@@ -1,45 +1,21 @@
 "use client"
-import { Trash2, Pencil, Eye, Mail } from "lucide-react";
-import { CheckBadgeIcon } from '@heroicons/react/24/solid';
+import { Trash2, Pencil, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useState } from "react";
 
-const mahasiswa = [
+const instrukturs = [
     {
-        nim: "20250101",
-        nama: "Rina Anggraini",
-        fakultas: "Ilmu Komputer",
-        prodi: "Informatika",
-        kelas: "A"
+        nama: "Instruktur A",
+        kontak: "085552320897",
     },
     {
-        nim: "20250102",
-        nama: "Ahmad Fauzan",
-        fakultas: "Teknik",
-        prodi: "Teknik Elektro",
-        kelas: "B"
+        nama: "Instruktur B",
+        kontak: "081789087634",
     },
     {
-        nim: "20250103",
-        nama: "Siti Nurhaliza",
-        fakultas: "Ekonomi",
-        prodi: "Akuntansi",
-        kelas: "C"
-    },
-    {
-        nim: "20250104",
-        nama: "Bagus Prasetyo",
-        fakultas: "Ilmu Sosial",
-        prodi: "Sosiologi",
-        kelas: "A"
-    },
-    {
-        nim: "20250105",
-        nama: "Dewi Lestari",
-        fakultas: "Hukum",
-        prodi: "Ilmu Hukum",
-        kelas: "B"
+        nama: "Instruktur C",
+        kontak: "097096853256",
     }
 ];
 
@@ -60,61 +36,36 @@ export default function InstrukturAdmin() {
                         <img src="/icons/back.svg" alt="Back" className="w-6" />
                     </button>
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
-                        <CheckBadgeIcon className="h-5" />
-                        <span className="text-base font-semibold">Lulus</span>
-                        <span className="text-base font-semibold">40</span>
+                        <img src="/icons/instruktur.svg" alt="" className="w-6" />
+                        <span className="text-base font-semibold">Instruktur</span>
+                        <span className="text-base font-semibold">3</span>
                     </div>
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="rounded-xl border border-black overflow-hidden flex items-center">
-                        <input
-                            type="text"
-                            placeholder="Cari Peserta..."
-                            className="outline-none px-3 py-1 w-64"
-                        />
-                        <button className="bg-gray-300 p-2">
-                            <img src="/icons/search.svg" alt="Search" className="w-5" />
-                        </button>
-                    </div>
-                    <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => setIsOpen(true)}>
-                        <img src="/icons/email.svg" alt="Email" className="w-6" />
-                        <span>Kirim Email</span>
+                    <button className="bg-green text-white text-xl font-radjdhani_bold border rounded px-3 py-1 flex items-center gap-2" onClick={() => setIsOpen(true)}>
+                        Tambah Instruktur <Plus size={16} />
                     </button>
                 </div>
             </div>
 
             {/* Tabel */}
             <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
+                <thead className="min-w-full bg-gray-200">
+                    <tr className="min-w-full">
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontak</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {mahasiswa.map((mhs, idx) => (
-                        <tr key={idx}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nim}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.fakultas}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.kelas}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    {instrukturs.map((instruktur, idx) => (
+                        <tr key={idx} className="">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.nama}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.kontak}</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Trash2 size={16} />
                                 </button>
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Pencil size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Eye size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                <Mail size={16} />
                                 </button>
                             </td>
                         </tr>

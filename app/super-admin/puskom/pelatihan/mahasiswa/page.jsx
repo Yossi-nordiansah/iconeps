@@ -41,11 +41,11 @@ export default function MahasiswaAdmin() {
     const lastSegmetst = segments[segments.length - 1];
 
     return (
-        <div className="h-full p-6">
+        <div className="p-6">
             {/* Header dan Pencarian */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <button className="bg-gray-300 p-2 rounded" onClick={()=>router.push('/super-admin/puskom/pelatihan/')}>
+                    <button className="bg-gray-300 p-2 rounded" onClick={()=>router.push('/admin/puskom/pelatihan/')}>
                         <img src="/icons/back.svg" alt="Back" className="w-6" />
                     </button>
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">

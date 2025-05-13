@@ -2,7 +2,7 @@ import React from 'react'
 
 const PelatihanLayout = ({children}) => {
     return (
-        <div className='pl-48 min-h-screen pt-16'>
+        <div className='pl-48 pt-16'>
             <div className='flex p-4 gap-10 items-center'>
                 <h1 className='font-radjdhani_bold text-3xl'>Pelatihan</h1>
                 <div className='border-2 border-black rounded-lg px-2 py-1 font-robotoBold'>
