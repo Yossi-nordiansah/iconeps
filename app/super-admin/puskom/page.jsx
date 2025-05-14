@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
 
 export default function AdminRootPage() {
-  redirect('/admin/puskom/pelatihan')
+  redirect('/super-admin/puskom/pelatihan')
 } 

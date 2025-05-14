@@ -6,16 +6,19 @@ import { useState } from "react";
 
 const instrukturs = [
     {
-        nama: "Instruktur A",
-        kontak: "085552320897",
+        nama: "admin A",
+        email: "adminA@example.com",
+        password: "passwordA123",
     },
     {
-        nama: "Instruktur B",
-        kontak: "081789087634",
+        nama: "admin B",
+        email: "adminB@example.com",
+        password: "passwordB456",
     },
     {
-        nama: "Instruktur C",
-        kontak: "097096853256",
+        nama: "admin C",
+        email: "adminC@example.com",
+        password: "passwordC789",
     }
 ];
 
@@ -34,11 +37,11 @@ export default function InstrukturAdmin() {
                 <div className="flex items-center gap-2">
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <img src="/icons/instruktur.svg" alt="" className="w-6" />
-                        <span className="text-base font-semibold">Instruktur</span>
+                        <span className="text-base font-semibold">Admin</span>
                         <span className="text-base font-semibold">3</span>
                     </div>
                     <button className="bg-green text-white text-xl font-radjdhani_bold border rounded px-3 py-1 flex items-center gap-2" onClick={() => setIsOpen(true)}>
-                        Tambah Instruktur <Plus size={16} />
+                        Tambah Admin <Plus size={16} />
                     </button>
                 </div>
             </div>
@@ -48,7 +51,8 @@ export default function InstrukturAdmin() {
                 <thead className="min-w-full bg-gray-200">
                     <tr className="min-w-full">
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontak</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Password</th>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -56,7 +60,8 @@ export default function InstrukturAdmin() {
                     {instrukturs.map((instruktur, idx) => (
                         <tr key={idx} className="">
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.kontak}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.email}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.password}</td>
                             <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Trash2 size={16} />
@@ -69,7 +74,6 @@ export default function InstrukturAdmin() {
                     ))}
                 </tbody>
             </table>
-            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
         </div>
     );
 }

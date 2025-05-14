@@ -42,7 +42,7 @@ const AdminLayout = ({ children }) => {
                             <img src="/icons/triangle.svg" alt="" className='w-5 rotate-90' />
                         </li>
                     </Link>
-                    <Link href="/super-admin/puskom/instruktur" className={`py-4 border-b block px-3 ${pathName === "/super-admin/puskom/instruktur" ? "bg-yellow-400" : ""}`}>
+                    <Link href="/super-admin/puskom/admin" className={`py-4 border-b block px-3 ${pathName === "/super-admin/puskom/admin" ? "bg-yellow-400" : ""}`}>
                         <li className='flex justify-between'>
                             <p>Admin</p>
                             <img src="/icons/triangle.svg" alt="" className='w-5 rotate-90' />

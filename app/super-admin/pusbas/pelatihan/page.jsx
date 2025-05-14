@@ -8,14 +8,14 @@ const PelatihanAdminPage = () => {
   const router = useRouter();
 
   const cards = [
-    { title: 'Mahasiswa', value: 40, icon: <UserGroupIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/mahasiswa' },
-    { title: 'Pendaftar', value: 30, icon: <PencilSquareIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/pendaftar' },
-    { title: 'Kelas', value: 3, icon: <PresentationChartBarIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/kelas' },
-    { title: 'Peserta', value: 35, icon: <UsersIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/peserta' },
-    { title: 'Nilai', value: 0, icon: <AcademicCapIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/nilai' },
-    { title: 'Lulus', value: 0, icon: <CheckBadgeIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/lulus' },
-    { title: 'Remidial', value: 0, icon: <ArrowPathIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/remidial' },
-    { title: 'Sertifikat', value: 0, icon: <DocumentCheckIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/sertifikat' },
+    { title: 'Mahasiswa', value: 40, icon: <UserGroupIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/mahasiswa' },
+    { title: 'Pendaftar', value: 30, icon: <PencilSquareIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/pendaftar' },
+    { title: 'Kelas', value: 3, icon: <PresentationChartBarIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/kelas' },
+    { title: 'Peserta', value: 35, icon: <UsersIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/peserta' },
+    { title: 'Nilai', value: 0, icon: <AcademicCapIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/nilai' },
+    { title: 'Lulus', value: 0, icon: <CheckBadgeIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/lulus' },
+    { title: 'Remidial', value: 0, icon: <ArrowPathIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/remidial' },
+    { title: 'Sertifikat', value: 0, icon: <DocumentCheckIcon className="h-20 w-20" />, path: '/super-admin/pusbas/pelatihan/sertifikat' },
   ];
   return (
     <div className=''>
