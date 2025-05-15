@@ -1,14 +1,181 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model admin {
+  id                Int                 @id @default(autoincrement())
+  users_id          Int
+  nama              String              @db.VarChar(100)
+  role              String              @db.VarChar(20)
+  users             users               @relation(fields: [users_id], references: [id], onDelete: Cascade, map: "id_users_fk")
+  informasi_periode informasi_periode[]
+
+  @@index([users_id], map: "id_users_fk")
+}
+
+model informasi_periode {
+  id         Int                       @id @default(autoincrement())
+  id_admin   Int
+  divisi     informasi_periode_divisi?
+  keterangan String?                   @db.Text
+  admin      admin                     @relation(fields: [id_admin], references: [id], onDelete: Cascade, map: "informasi_periode_ibfk_1")
+
+  @@index([id_admin], map: "id_admin")
+}
+
+model instruktur {
+  id     Int               @id @default(autoincrement())
+  nama   String            @db.VarChar(50)
+  divisi instruktur_divisi
+  kontak String            @db.VarChar(15)
+  kelas  kelas[]
+}
+
+model jadwal {
+  id          Int      @id
+  id_kelas    Int
+  hari        String   @db.VarChar(10)
+  tanggal     DateTime @db.Date
+  jam_mulai   String   @db.VarChar(7)
+  jam_selesai String   @db.VarChar(7)
+  agenda      String   @db.VarChar(10)
+  kelas       kelas    @relation(fields: [id_kelas], references: [id], onDelete: Cascade, map: "id_kelas_fk")
+
+  @@index([id_kelas], map: "id_kelas_fk")
+}
+
+model kelas {
+  id            Int              @id @default(autoincrement())
+  nama_kelas    String           @db.VarChar(50)
+  id_instruktur Int
+  tipe_kelas    kelas_tipe_kelas
+  divisi        kelas_divisi
+  periode       String           @db.VarChar(18)
+  id_peserta    Int
+  link_ujian    String?          @db.VarChar(100)
+  jadwal        jadwal[]
+  instruktur    instruktur       @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
+  peserta       peserta          @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "kelas_ibfk_1")
+
+  @@index([id_peserta], map: "id_peserta")
+  @@index([id_peserta], map: "id_peserta_2")
+  @@index([id_instruktur], map: "insturktur relation")
+}
+
+model mahasiswa {
+  id            Int       @id @default(autoincrement())
+  user_id       Int       @unique(map: "user_id")
+  nama          String    @db.VarChar(100)
+  email         String    @db.VarChar(100)
+  nomor_telepon String    @db.VarChar(15)
+  fakultas      String    @db.VarChar(50)
+  prodi         String    @db.VarChar(50)
+  semester      String    @db.VarChar(2)
+  nim           String    @db.VarChar(15)
+  role          String    @db.VarChar(10)
+  users         users     @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "mahasiswa_ibfk_1")
+  peserta       peserta[]
+
+  @@index([user_id], map: "mahasiswa_ibfk_1")
+}
+
+model nilai {
+  id         Int     @id @default(autoincrement())
+  id_peserta Int
+  listening  Int
+  structure  Int
+  reading    Int
+  total      Int
+  peserta    peserta @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "relasi_peserta")
+
+  @@index([id_peserta], map: "relasi_peserta")
+}
+
+model peserta {
+  id                  Int                   @id @default(autoincrement())
+  mahasiswa_id        Int
+  status              peserta_status?       @default(pendaftar)
+  bukti_pembayaran    String                @db.VarChar(255)
+  divisi              peserta_divisi
+  tanggal_pendaftaran DateTime              @default(now()) @db.Timestamp(0)
+  pilihan_kelas       peserta_pilihan_kelas
+  tanggal_pembayaran  String                @db.VarChar(15)
+  nominal_pembayaran  Int
+  kelas               kelas[]
+  nilai               nilai[]
+  mahasiswa           mahasiswa             @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
+  sertifikat          sertifikat[]
+
+  @@index([mahasiswa_id], map: "pendaftaran_ibfk_1")
+}
+
+model sertifikat {
+  id                  Int      @id @default(autoincrement())
+  jenis               String   @db.VarChar(10)
+  id_peserta          Int
+  nomor_sertifikat    String?  @db.VarChar(50)
+  tanggal_diterbitkan DateTime @db.Date
+  peserta             peserta  @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "id_peserta_fk")
+
+  @@index([id_peserta], map: "id_peserta_fk")
+}
+
+model users {
+  id            Int        @id @default(autoincrement())
+  email         String     @db.VarChar(100)
+  password      String     @db.VarChar(255)
+  refresh_token String?    @db.Text
+  role          users_role
+  created_at    DateTime   @default(now()) @db.Timestamp(0)
+  admin         admin[]
+  mahasiswa     mahasiswa?
+}
+
+enum informasi_periode_divisi {
+  pusbas
+  puskom
+}
+
+enum instruktur_divisi {
+  pusbas
+  puskom
+}
+
+enum peserta_status {
+  pendaftar
+  peserta
+  lulus
+  remidial
+}
+
+enum kelas_tipe_kelas {
+  weekend
+  weekday
+}
+
+enum peserta_divisi {
+  pusbas
+  puskom
+}
+
+enum users_role {
+  super_admin
+  admin
+  mahasiswa
+}
+
+enum kelas_divisi {
+  pusbas
+  puskom
+}
+
+enum peserta_pilihan_kelas {
+  weekday_online  @map("weekday online")
+  weekend_online  @map("weekend online")
+  weekday_offline @map("weekday offline")
 }

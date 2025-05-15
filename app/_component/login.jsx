@@ -1,21 +1,9 @@
 "use client"
 import { useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 const PopupLogin = ({ isOpen, close }) => {
   const popupRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (popupRef.current && !popupRef.current.contains(e.target)) {
-        close(); // Panggil close dari props
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
  
   if (!isOpen) return null;
 
@@ -23,7 +11,7 @@ const PopupLogin = ({ isOpen, close }) => {
     <div className="fixed inset-0 bg-green px-3 bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
       <div
         ref={popupRef}
-        className="bg-white p-6 rounded-lg shadow-lg w-80 border-2 border-yellow-300"
+        className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
       >
         <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">Login</h2>
         <form>
@@ -64,6 +52,7 @@ const PopupLogin = ({ isOpen, close }) => {
               Login
             </button>
           </div>
+          <p className='text-sm text-center mt-5'>Belum punya akun? <Link href={"/registrasi"} onClick={close} className='cursor-pointer text-blue-900 font-robotoBold'>Registrasi Sekarang</Link></p>
         </form>
       </div>
     </div>

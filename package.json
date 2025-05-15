@@ -16,7 +16,8 @@
     "@lexical/selection": "^0.31.0",
     "@lexical/utils": "^0.31.0",
     "@prisma/client": "^6.4.1",
-    "axios": "^1.7.9",
+    "axios": "^1.9.0",
+    "bcrypt": "^6.0.0",
     "draft-js": "^0.11.7",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.475.0",
@@ -28,6 +29,7 @@
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.1.0",
+    "sweetalert2": "^11.21.0",
     "swiper": "^11.2.0",
     "xlsx": "^0.18.5"
   },
