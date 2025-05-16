@@ -20,6 +20,8 @@ export async function POST(request) {
         return NextResponse.json({ message: "Data tidak lengkap." }, { status: 400 });
     }
 
+    console.log(`email: ${email}`);
+    console.log(`nim: ${nim}`)
 
     try {
 
@@ -27,7 +29,9 @@ export async function POST(request) {
             where: { email: email }
         });
 
-        if (existingUser) {
+        console.log(`existing user: ${existingUser}`)
+
+        if (existingUser.length > 0) {
             return NextResponse.json({ message: "Email sudah terdaftar." }, { status: 409 });
         }
 
@@ -36,7 +40,7 @@ export async function POST(request) {
             where: { nim: nim }
         });
 
-        if (existingNIM) {
+        if (existingNIM.length > 0) {
             return NextResponse.json({ message: "NIM sudah terdaftar." }, { status: 409 });
         }
         // Hash password sebelum disimpan
