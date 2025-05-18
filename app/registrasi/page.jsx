@@ -104,9 +104,9 @@ const Registrasi = () => {
 
     return (
 
-        <div className='min-h-screen pt-20 pb-12 shadow-2xl lg:px-12 md:px-8 px-3 flex justify-between gap-10 items-center'>
+        <div className='lg:min-h-screen pt-20 pb-8 shadow-2xl lg:px-12 md:px-8 px-3 flex justify-between gap-10 items-center'>
             <img src="/images/registrasi.png" alt="" className='min-w-52 lg:w-[420px] drop-shadow-2xl mx-auto sm:block hidden' />
-            <div className='lg:max-w-[520px] md:max-w-[450px] w-full md:min-w-96 min-w-64 rounded-xl border-2  border-yellow-300 bg-blue-500/50 px-5 py-3 shadow-xl mx-auto'>
+            <div className='lg:max-w-[520px] md:max-w-[450px] w-full md:min-w-96 min-w-64 rounded-xl border-4 border-yellow-300 bg-blue-500/50 px-5 py-3 shadow-xl mx-auto'>
                 <h1 className='text-3xl font-robotoBold text-blue-950 mb-3 sm:text-left text-center'>Registrasi</h1>
                 <form onSubmit={handleSubmit} className="space-y-3 w-full ">
                     <input
@@ -128,16 +128,17 @@ const Registrasi = () => {
                         required
                     />
                     <input
-                        type="text"
+                        type="tel"
                         name="telepon"
                         placeholder="Nomor Telepon / WA"
                         value={form.telepon}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded-lg border-blue-500 outline-blue-400"
                         required
+                        pattern="[0-9]{10,15}"
                     />
                     <div className='flex gap-4'>
-                        <div className='bg-white w-full border px-1 outline-blue-400 rounded-lg'>
+                        <div className='bg-white w-full border border-blue-500 px-1 outline-blue-400 rounded-lg'>
                             <select
                                 name="fakultas"
                                 value={form.fakultas}
@@ -153,7 +154,7 @@ const Registrasi = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className='bg-white w-full border px-1 outline-blue-400 rounded-lg'>
+                        <div className='bg-white w-full border border-blue-500 px-1 outline-blue-400 rounded-lg'>
                             <select
                                 name="prodi"
                                 value={form.prodi}
