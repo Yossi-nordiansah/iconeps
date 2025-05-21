@@ -41,8 +41,8 @@ const PuskomPage = () => {
                         <li>Simpan bukti pembayaran dalam bentuk gambar (difoto/screenshoot).</li>
                         <li>Klik tombol daftar dibawah, isi semua form dengan benar.</li>
                         <li>Setelah melakukan pendaftaran status anda akan muncul pada halaman pelatihan.</li>
-                        <li>Pelatihan akan dimulai sesuai dengan periode yang ditentukan.</li>
-                        <li>Jumlah pertemuan akan mengikuti kelas yang anda pilih (weekend/weekday).</li>
+                        <li>Pelatihan akan dimulai sesuai dengan periode yang ditentukan yang akan diinformasikan melalui grup whatsApp</li>
+                        <li>Pertemuan akan dilaksanakan sebayak 10 kali dan jadwalnya akan mengikuti kelas yang anda pilih (weekend/weekday).</li>
                         <li>Ujian akan dilakukan satu kali, bagi peserta yang tidak hadir akan dinyatakan gugur/gagal dalam ujian.</li>
                         <li>Peserta yang lulus ujian akan mendapatkan sertifikat yang dapat di download dari website ini.</li>
                         <li>Bagi peserta yang gagal akan mendapat kesempatan untuk remidi sebanyak satu kali.</li>

@@ -106,7 +106,6 @@ const authOptions = {
   },
 };
 
-// ❗ INI YANG PENTING untuk App Router (Next.js 13+)
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
