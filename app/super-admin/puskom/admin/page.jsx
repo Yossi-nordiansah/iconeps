@@ -3,6 +3,7 @@ import { Trash2, Pencil, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useState } from "react";
+import AdminForm from "@/app/_component/admin/formAdmin";
 
 const instrukturs = [
     {
@@ -29,6 +30,8 @@ export default function InstrukturAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
+    const role = `admin_${segments[segments.length - 2]}`
+    console.log(role)
 
     return (
         <div className="pl-56 pt-24 pr-6">
@@ -74,6 +77,7 @@ export default function InstrukturAdmin() {
                     ))}
                 </tbody>
             </table>
+            <AdminForm isOpen={isOpen} role={role} close={()=>setIsOpen(false)}/>
         </div>
     );
 }
