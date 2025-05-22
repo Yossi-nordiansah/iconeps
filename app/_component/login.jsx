@@ -8,9 +8,9 @@ import { getSession } from "next-auth/react";
 import Swal from 'sweetalert2';
 
 const roleRedirectMap = {
-  admin_puskom: "/admin/pelatihan/puskom",
-  admin_pusbas: "/admin/pelatihan/pusbas",
-  super_admin: "/super-admin/pelatihan/puskom",
+  admin_puskom: "/admin/puskom/pelatihan",
+  admin_pusbas: "/admin/pusbas/pelatihan",
+  super_admin: "/super-admin/puskom/pelatihan",
   mahasiswa: "/",
 }; 
 

@@ -44,35 +44,50 @@ const authOptions = {
       },
       async authorize(credentials) {
         try {
-          const users = await prisma.users.findMany({
+          const user = await prisma.users.findFirst({
             where: { email: credentials.email },
-            include: { mahasiswa: true },
+            include: {
+              mahasiswa: true,
+              admin: true,
+            },
           });
 
-          if (!users || users.length === 0) {
+          console.log(`name: ${user.admin.nama}`)
+
+          if (!user) {
             throw new Error("EMAIL_NOT_FOUND");
           }
 
-          for (const user of users) {
-            const valid = await bcrypt.compare(credentials.password, user.password);
-            if (valid) {
-              const nama = user.mahasiswa?.nama || user.nama || "Unknown";
-              return {
-                id: user.id,
-                name: nama,
-                role: user.role,
-              };
-            }
+          const valid = await bcrypt.compare(credentials.password, user.password);
+          if (!valid) {
+            throw new Error("INVALID_PASSWORD");
           }
 
-          throw new Error("INVALID_PASSWORD");
+          let nama = "Unknown";
+          if (
+            user.role === "super_admin" ||
+            user.role === "admin_puskom" ||
+            user.role === "admin_pusbas"
+          ) {
+            nama = user.admin?.[0]?.nama || user.nama || "Unknown";
+          } else {
+            nama = user.mahasiswa?.nama || user.nama || "Unknown";
+          }
+
+          console.log(`role: ${user.role}`);
+          console.log(`nama: ${nama}`);
+
+          return {
+            id: user.id,
+            name: nama,
+            role: user.role,
+          };
 
         } catch (error) {
           console.error("Authorize error:", error.message);
-          throw new Error(error.message); // lempar error dengan kode khusus
+          throw new Error(error.message);
         }
       }
-
 
     }),
   ],
