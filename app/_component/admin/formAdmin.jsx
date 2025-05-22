@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const AdminForm = ({ isOpen, close, role }) => {
 
     const router = useRouter()
     const [showPasswordButton, setShowPasswordButton] = useState(false);
     const [showConfirmPasswordButton, setShowConfirmPasswordButton] = useState(false);
+    const popupRef = useRef(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
         nama: "",
@@ -37,29 +39,36 @@ const AdminForm = ({ isOpen, close, role }) => {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('/api/registrasi', {
+            const response = await axios.post('/api/admin/create', {
                 nama: form.nama,
                 email: form.email,
+                password: form.password,
                 role: form.role
+            });
+
+            setForm({
+                nama: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                role: role
             });
 
             Swal.fire({
                 icon: 'success',
-                title: 'Registrasi Berhasil!',
+                title: 'Admin Berhasil Ditambahkan',
                 showConfirmButton: false,
                 timer: 2000,
-            }).then(() => {
-                router.push("/");
             });
-        } catch (error) {
-            console.error("Registrasi error:", error.response.data.message);
 
-            // Jika ada response dari server (validasi error)
+            close();
+        } catch (error) {
+            // console.error("Registrasi error:", error.response.data.message);
             if (error.response && error.response.data && error.response.data.message) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Registrasi Gagal',
-                    text: error.response.data.message, // tampilkan pesan dari server
+                    text: error.response.data.message,
                 });
             } else {
                 // Error lain (network, dll)
@@ -79,11 +88,12 @@ const AdminForm = ({ isOpen, close, role }) => {
     };
 
     return (
-
-        <div className='lg:min-h-screen pt-20 pb-8 shadow-2xl lg:px-12 md:px-8 px-3 flex justify-between gap-10 items-center'>
-            <img src="/images/registrasi.png" alt="" className='min-w-52 lg:w-[420px] drop-shadow-2xl mx-auto sm:block hidden' />
-            <div className='lg:max-w-[520px] md:max-w-[450px] w-full md:min-w-96 min-w-64 rounded-xl border-4 border-yellow-300 bg-blue-500/50 px-5 py-3 shadow-xl mx-auto'>
-                <h1 className='text-3xl font-robotoBold text-blue-950 mb-3 sm:text-left text-center'>Registrasi</h1>
+        <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
+            <div
+                ref={popupRef}
+                className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
+            >
+                <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">Tambah Admin</h2>
                 <form onSubmit={handleSubmit} className="space-y-3 w-full ">
                     <input
                         type="text"
@@ -153,7 +163,7 @@ const AdminForm = ({ isOpen, close, role }) => {
                             type="submit"
                             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                         >
-                            Login
+                            Submit
                         </button>
                     </div>
                 </form>
@@ -163,3 +173,4 @@ const AdminForm = ({ isOpen, close, role }) => {
 };
 
 export default AdminForm;
+

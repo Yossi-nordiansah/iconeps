@@ -163,12 +163,6 @@ enum peserta_divisi {
   puskom
 }
 
-enum users_role {
-  super_admin
-  admin
-  mahasiswa
-}
-
 enum kelas_divisi {
   pusbas
   puskom
@@ -178,4 +172,11 @@ enum peserta_pilihan_kelas {
   weekday_online  @map("weekday online")
   weekend_online  @map("weekend online")
   weekday_offline @map("weekday offline")
+}
+
+enum users_role {
+  super_admin
+  admin_puskom
+  admin_pusbas
+  mahasiswa
 }

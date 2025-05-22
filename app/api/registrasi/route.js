@@ -20,9 +20,6 @@ export async function POST(request) {
         return NextResponse.json({ message: "Data tidak lengkap." }, { status: 400 });
     }
 
-    console.log(`email: ${email}`);
-    console.log(`nim: ${nim}`)
-
     try {
 
         const existingUser = await prisma.users.findMany({
@@ -45,12 +42,12 @@ export async function POST(request) {
         }
         // Hash password sebelum disimpan
         const hashedPassword = await bcrypt.hash(password, 10);
-
+ 
         const userRegistrasi = await prisma.users.create({
             data: {
                 email: email,
                 password: hashedPassword,
-                role: 'mahasiswa',
+                role: 'mahasiswa', 
             }
         });
 

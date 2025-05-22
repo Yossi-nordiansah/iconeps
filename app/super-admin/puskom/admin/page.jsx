@@ -40,7 +40,7 @@ export default function InstrukturAdmin() {
                 <div className="flex items-center gap-2">
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <img src="/icons/instruktur.svg" alt="" className="w-6" />
-                        <span className="text-base font-semibold">Admin</span>
+                        <span className="text-base font-semibold">Admin Puskom</span>
                         <span className="text-base font-semibold">3</span>
                     </div>
                     <button className="bg-green text-white text-xl font-radjdhani_bold border rounded px-3 py-1 flex items-center gap-2" onClick={() => setIsOpen(true)}>

@@ -45,8 +45,8 @@ const QuestionsList = () => {
         },
         {
             id: 3,
-            question: "Dimana lokasi ruangan iconeps?",
-            answer: `Knator dari ICONEPS berada di gedung Hajar Ibrahim lantai 2 (setelah tangga belok ke kiri)`,
+            question: "Dimana lokasi ruangan ICONEPS?",
+            answer: `Kantor dari ICONEPS berada di gedung Hajar Ibrahim lantai 2 (setelah tangga belok ke kiri)`,
             action: false,
         },
         {
@@ -64,7 +64,7 @@ const QuestionsList = () => {
         {
             id: 6,
             question: "Apa perbedaan kelas online dan offline?",
-            answer: `Perbedaan kelas offline dan kelas online adalah kelas Online maka seluruh kegiatan pelatihan akan dilaksanakan secara daring sedangkan untuk kelas offline kegiatan pelatihan akan dilaksanakan secara daring dan luring (Hybrid).`,
+            answer: `Perbedaan kelas offline dan kelas online adalah kelas Online seluruh kegiatan pelatihan akan dilaksanakan secara daring sedangkan untuk kelas offline kegiatan pelatihan akan dilaksanakan secara daring dan luring (Hybrid). Kelas online hanya ada pada pelatihan pusbas`,
             action: false,
         },
     ]);
@@ -79,6 +79,7 @@ const QuestionsList = () => {
     return (
         <div className="">
             <div className='lg:w-11/12 sm:w-[93%] w-[88%] mx-auto lg:py-10 sm:py-8 py-6'>
+                <h1 className="text-5xl font-radjdhani_bold text-blue-950 mb-4 underline">FAQ</h1>
                 {
                     questionsList.map((item) =>
                     (
