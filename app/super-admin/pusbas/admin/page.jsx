@@ -29,7 +29,6 @@ export default function InstrukturAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const role = `admin_${segments[segments.length - 2]}`
-    console.log(role)
 
     return (
         <div className="pl-56 pt-24 pr-6">

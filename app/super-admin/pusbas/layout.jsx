@@ -2,15 +2,20 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 const AdminLayout = ({ children }) => {
 
     const pathName = usePathname();
+    const { data: session, status } = useSession();
+
 
     return (
         <div>
             <div className='absolute bg-primary h-full w-48 pt-24 z-10 text-white font-semibold'>
-                <p className='text-xl mb-10 px-3'>nama admin</p>
+                <p className='text-xl mb-10 px-3'>{session?.user?.name}</p>
                 <ul className='flex-col'>
                     <Link href="/super-admin/pusbas/pelatihan" className={`py-4 border-y block px-3 ${pathName.startsWith("/super-admin/pusbas/pelatihan") ? "bg-yellow-400" : ""}`}>
                         <li className='flex justify-between'>
@@ -49,9 +54,27 @@ const AdminLayout = ({ children }) => {
                         </li>
                     </Link>
                 </ul>
-                <div className='flex items-center gap-4 px-3 py-4 border-b cursor-pointer'>
-                    <img src="/icons/logout-1.svg" alt="" className='w-5' />
-                    <p className='text-lg'>Logout</p>
+                <div
+                    className="flex items-center gap-4 px-3 py-4 border-b cursor-pointer"
+                    onClick={async () => {
+                        const result = await Swal.fire({
+                            title: "Keluar dari akun?",
+                            text: "Anda akan keluar dari sesi login.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#d33",
+                            cancelButtonColor: "#3085d6",
+                            confirmButtonText: "Ya, logout",
+                            cancelButtonText: "Batal",
+                        });
+
+                        if (result.isConfirmed) {
+                            await signOut({ callbackUrl: "/" });
+                        }
+                    }}
+                >
+                    <Image src="/icons/logout-1.svg" alt="" width={20} height={20} />
+                    <p className="text-lg">Logout</p>
                 </div>
             </div>
             {children}

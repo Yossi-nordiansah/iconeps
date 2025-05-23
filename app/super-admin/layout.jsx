@@ -1,26 +1,36 @@
 "use client"
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, redirect } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 const AdminLayout = ({ children }) => {
-    const pathName = usePathname()
-    const router = useRouter()
-    const [segment, setSegment] = useState("puskom")
+    const { data: session, status } = useSession();
+    const pathName = usePathname(); 
+    const router = useRouter();
+    const [segment, setSegment] = useState("puskom");
 
-    const handleSegmentChange = (e) => {
-        const newSegment = e.target.value
-        setSegment(newSegment)
-        router.push(`/super-admin/${newSegment}/pelatihan`)
+    useEffect(() => {
+        const matched = pathName.split('/')[2];
+        if (matched === 'puskom' || matched === 'pusbas') {
+            setSegment(matched);
+        }
+    }, [pathName]);
+    
+    if (status === "loading") return null;
+
+    if (!session) {
+        redirect("/unauthorized");
     }
 
-    // Optional: sinkronkan dropdown dengan URL saat reload
-    useEffect(() => {
-        const matched = pathName.split('/')[2]
-        if (matched === 'puskom' || matched === 'pusbas') {
-            setSegment(matched)
-        }
-    }, [pathName])
+    if (session?.user?.role !== "super_admin") {
+        redirect("/unauthorized");
+    }
+
+    const handleSegmentChange = (e) => {
+        const newSegment = e.target.value;
+        setSegment(newSegment);
+        router.push(`/super-admin/${newSegment}/pelatihan`);
+    };
 
     return (
         <div>
@@ -36,7 +46,8 @@ const AdminLayout = ({ children }) => {
             </div>
             {children}
         </div>
-    )
+    );
 }
+
 
 export default AdminLayout

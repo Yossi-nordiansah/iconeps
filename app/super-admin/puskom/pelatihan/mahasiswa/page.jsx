@@ -34,9 +34,6 @@ export default function MahasiswaAdmin() {
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
-
-    console.log(pathname)
-
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
 

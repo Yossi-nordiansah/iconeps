@@ -18,7 +18,6 @@ const Login = () => {
                 email,
                 password,
             });
-            console.log(response.data);
             alert(response.data.message);
 
             // ✅ Ganti navigate dengan router.push

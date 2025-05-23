@@ -54,9 +54,6 @@ export default function MahasiswaAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState([]);
-
-    console.log(pathname)
-
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
 

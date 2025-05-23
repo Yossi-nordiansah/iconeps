@@ -12,8 +12,6 @@ export async function POST(request) {
         role
     } = body;
 
-    console.log(body)
-
     if (!nama || !email || !role || !password) {
         return NextResponse.json({ message: "Data tidak lengkap." }, { status: 400 });
     }

@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./navbar";
 import Footer from "./footer";
+import { SessionProvider } from "next-auth/react";
 
 export default function LayoutWrapper({ children }) {
   const pathname = usePathname();
@@ -10,9 +11,11 @@ export default function LayoutWrapper({ children }) {
 
   return (
     <>
-      {!isAdminPage && <Navbar />}
-      {children}
-      {!isAdminPage && <Footer />}
+      <SessionProvider>
+        {!isAdminPage && <Navbar />}
+        {children}
+        {!isAdminPage && <Footer />}
+      </SessionProvider>
     </>
   );
 }

@@ -31,15 +31,11 @@ export default function SertifikatAdmin() {
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
-
-    console.log(pathname)
-
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
 
     return (
         <div className="p-6">
-            {/* Header dan Pencarian */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/super-admin/puskom/pelatihan/')}>

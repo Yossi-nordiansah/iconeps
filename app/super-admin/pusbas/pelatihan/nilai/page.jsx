@@ -35,7 +35,6 @@ export default function NilaiAdmin() {
             alert("Silakan pilih file terlebih dahulu.");
             return;
         }
-        console.log("Uploading file:", file);
     };
 
     return (
