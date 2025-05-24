@@ -1,21 +1,19 @@
-"use client"
 import React from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from 'sweetalert2';
-import PopupLogin from '../_component/login';
 
-const Registrasi = () => {
-    const router = useRouter()
+const EditProfile = ({ isOpen, close, id }) => {
+
     const [showPasswordButton, setShowPasswordButton] = useState(false);
     const [showConfirmPasswordButton, setShowConfirmPasswordButton] = useState(false);
-    const [isOpen, setIsopen] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const [form, setForm] = useState({
         nama: "",
-        email: "", 
+        email: "",
         telepon: "",
         fakultas: "",
         prodi: "",
@@ -45,70 +43,15 @@ const Registrasi = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (form.password !== form.confirmPassword) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Password dan Konfirmasi Password tidak cocok!',
-            });
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        try {
-            const response = await axios.post('/api/registrasi', {
-                nama: form.nama,
-                email: form.email,
-                telepon: form.telepon,
-                fakultas: form.fakultas,
-                prodi: form.prodi,
-                semester: form.semester,
-                nim: form.nim,
-                password: form.password,
-            });
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Registrasi Berhasil!',
-                showConfirmButton: false,
-                timer: 2000,
-            }).then(() => {
-                router.push("/login");
-            });
-        } catch (error) {
-            console.error("Registrasi error:", error.response.data.message);
-
-            // Jika ada response dari server (validasi error)
-            if (error.response && error.response.data && error.response.data.message) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Registrasi Gagal',
-                    text: error.response.data.message, // tampilkan pesan dari server
-                });
-            } else {
-                // Error lain (network, dll)
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Registrasi Gagal',
-                    text: 'Terjadi kesalahan saat registrasi.',
-                });
-            }
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    if (!isOpen) return;
 
     return (
-
-        <div className='lg:min-h-screen pt-20 pb-8 shadow-2xl lg:px-12 md:px-8 px-3 flex justify-between gap-10 items-center'>
-            <img src="/images/registrasi.png" alt="" className='min-w-52 lg:w-[420px] drop-shadow-2xl mx-auto sm:block hidden' />
-            <div className='lg:max-w-[520px] md:max-w-[450px] w-full md:min-w-96 min-w-64 rounded-xl border-4 border-yellow-300 bg-blue-500/50 px-5 py-3 shadow-xl mx-auto'>
-                <h1 className='text-3xl font-robotoBold text-blue-950 mb-3 sm:text-left text-center'>Registrasi</h1>
-                <form onSubmit={handleSubmit} className="space-y-3 w-full ">
+        <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
+            <div
+                className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
+            >
+                <h1 className='text-3xl font-robotoBold text-blue-950 mb-3 text-center'>Edit Profile</h1>
+                <form className="space-y-3 w-full ">
                     <input
                         type="text"
                         name="nama"
@@ -229,28 +172,34 @@ const Registrasi = () => {
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
                         >
                             {showConfirmPasswordButton ? <FaEye /> : <FaEyeSlash />}
-                        </button> 
+                        </button>
                     </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 font-robotoBold text-white font-bold py-2 rounded-lg disabled:opacity-50"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? "Memproses..." : "Registrasi"}
-                    </button>
-                    <p className="text-center">
-                        Sudah punya akun?{" "}
-                        <span onClick={() => setIsopen(true)} className="text-blue-700 hover:underline cursor-pointer font-semibold">
-                            Login
-                        </span>
-                    </p>
+                    <div className='flex gap-4'>
+                        <button
+                            onClick={close}
+                            type="button"
+                            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className={`w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 flex justify-center items-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            {isLoading ? (
+                                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                </svg>
+                            ) : null}
+                            {isLoading ? 'Editing...' : 'Ubah Data'}
+                        </button>
+                    </div>
                 </form>
             </div>
-            <PopupLogin isOpen={isOpen} close={() => setIsopen(false)} />
         </div>
     )
 }
 
-export default Registrasi
-
-
+export default EditProfile
