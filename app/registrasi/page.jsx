@@ -77,7 +77,7 @@ const Registrasi = () => {
                 showConfirmButton: false,
                 timer: 2000,
             }).then(() => {
-                router.push("/");
+                router.push("/login");
             });
         } catch (error) {
             console.error("Registrasi error:", error.response.data.message);

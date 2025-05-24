@@ -3,16 +3,33 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import PopupLogin from './login';
+import { useSession, signOut } from 'next-auth/react';
+import Swal from 'sweetalert2';
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDesktopMenuAccount, setShowDesktopMenuAccount] = useState(false);
   const [showMobileMenuAccount, setShowMobileMenuAccount] = useState(false);
   const [changeNavbarColor, setChangeNavbarColor] = useState(false);
+  const [name, setName] = useState("")
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user?.name) {
+      setName(session.user.name.charAt(0));
+    }
+  }, [session]);
 
   const handleToggle = (setter) => () => setter((prev) => !prev);
+
+  useEffect(() => {
+    if (!session && showDesktopMenuAccount) {
+      setIsOpen(true);
+      setShowDesktopMenuAccount(false);
+    }
+  }, [session, showDesktopMenuAccount]);
 
   useEffect(() => {
     const changeBackground = () => setChangeNavbarColor(window.scrollY >= 50);
@@ -21,42 +38,72 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', changeBackground);
   }, []);
 
+  const handleAccount = () => {
+    if (!session) {
+      setIsOpen(true)
+    } else {
+      setShowDesktopMenuAccount(!showDesktopMenuAccount)
+    }
+  }
+
   return (
     <div className={`fixed z-20 flex items-center justify-between w-full px-5 sm:py-1 py-3 overflow-visible 
       ${pathname != '/' ? 'bg-secondary' : changeNavbarColor ? 'bg-secondary' : 'bg-transparent'}`}>
-    
-      {/* Logo */}
       <div className='flex items-center gap-2'>
         <img src="/images/iconeps_logo.png" alt="ICONEPS Logo" className='w-8 sm:w-11' />
         <h1 className='text-2xl text-white sm:text-4xl font-robotoBold'>ICONEPS</h1>
       </div>
 
-      {/* Desktop Menu */} 
       <div className='hidden sm:flex items-center text-white font-roboto'>
         {['/', '/jadwal', '/pelatihan'].map((path, index) => (
-          <Link key={index} href={path} className={`${pathname === path ? 'text-yellow-400 font-bold' : "" } relative px-4 py-4 group`}>
+          <Link key={index} href={path} className={`${pathname === path ? 'text-yellow-400 font-bold' : ""} relative px-4 py-4 group`}>
             <p>{['Home', 'Jadwal', 'Pelatihan'][index]}</p>
             <div className="absolute bottom-0 left-0 w-0 h-1 transition-all duration-300 bg-green group-hover:w-full"></div>
           </Link>
         ))}
 
-        <button onClick={()=>setIsOpen(true)} className="px-4 py-2 group">
+        {/*  */}
+
+        {session ? <div className='bg-yellow-500 cursor-pointer rounded-full w-[30px] flex justify-center items-center text-xl h-[30px] font-roboto' onClick={handleAccount}>
+          {name}
+        </div> : <button onClick={handleAccount} className="px-4 py-2 group">
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="30px" height="30px" viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
           </svg>
-        </button>
+        </button>}
 
         {/* Desktop Dropdown Menu */}
-        <div className={`absolute top-14 shadow-2xl z-20 bg-white right-0 transition-transform duration-200 ${showDesktopMenuAccount ? 'translate-x-0' : 'translate-x-40'}`}>
-          <Link href="/profile" className='flex items-center gap-1 px-4 py-2'>
-            <img src="/icons/setting.svg" className='w-5' alt="Edit Profil" />
-            <p className='text-sm text-black'>Edit Profil</p>
-          </Link>
-          <Link href="/" className='flex items-center gap-1 px-4 py-2'>
-            <img src="/icons/logout.svg" className='w-5' alt="Logout" />
-            <p className='text-sm text-black'>Logout</p>
-          </Link>
-        </div>
+        {
+          session && (
+            <div className={`absolute top-14 shadow-2xl z-20 bg-white right-0 transition-transform duration-200 ${showDesktopMenuAccount ? 'translate-x-0' : 'translate-x-40'}`}>
+              <Link href="/profile" className='flex items-center gap-1 px-4 py-2'>
+                <img src="/icons/setting.svg" className='w-5' alt="Edit Profil" />
+                <p className='text-sm text-black'>Edit Profil</p>
+              </Link>
+              <div href="/" className='flex items-center cursor-pointer gap-1 px-4 py-2'
+                onClick={async () => {
+                  const result = await Swal.fire({
+                    title: "Keluar dari akun?",
+                    text: "Anda akan keluar dari sesi login.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Ya, logout",
+                    cancelButtonText: "Batal",
+                  });
+
+                  if (result.isConfirmed) {
+                    await signOut({ callbackUrl: "/" });
+                  }
+                }}>
+                <img src="/icons/logout.svg" className='w-5' alt="Logout" />
+                <p className='text-sm text-black'>Logout</p>
+              </div>
+            </div>
+          )
+        }
+
       </div>
 
       <img src="/icons/burgerIcon.svg" className='sm:hidden w-8 cursor-pointer' alt="menu icon" onClick={handleToggle(setShowMenu)} />
@@ -69,7 +116,8 @@ const Navbar = () => {
             {['Home', 'Jadwal', 'Pelatihan'][index]}
           </Link>
         ))}
-        <div className='font-semibold flex items-baseline gap-2 px-5 py-4 text-2xl cursor-pointer' onClick={()=>setIsOpen(true)}>
+
+        <div className='font-semibold flex items-baseline gap-2 px-5 py-4 text-2xl cursor-pointer' onClick={() => setIsOpen(true)}>
           <p>Login</p>
           <img src="/icons/arrow.svg" className={`w-4 ${showMobileMenuAccount ? 'rotate-180' : 'rotate-90'} duration-100`} alt="arrow icon" />
         </div>
@@ -80,12 +128,12 @@ const Navbar = () => {
             <p className='text-black'>Edit Profil</p>
           </Link>
           <Link href="/logout" className='flex items-center gap-1 px-6 py-3' onClick={handleToggle(setShowMenu)}>
-            <img src="/icons/logout.svg" alt="Logout"/>
+            <img src="/icons/logout.svg" alt="Logout" />
             <p className='text-black'>Logout</p>
           </Link>
         </div>
       </div>
-      <PopupLogin isOpen={isOpen} close={() => setIsOpen(false)}/>
+      <PopupLogin isOpen={isOpen} close={() => setIsOpen(false)} />
     </div>
   );
 };
