@@ -37,7 +37,7 @@ const PuskomPage = () => {
                 <div className='py-4 md:px-6 px-3'>
                     <h1 className='text-white font-robotoBold sm:text-2xl text-md mb-3'>Tahapan Dalam Pelatihan PUSKOM</h1>
                     <ol className='text-white md:pl-5 pl-4 pr-2 list-decimal selection:text-lg md:text-base text-sm'>
-                        <li>Pastikan anda sudah melakukan pembayaran sebesar Rp 440.000,-. melalui rekening BNI 678-456-6887 a.n. Universitas Islam Majapahit-Pusbas.</li>
+                        <li>Pastikan anda sudah melakukan pembayaran sebesar Rp 440.000,-. melalui rekening BNI 678-456-6990 a.n. Universitas Islam Majapahit - PUSKOM.</li>
                         <li>Simpan bukti pembayaran dalam bentuk gambar (difoto/screenshoot).</li>
                         <li>Klik tombol daftar dibawah, isi semua form dengan benar.</li>
                         <li>Setelah melakukan pendaftaran status anda akan muncul pada halaman pelatihan.</li>

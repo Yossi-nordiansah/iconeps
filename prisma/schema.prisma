@@ -97,18 +97,19 @@ model nilai {
 }
 
 model peserta {
-  id                  Int                   @id @default(autoincrement())
+  id                  Int                    @id @default(autoincrement())
   mahasiswa_id        Int
-  status              peserta_status?       @default(pendaftar)
-  bukti_pembayaran    String                @db.VarChar(255)
+  status              peserta_status?        @default(pendaftar)
+  bukti_pembayaran    String                 @db.VarChar(255)
   divisi              peserta_divisi
-  tanggal_pendaftaran DateTime              @default(now()) @db.Timestamp(0)
-  pilihan_kelas       peserta_pilihan_kelas
-  tanggal_pembayaran  String                @db.VarChar(15)
+  tanggal_pendaftaran DateTime               @default(now()) @db.Timestamp(0)
+  pilihan_kelas       peserta_pilihan_kelas?
+  tanggal_pembayaran  String                 @db.VarChar(15)
   nominal_pembayaran  Int
+  loket_pembayaran    String                 @db.VarChar(25)
   kelas               kelas[]
   nilai               nilai[]
-  mahasiswa           mahasiswa             @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
+  mahasiswa           mahasiswa              @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
   sertifikat          sertifikat[]
 
   @@index([mahasiswa_id], map: "pendaftaran_ibfk_1")

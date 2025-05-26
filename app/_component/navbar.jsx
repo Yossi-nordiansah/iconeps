@@ -20,7 +20,7 @@ const Navbar = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    if (session?.user?.name) {
+    if (session?.user?.name) { 
       setName(session.user.name.charAt(0));
     }
 
