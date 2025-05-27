@@ -68,7 +68,7 @@ const Jadwal = () => {
           <div>
             <h1 className='text-2xl font-robotoBold text-center mb-2'>Jadwal Puskom</h1>
             <div className='w-fit lg:mx-0 mx-auto'>
-              <h1 className='font-semibold bg-[#00ff00] px-2 py-1'>Kelas A (Weekend Online)</h1>
+              <h1 className='font-semibold bg-[#00ff00] px-2 py-1'>Kelas A</h1>
               {/* table */}
               <table className='table h-fit w-fit text-center lg:text-nowrap'>
                 <thead>
@@ -76,7 +76,6 @@ const Jadwal = () => {
                     <th className='text-center sm:text-base text-[10px]'>Hari</th>
                     <th className='text-center sm:text-base text-[10px] sm:px-7'>Jam Mulai</th>
                     <th className='text-center sm:text-base text-[10px] sm:px-7'>Jam Selesai</th>
-                    <th className='text-center sm:text-base text-[10px] sm:px-7'>Agenda</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -85,7 +84,6 @@ const Jadwal = () => {
                       <td className='text-center sm:text-base text-[10px]'>{item.hari}</td>
                       <td className='text-center sm:text-base text-[10px]'>{item.jamMulai}</td>
                       <td className='text-center sm:text-base text-[10px]'>{item.jamSelesai}</td>
-                      <td className='text-center sm:text-base text-[10px]'>{item.agenda}</td>
                     </tr>
                   ))}
                 </tbody>

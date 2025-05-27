@@ -30,6 +30,7 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
                 mahasiswa_id: session.user.id
             }));
         }
+       console.log("session.user.id:", JSON.stringify(session, null, 2));
     }, [session]);
 
     useEffect(() => {
@@ -56,7 +57,7 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData();
+        const formData = new FormData(); 
         Object.entries(form).forEach(([key, value]) => {
             formData.append(key, value)
         });
@@ -84,6 +85,7 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
     }
 
     if (!isOpen && !isOpenLogin) return null;
+    console.log(form)
 
     return (
         <div className="fixed inset-0 bg-black px-6 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-50">
@@ -120,9 +122,9 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
                                 value={form.pilihan_kelas || ""}
                             >
                                 <option value="" disabled>Pilih Kelas</option>
-                                <option value="weekday offline">Weekday Offline</option>
-                                <option value="weekday online">Weekday Online</option>
-                                <option value="weekend offline">Weekend Offline</option>
+                                <option value="weekday_offline">Weekday Offline</option>
+                                <option value="weekday_online">Weekday Online</option>
+                                <option value="weekend_offline">Weekend Offline</option>
                             </select>
                         </div>
                     }
