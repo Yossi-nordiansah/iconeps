@@ -41,20 +41,16 @@ export async function POST(req) {
     const buffer = Buffer.from(await bukti_pembayaran.arrayBuffer());
     await writeFile(filePath, buffer);
 
-    console.log(`/bukti-pembayaran/${safeFileName}`)
-
     try {
 
         const mahasiswa = await prisma.mahasiswa.findFirst({
             where: {
-                user_id : parseInt(mahasiswa_id)
+                user_id: parseInt(mahasiswa_id)
             }
         })
 
-        if(!mahasiswa){
-            console.log("mahasiswa kosong")
-        }else{
-            console.log(`id: ${mahasiswa.id}`)
+        if (mahasiswa) {
+            return NextResponse.json({ error: "Anda sudah mendaftar sebelumnya" }, { status: 400 });
         }
 
         const created = await prisma.peserta.create({

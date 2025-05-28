@@ -44,7 +44,11 @@ export const authOptions = {
         const user = await prisma.users.findFirst({
           where: { email: credentials.email },
           include: {
-            mahasiswa: true,
+            mahasiswa: {
+              include: {
+                peserta: true,
+              },
+            },
             admin: true,
           },
         });
@@ -55,6 +59,8 @@ export const authOptions = {
         if (!valid) throw new Error("INVALID_PASSWORD");
 
         let nama = "Unknown";
+        let statusPeserta = null;
+
         if (
           user.role === "super_admin" ||
           user.role === "admin_puskom" ||
@@ -63,12 +69,14 @@ export const authOptions = {
           nama = user.admin?.[0]?.nama || user.nama || "Unknown";
         } else {
           nama = user.mahasiswa?.nama || user.nama || "Unknown";
+          statusPeserta = user.mahasiswa?.peserta?.[0]?.status || null;
         }
 
         return {
           id: user.id,
           name: nama,
           role: user.role,
+          statusPeserta,
         };
       },
     }),
@@ -86,6 +94,7 @@ export const authOptions = {
           role: user.role,
           accessToken,
           refreshToken,
+          statusPeserta: user.statusPeserta,
           accessTokenExpires: Date.now() + 15 * 60 * 1000,
           user,
         };
@@ -99,7 +108,8 @@ export const authOptions = {
       session.user = {
         id: token.id,
         name: token.name,
-        role: token.role, // penting
+        role: token.role,
+        statusPeserta: token.statusPeserta,
       };
       session.accessToken = token.accessToken;
       session.error = token.error;

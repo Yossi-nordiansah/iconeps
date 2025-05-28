@@ -167,7 +167,7 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
                             className={`w-full py-3 rounded-lg outline-none border`}
                             required
                         >   {
-                                segment === "Pusbas" ? (
+                                segment[0] === "Pusbas" ? (
                                     <>
                                         <option value="" disabled>Pilih Loket</option>
                                         <option value="BNI">BNI</option>

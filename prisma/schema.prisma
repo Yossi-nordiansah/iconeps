@@ -27,7 +27,7 @@ model informasi_periode {
 
   @@index([id_admin], map: "id_admin")
 }
-
+ 
 model instruktur {
   id     Int               @id @default(autoincrement())
   nama   String            @db.VarChar(50)
