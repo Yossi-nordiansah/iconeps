@@ -1,13 +1,56 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormPendaftaran from '../_component/formPendaftaran';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import Link from 'next/link';
 
 const PuskomPage = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     const path = pathname.split('/').filter(Boolean);
+    const [divisi, setDivisi] = useState([]);
+    const [listed, setListed] = useState(false);
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        const getStatus = async () => {
+            if (!session?.user?.id) return;
+            try {
+                const res = await axios.post("/api/peserta/cek-status", {
+                    id: session?.user?.id,
+                });
+                const divisi = res.data.mahasiswa.peserta.map((item) => item.divisi);
+                setDivisi(divisi);
+            } catch (error) {
+                console.error("Failed to fetch status:", error);
+            }
+        };
+        getStatus();
+    }, [session]);
+
+    const refreshDivisi = async () => {
+        if (!session?.user?.id) return;
+        try {
+            const res = await axios.post("/api/peserta/cek-status", {
+                id: session.user.id,
+            });
+            const divisiBaru = res.data.mahasiswa.peserta.map((item) => item.divisi);
+            setDivisi(divisiBaru);
+        } catch (error) {
+            console.error("Failed to refresh status:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (divisi.includes("puskom")) {
+            setListed(true);
+        } else {
+            setListed(false);
+        }
+    }, [divisi]);
 
     function capitalizeFirstLetter(string) {
         if (string.length === 0) return '';
@@ -15,7 +58,6 @@ const PuskomPage = () => {
     }
 
     const segments = path.map(segment => capitalizeFirstLetter(segment));
-
 
     return (
         <div className='relative min-h-screen pt-24 pb-14 sm:px-10 px-4 bg-blue-950'>
@@ -50,11 +92,17 @@ const PuskomPage = () => {
                     </ol>
                     <div className='flex items-start mt-6 flex-wrap justify-center md:gap-5 gap-3 h-fit'>
                         <a href='https://wa.me/6285655230897' target="_blank" className='bg-wa flex cursor-pointer gap-2 items-center px-3 py-2 w-fit h-fit rounded-md font-radjdhani_bold text-white'>Kontak <img src="/icons/wa.svg" alt="" className='w-5' /></a>
-                        <button className='shadow-md bg-green px-3 py-2 rounded-md text-white font-radjdhani_bold text-nowrap' onClick={() => setIsOpen(true)}>Daftar Sekarang</button>
+                        {
+                            listed ? <Link href="/pelatihan" className='shadow-md bg-green px-3 py-2 rounded-md text-white font-radjdhani_bold text-nowrap'>
+                                Cek Status
+                            </Link>
+                                :
+                                <button className='shadow-md bg-green px-3 py-2 rounded-md text-white font-radjdhani_bold text-nowrap' onClick={() => setIsOpen(true)}>Daftar Sekarang</button>
+                        }
                     </div>
                 </div>
             </div>
-            <FormPendaftaran isOpen={isOpen} close={() => setIsOpen(false)} segment={segments}/>
+            <FormPendaftaran isOpen={isOpen} close={() => setIsOpen(false)} segment={segments} onSubmitSuccess={refreshDivisi} />
         </div>
     )
 }

@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { signIn } from "next-auth/react";
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { getSession } from "next-auth/react";
 import Swal from 'sweetalert2';
@@ -20,6 +20,7 @@ const PopupLogin = ({ isOpen, close }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const pathname = usePathname();
   const router = useRouter();
 
   if (!isOpen) return null;
@@ -42,7 +43,8 @@ const PopupLogin = ({ isOpen, close }) => {
         text: `Selamat datang, ${user?.name || "User"}!`,
       }).then(() => {
         close();
-        router.push(roleRedirectMap[user?.role] || "/dashboard");
+        const redirectPath = user?.role === "mahasiswa" ? pathname : roleRedirectMap[user?.role] || "/dashboard";
+        router.push(redirectPath);
       });
     } else {
       let errorMessage = "Login gagal!";

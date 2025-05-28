@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import PopupLogin from './login';
 import axios from 'axios';
 
-const FormPendaftaran = ({ isOpen, close, segment }) => {
+const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
 
     const popupRef = useRef(null);
     const [isOpenLogin, setIsOpenLogin] = useState(false);
@@ -30,7 +30,6 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
                 mahasiswa_id: session.user.id
             }));
         }
-       console.log("session.user.id:", JSON.stringify(session, null, 2));
     }, [session]);
 
     useEffect(() => {
@@ -41,7 +40,8 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
                 text: 'Silakan login terlebih dahulu sebelum mendaftar.',
                 confirmButtonText: 'Login',
             }).then(() => {
-                setIsOpenLogin(true)
+                setIsOpenLogin(true);
+                close();
             });
         }
     }, [session, isOpen]);
@@ -57,19 +57,20 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true)
-        const formData = new FormData(); 
+        const formData = new FormData();
         Object.entries(form).forEach(([key, value]) => {
             formData.append(key, value)
         });
 
         try {
-            await axios.post("/api/pendaftaran/create", formData);
+            await axios.post("/api/peserta/create", formData);
             Swal.fire({
                 title: 'Pendaftaran Berhasil!',
                 text: 'Data berhasil diupload.',
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
+            onSubmitSuccess();
             close()
         } catch (error) {
             Swal.fire({
@@ -85,7 +86,6 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
     }
 
     if (!isOpen && !isOpenLogin) return null;
-    console.log(form)
 
     return (
         <div className="fixed inset-0 bg-black px-6 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-50">
@@ -95,7 +95,7 @@ const FormPendaftaran = ({ isOpen, close, segment }) => {
             >
                 <h2 className="text-2xl sm:text-nowrap text-center font-robotoBold mb-4 text-blue-950">Form Pendaftaran {segment[0]}</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                             Bukti Pembayaran
                         </label>

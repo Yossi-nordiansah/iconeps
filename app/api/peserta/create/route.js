@@ -22,8 +22,6 @@ export async function POST(req) {
     const nominal_pembayaran = parseInt(formData.get("nominal_pembayaran"));
     const loket_pembayaran = sanitizeText(formData.get("loket_pembayaran"));
 
-    console.log(pilihan_kelas)
-
     if (!(bukti_pembayaran instanceof Blob)) return NextResponse.json({ error: "File tidak ditemukan" }, { status: 400 });
 
     if (isNaN(nominal_pembayaran)) {
@@ -48,10 +46,6 @@ export async function POST(req) {
                 user_id: parseInt(mahasiswa_id)
             }
         })
-
-        if (mahasiswa) {
-            return NextResponse.json({ error: "Anda sudah mendaftar sebelumnya" }, { status: 400 });
-        }
 
         const created = await prisma.peserta.create({
             data: {
