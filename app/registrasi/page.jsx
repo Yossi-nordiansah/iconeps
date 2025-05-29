@@ -77,20 +77,17 @@ const Registrasi = () => {
                 showConfirmButton: false,
                 timer: 2000,
             }).then(() => {
-                router.push("/login");
+                router.push("/?showLogin=true");
             });
         } catch (error) {
             console.error("Registrasi error:", error.response.data.message);
-
-            // Jika ada response dari server (validasi error)
             if (error.response && error.response.data && error.response.data.message) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Registrasi Gagal',
-                    text: error.response.data.message, // tampilkan pesan dari server
+                    text: error.response.data.message,
                 });
             } else {
-                // Error lain (network, dll)
                 Swal.fire({
                     icon: 'error',
                     title: 'Registrasi Gagal',

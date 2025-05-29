@@ -2,7 +2,7 @@ import React from 'react';
 
 const Keunggulan = () => {
   return (
-    <div className='flex flex-wrap items-center justify-center gap-4 px-2 py-5 lg:gap-10 bg-gradient-to-b from-secondary to-primary'>
+    <div className='flex flex-wrap -mt-2 relative z-30 items-center justify-center gap-4 px-2 py-5 lg:gap-10 bg-gradient-to-b from-secondary to-primary'>
         <div className=''>
             <img src="/icons/flexible.svg" className='block h-16 mx-auto' alt="" />
             <p className='w-48 text-sm font-semibold text-center text-white md:w-fit'>Waktu Fleksibel</p>

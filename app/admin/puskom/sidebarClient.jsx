@@ -21,7 +21,7 @@ export default function SidebarClient({ name }) {
                     { href: "/admin/puskom/cetak-laporan", label: "Cetak Laporan" },
                     { href: "/admin/puskom/instruktur", label: "Instruktur" },
                 ].map(({ href, label }) => {
-                    const isActive = pathname === href;
+                    const isActive = pathname.startsWith(href);
 
                     return (
                         <li key={href}>
