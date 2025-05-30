@@ -13,18 +13,24 @@ export default function MahasiswaAdmin() {
 
     const router = useRouter();
     const pathname = usePathname();
-    const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const [mahasiswa, setMahasiswa] = useState([])
+    const filteredMahasiswa = mahasiswa.filter(m =>
+        m.mahasiswa.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.mahasiswa.nim.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const [isOpen, setIsOpen] = useState(false);
     const [openDetailMahasiswa, setOpenDetailMahasiswa] = useState(false);
     const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4;
-    const totalPages = Math.ceil(mahasiswa.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredMahasiswa.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentMahasiswa = mahasiswa.slice(indexOfFirstItem, indexOfLastItem);
+    const currentMahasiswa = filteredMahasiswa.slice(indexOfFirstItem, indexOfLastItem);
     const [openEdit, setOpenEdit] = useState(false);
     const [editData, setEditData] = useState(null);
 
@@ -90,10 +96,15 @@ export default function MahasiswaAdmin() {
                             type="text"
                             placeholder="Cari Mahasiswa..."
                             className="outline-none px-3 py-1 w-64"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1); // reset ke halaman pertama saat search berubah
+                            }}
                         />
-                        <button className="bg-gray-300 p-2">
+                        <div className="bg-gray-300 p-2">
                             <img src="/icons/search.svg" alt="Search" className="w-5" />
-                        </button>
+                        </div>
                     </div>
                     <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => setIsOpen(true)}>
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
@@ -112,29 +123,40 @@ export default function MahasiswaAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {currentMahasiswa.map((mhs, idx) => (
-                        <tr key={idx}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-72 min-w-72 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa.nama}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.email}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-60 truncate overflow-hidden text-ellipsis">{mhs.password}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Trash2 size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                                    onClick={() => {
-                                        setEditData(mhs);
-                                        setOpenEdit(true);
-                                    }}>
-                                    <Pencil size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setOpenDetailMahasiswa(true); setSelectedMahasiswa(mhs); }}>
-                                    <Eye size={16} />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {
+                        filteredMahasiswa.length === 0 ? (
+                            <tr className="">
+                                <td colSpan={5} className="text-center min-w-[1040px] py-4 text-gray-500">
+                                    Hasil tidak ditemukan
+                                </td>
+                            </tr>
+                        ) :
+                            (
+                                currentMahasiswa.map((mhs, idx) => (
+                                    <tr key={idx}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-72 min-w-72 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa.nama}</td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.email}</td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-60 truncate overflow-hidden text-ellipsis">{mhs.password}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                                <Trash2 size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                                onClick={() => {
+                                                    setEditData(mhs);
+                                                    setOpenEdit(true);
+                                                }}>
+                                                <Pencil size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setOpenDetailMahasiswa(true); setSelectedMahasiswa(mhs); }}>
+                                                <Eye size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )
+                    }
                 </tbody>
             </table>
             <div className="flex justify-end items-center gap-2 mt-4">
