@@ -6,6 +6,8 @@ import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DetailMahasiswa from "@/app/_component/detailMahasiswa";
+import EditMahasiswa from "@/app/_component/admin/EditMahasiswa";
+import Swal from "sweetalert2";
 
 export default function MahasiswaAdmin() {
 
@@ -23,18 +25,18 @@ export default function MahasiswaAdmin() {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentMahasiswa = mahasiswa.slice(indexOfFirstItem, indexOfLastItem);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [editData, setEditData] = useState(null);
 
+    const getData = async () => {
+        try {
+            const response = await axios.get("/api/mahasiswa")
+            setMahasiswa(response.data);
+        } catch (error) {
+            console.log(error)
+        }
+    };
     useEffect(() => {
-        const getData = async () => {
-            try {
-                const response = await axios.get("/api/mahasiswa")
-                console.log(response)
-                setMahasiswa(response.data);
-                console.log(mahasiswa)
-            } catch (error) {
-                console.log(error)
-            }
-        };
         getData();
     }, []);
 
@@ -44,6 +46,29 @@ export default function MahasiswaAdmin() {
 
     const prevPage = () => {
         if (currentPage > 1) setCurrentPage(prev => prev - 1);
+    };
+
+    const handleSaveEdit = async (updatedData) => {
+        try {
+            // Contoh update lokal (atau bisa kirim ke API)
+            setMahasiswa(prev =>
+                prev.map(m => m.mahasiswa.id === updatedData.id
+                    ? { ...m, mahasiswa: { ...m.mahasiswa, nama: updatedData.nama, nim: updatedData.nim }, email: updatedData.email, password: updatedData.password }
+                    : m
+                )
+            );
+            const data = await axios.put(`/api/mahasiswa/${updatedData.id}`, updatedData);
+            Swal.fire({
+                icon: 'success',
+                title: 'Data berhasil diperbarui!',
+                showConfirmButton: false,
+                timer: 2000,
+            });
+            getData();
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -97,7 +122,11 @@ export default function MahasiswaAdmin() {
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Trash2 size={16} />
                                 </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                    onClick={() => {
+                                        setEditData(mhs);
+                                        setOpenEdit(true);
+                                    }}>
                                     <Pencil size={16} />
                                 </button>
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setOpenDetailMahasiswa(true); setSelectedMahasiswa(mhs); }}>
@@ -129,6 +158,7 @@ export default function MahasiswaAdmin() {
             </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
             <DetailMahasiswa isOpen={openDetailMahasiswa} close={() => setOpenDetailMahasiswa(false)} data={selectedMahasiswa} />
+            <EditMahasiswa isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
         </div>
     );
 }

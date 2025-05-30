@@ -24,7 +24,7 @@ const JadwalForm = ({ isOpen, close }) => {
   }
 
   return (
-    <div className='inset-0 flex justify-center items-center bg-black/50 absolute z-50 h-screen'>
+    <div className='inset-0 flex justify-center items-center bg-black/50 fixed z-50 h-screen'>
       <form className='p-4 bg-white rounded-xl'>
         <h1 className='text-2xl font-robotoBold text-center mb-4'>Buat Jadwal</h1>
 
