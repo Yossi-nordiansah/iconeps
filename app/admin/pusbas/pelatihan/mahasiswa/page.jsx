@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import DetailMahasiswa from "@/app/_component/detailMahasiswa";
 
 export default function MahasiswaAdmin() {
 
@@ -12,6 +13,8 @@ export default function MahasiswaAdmin() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [mahasiswa, setMahasiswa] = useState([])
+    const [openDetailMahasiswa, setOpenDetailMahasiswa] = useState(false);
+    const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
     const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +48,6 @@ export default function MahasiswaAdmin() {
 
     return (
         <div className="p-6">
-            {/* Header dan Pencarian */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/admin/pusbas/pelatihan/')}>
@@ -74,8 +76,6 @@ export default function MahasiswaAdmin() {
                     </button>
                 </div>
             </div>
-
-            {/* Tabel */}
             <table className="max-w-11/12 divide-y max-h-20 overflow-auto divide-gray-200">
                 <thead className="bg-gray-200">
                     <tr>
@@ -100,7 +100,7 @@ export default function MahasiswaAdmin() {
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Pencil size={16} />
                                 </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setOpenDetailMahasiswa(true); setSelectedMahasiswa(mhs); }}>
                                     <Eye size={16} />
                                 </button>
                             </td>
@@ -128,6 +128,7 @@ export default function MahasiswaAdmin() {
                 </button>
             </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
+            <DetailMahasiswa isOpen={openDetailMahasiswa} close={() => setOpenDetailMahasiswa(false)} data={selectedMahasiswa} />
         </div>
     );
 }
