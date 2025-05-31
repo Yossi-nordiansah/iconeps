@@ -112,7 +112,10 @@ export default function MahasiswaAdmin() {
                 });
             }
         }
-    }
+    };
+
+    const allEmails = mahasiswa.map(m => m.email);
+    console.log(allEmails);
 
     return (
         <div className="p-6">
@@ -215,8 +218,8 @@ export default function MahasiswaAdmin() {
                     Next
                 </button>
             </div>
-            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
-            <DetailMahasiswa isOpen={openDetailMahasiswa} close={() => setOpenDetailMahasiswa(false)} data={selectedMahasiswa} />
+            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} recipients={allEmails}/>
+            <DetailMahasiswa isOpen={openDetailMahasiswa} close={() => setOpenDetailMahasiswa(false)} data={selectedMahasiswa}/>
             <EditMahasiswa isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
         </div>
     );

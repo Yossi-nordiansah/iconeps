@@ -45,8 +45,6 @@ export async function PUT(req) {
 export async function DELETE(req, { params }) {
     const param = await params;
     const id = parseInt(param.id);
-    // console.log(id)
-    // const id = params.id?.[0]; // menangani [...id] catch-all route
 
     if (!id) {
         return NextResponse.json({ message: "ID tidak ditemukan di URL" }, { status: 400 });
