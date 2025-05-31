@@ -39,7 +39,26 @@ export async function PUT(req) {
         return NextResponse.json({ message: "data berhasil diperbaharui" }, { status: 200 })
     } catch (error) {
         return NextResponse.json(error, { status: 500 })
+    };
+}
+
+export async function DELETE(req, { params }) {
+    const param = await params;
+    const id = parseInt(param.id);
+    // console.log(id)
+    // const id = params.id?.[0]; // menangani [...id] catch-all route
+
+    if (!id) {
+        return NextResponse.json({ message: "ID tidak ditemukan di URL" }, { status: 400 });
     }
 
+    try {
+        await prisma.users.delete({
+            where: { id }
+        });
 
+        return NextResponse.json({ message: "Data berhasil dihapus" }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 }

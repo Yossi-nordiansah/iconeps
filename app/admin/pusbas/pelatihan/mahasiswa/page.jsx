@@ -56,10 +56,14 @@ export default function MahasiswaAdmin() {
 
     const handleSaveEdit = async (updatedData) => {
         try {
-            // Contoh update lokal (atau bisa kirim ke API)
             setMahasiswa(prev =>
                 prev.map(m => m.mahasiswa.id === updatedData.id
-                    ? { ...m, mahasiswa: { ...m.mahasiswa, nama: updatedData.nama, nim: updatedData.nim }, email: updatedData.email, password: updatedData.password }
+                    ? {
+                        ...m,
+                        mahasiswa: { ...m.mahasiswa, nama: updatedData.nama, nim: updatedData.nim },
+                        email: updatedData.email,
+                        ...(updatedData.password ? { password: updatedData.password } : {})
+                    }
                     : m
                 )
             );
@@ -76,6 +80,39 @@ export default function MahasiswaAdmin() {
             console.error(error);
         }
     };
+
+    const handleDelete = async (id) => {
+        const confirm = await Swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Data Mahasiswa akan dihapus permanen",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                await axios.delete(`/api/mahasiswa/${id}`);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Berhasil dihapus!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                getData();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal menghapus data!',
+                    text: 'Terjadi kesalahan saat menghapus data.',
+                });
+            }
+        }
+    }
 
     return (
         <div className="p-6">
@@ -99,7 +136,7 @@ export default function MahasiswaAdmin() {
                             value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);
-                                setCurrentPage(1); // reset ke halaman pertama saat search berubah
+                                setCurrentPage(1);
                             }}
                         />
                         <div className="bg-gray-300 p-2">
@@ -140,7 +177,7 @@ export default function MahasiswaAdmin() {
                                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-60 truncate overflow-hidden text-ellipsis">{mhs.password}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                                <Trash2 size={16} />
+                                                <Trash2 size={16} onClick={() => handleDelete(mhs.id)} />
                                             </button>
                                             <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
                                                 onClick={() => {
