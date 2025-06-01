@@ -13,9 +13,34 @@ export default function MahasiswaAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [dataPendaftar, setDataPendaftar] = useState([]);
+    const [allSemesterChecked, setAllSemesterChecked] = useState(true);
+    const [selectedFakultas, setSelectedFakultas] = useState('');
+    const [selectedProdi, setSelectedProdi] = useState('');
+    const [selectedKelas, setSelectedKelas] = useState('');
+    const [sortOrder, setSortOrder] = useState('desc');
+    const filteredPendaftar = dataPendaftar
+        .filter(m =>
+            m.nama.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedFakultas === '' || m.fakultas === selectedFakultas) &&
+            (selectedProdi === '' || m.prodi === selectedProdi) &&
+            (selectedKelas === '' || m.peserta[0]?.pilihan_kelas === selectedKelas) &&
+            (allSemesterChecked || selectedSemester.includes(m.semester))
+        )
+        .sort((a, b) => {
+            const dateA = new Date(a.peserta[0]?.tanggal_pendaftaran);
+            const dateB = new Date(b.peserta[0]?.tanggal_pendaftaran);
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });;
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4;
+    const totalPages = Math.ceil(filteredPendaftar.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
+    const currentPendaftar = filteredPendaftar.slice(indexOfFirstItem, indexOfLastItem);
     const [statusPendaftar, setStatusPendaftar] = useState(false);
     const [messageEmpty, setmessageErrorEmpty] = useState("");
     const divisi = segments[segments.length - 3];
@@ -25,7 +50,9 @@ export default function MahasiswaAdmin() {
             const response = await axios.post("/api/peserta", {
                 divisi: divisi
             });
-            setDataPendaftar(response.data)
+            setDataPendaftar(response.data);
+            console.log(response.data);
+            setStatusPendaftar(response.data.length === 0);
         } catch (error) {
             setStatusPendaftar(true);
             setmessageErrorEmpty(`Belum ada pendaftar PUSBAS`)
@@ -38,12 +65,25 @@ export default function MahasiswaAdmin() {
     }, [])
 
     const toggleSemester = (sem) => {
+        setAllSemesterChecked(false);
         setSelectedSemester((prev) =>
             prev.includes(sem)
                 ? prev.filter((s) => s !== sem)
                 : [...prev, sem]
         );
     };
+
+    const nextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) setCurrentPage(prev => prev - 1);
+    };
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, selectedFakultas, selectedProdi, selectedSemester, selectedKelas, sortOrder]);
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -55,7 +95,7 @@ export default function MahasiswaAdmin() {
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <PencilSquareIcon className="h-5" />
                         <span className="text-base font-semibold">Pendaftar</span>
-                        <span className="text-base font-semibold">40</span>
+                        <span className="text-base font-semibold">{filteredPendaftar.length}</span>
                     </div>
                     <div className="p-2 w-fit bg-gray-300 rounded cursor-pointer">
                         <CheckIcon className="w-5 h-5" />
@@ -67,16 +107,24 @@ export default function MahasiswaAdmin() {
                             type="text"
                             placeholder="Cari Pendaftar..."
                             className="outline-none px-3 py-1 w-64"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1);
+                            }}
                         />
                         <button className="bg-gray-300 p-2">
                             <img src="/icons/search.svg" alt="Search" className="w-5" />
                         </button>
                     </div>
                     <div className="px-2 py-2 border bg-gray-300 rounded">
-                        <select className="bg-transparent outline-none">
-                            <option value="" disabled>Timeline</option>
-                            <option value="">Terbaru</option>
-                            <option value="">Terlama</option>
+                        <select
+                            className="bg-transparent outline-none"
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                        >
+                            <option value="desc">Terbaru</option>
+                            <option value="asc">Terlama</option>
                         </select>
                     </div>
                     <button onClick={() => setShowFilter(!showFilter)} className={`${showFilter ? 'bg-red-500' : 'bg-gray-300'} px-4 py-2 rounded`}>
@@ -95,41 +143,69 @@ export default function MahasiswaAdmin() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block font-semibold mb-1">Fakultas</label>
-                            <select className="w-full border px-3 py-2 rounded">
+                            <select className="w-full border px-3 py-2 rounded" value={selectedFakultas} onChange={(e) => setSelectedFakultas(e.target.value)}>
                                 <option value="">Pilih Fakultas</option>
-                                <option value="FT">Fakultas Teknik</option>
-                                <option value="FE">Fakultas Ekonomi</option>
+                                <option value="Fakultas Teknik">Fakultas Teknik</option>
+                                <option value="Fakultas Ekonomi">Fakultas Ekonomi</option>
+                                <option value="Fakultas Ilmu Sosial Dan Ilmu Politik">Fakultas Ilmu Sosial Dan Ilmu Politik</option>
+                                <option value="Fakultas Agama Islam">Fakultas Agama Islam</option>
+                                <option value="Fakultas Keguruan dan Ilmu Pendidikan">Fakultas Keguruan dan Ilmu Pendidikan</option>
                             </select>
                         </div>
                         <div>
                             <label className="block font-semibold mb-1">Prodi</label>
-                            <select className="w-full border px-3 py-2 rounded">
+                            <select className="w-full border px-3 py-2 rounded" value={selectedProdi} onChange={(e) => setSelectedProdi(e.target.value)}>
                                 <option value="">Pilih Prodi</option>
-                                <option value="TI">Teknik Informatika</option>
-                                <option value="SI">Sistem Informasi</option>
+                                <option value="Informatika">Informatika</option>
+                                <option value="Teknik Sipil">Teknik Sipil</option>
+                                <option value="Teknik Mesin">Teknik Mesin</option>
+                                <option value="Teknik Industri">Teknik Industri</option>
+                                <option value="Manajemen">Manajemen</option>
+                                <option value="Akuntansi">Akuntansi</option>
+                                <option value="Ilmu Pemerintahan">Ilmu Pemerintahan</option>
+                                <option value="Ilmu Komunikasi">Ilmu Komunikasi</option>
+                                <option value="Pendidikan Agama Islam">Pendidikan Agama Islam</option>
+                                <option value="Pendidikan Bahasa Indonesia">Pendidikan Bahasa Indonesia</option>
+                                <option value="Pendidikan Bahasa Inggris">Pendidikan Bahasa Inggris</option>
+                                <option value="Pendidikan Matematika">Pendidikan Matematika</option>
+                                <option value="Pendidikan Kepelatihan Olahraga">Pendidikan Kepelatihan Olahraga</option>
                             </select>
                         </div>
                         <div>
                             <label className="block font-semibold mb-1">Pilihan Kelas</label>
-                            <select className="w-full border px-3 py-2 rounded">
+                            <select className="w-full border px-3 py-2 rounded" value={selectedKelas} onChange={(e) => setSelectedKelas(e.target.value)}>
                                 <option value="">Pilih Kelas</option>
-                                <option value="pagi">Pagi</option>
-                                <option value="malam">Malam</option>
-                                <option value="weekend">Weekend</option>
+                                <option value="weekday_offline">weekday_offline</option>
+                                <option value="weekday_online">weekday_online</option>
+                                <option value="weekend_offline">weekend_offline</option>
                             </select>
                         </div>
                         <div>
                             <label className="block font-semibold mb-1">Semester</label>
                             <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto border px-2 py-2 rounded">
+                                <label className="flex items-center space-x-2 col-span-4">
+                                    <input
+                                        type="checkbox"
+                                        checked={allSemesterChecked}
+                                        onChange={(e) => {
+                                            setAllSemesterChecked(e.target.checked);
+                                            if (e.target.checked) {
+                                                setSelectedSemester([]); // Reset ke semua semester
+                                            }
+                                        }}
+                                        className="accent-blue-600"
+                                    />
+                                    <span>Semua Semester</span>
+                                </label>
                                 {Array.from({ length: 14 }, (_, i) => i + 1).map((sem) => (
                                     <label key={sem} className="flex items-center space-x-2">
                                         <input
                                             type="checkbox"
-                                            checked={selectedSemester.includes(sem)}
-                                            onChange={() => toggleSemester(sem)}
+                                            checked={selectedSemester.includes(sem.toString())}
+                                            onChange={() => toggleSemester(sem.toString())}
                                             className="accent-blue-600"
                                         />
-                                        <span>{sem}</span>
+                                        <span>{sem.toString()}</span>
                                     </label>
                                 ))}
                             </div>
@@ -157,10 +233,10 @@ export default function MahasiswaAdmin() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {dataPendaftar.map((mhs, idx) => (
+                            {currentPendaftar.map((mhs, idx) => (
                                 <tr key={idx}>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nama}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.fakultas}</td>
+                                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 max-w-32 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nama}</td>
+                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-32 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.fakultas.substring(9)}</td>
                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.semester}</td>
                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">
@@ -195,7 +271,27 @@ export default function MahasiswaAdmin() {
                             ))}
                         </tbody>
                     </table>
+
             }
+            <div className="flex justify-end items-center gap-2 mt-4">
+                <button
+                    onClick={prevPage}
+                    disabled={currentPage === 1}
+                    className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
+                >
+                    Previous
+                </button>
+                <span className="text-sm font-medium">
+                    Page {currentPage} of {totalPages}
+                </span>
+                <button
+                    onClick={nextPage}
+                    disabled={currentPage === totalPages}
+                    className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
         </div>
     );

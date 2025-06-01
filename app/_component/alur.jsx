@@ -57,7 +57,7 @@ const Alur = () => {
                             <h1 className="text-xl font-montserrat_extrabold text-blue-950">Masa Pelatihan</h1>
                         </div>
                         <ol className="pb-1 pl-12 mt-1 ml-5 space-y-2 text-sm list-decimal list-inside border-l-2 border-gray-400 text-blue-950 font-montserrat_extrabold">
-                            <li>Jadwal pelatihan akan disesuaikan dengan kelas yang anda ikuti (weekend/weekday)</li>
+                            <li>Jadwal pelatihan akan disesuaikan dengan kelas yang anda ikuti</li>
                             <li>Jika anda lulus, seritifkat bisa didownload melalui website ini</li>
                             <li>Jika tidak lulus, maka anda masih bisa mengikuti remidi dengan ketentuan yang berlaku</li>
                         </ol>

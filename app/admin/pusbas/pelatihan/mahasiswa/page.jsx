@@ -21,7 +21,7 @@ export default function MahasiswaAdmin() {
         m.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const [isOpen, setIsOpen] = useState(false);
-    const [openDetailMahasiswa, setOpenDetailMahasiswa] = useState(false);
+    const [openDetailMahasiswa, setOpenDetailMahasiswa] = useState(false); 
     const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];

@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+52104110027	mahasiswa7	yossi.nordiansah13@gmail.com	$2b$10$NQcsI3OgstAGMVkoqfvvaemAqUfHma9I8DZ4Lot254SfUpeYQ0ITe	
+52104110028	mahasiswa8	evamaulindia@gmail.com	$2b$10$ieg7RWgIO4ROxPWMx7Sb/uAWVz9KSFaXlTaKd2Gcl9EX4bJdEiYa2	
+52104110039	Silvi Amanda	silviavida@gmail.com	$2b$10$bOqeEZftdL3y.FBmjUEDW
+52104110023	Yossi Nordiansah	yossi.nordiansah20@gmail.com	$2b$10$la3kn3Moe.4QDOFsI9i6Ke2rIrMCIGWbVfM4C03zCzt7usjBY8G0y	
+52104110022	Mahasiswa 2	bayuborneo24@gmail.com	$2b$10$NrZWbSTEwvQ9tBFYSY5DROsBBmSToxR3Nlk0YDSnZhE0r1.GO9w6m	
+52104110024	mahasiswa 3	priasatya21@gmail.com	$2b$10$0Kg/f37QI69KdFJ6/Xl01.lvThz0bx26IvNUOsEoUS.6WLVcu.8Ka	
+52104110026	mahasiswa6	yossi.nordiansah99@gmail.com	$2b$10$LtDDnOb5zInPNfZm4THU
