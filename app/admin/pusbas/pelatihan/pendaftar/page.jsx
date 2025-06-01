@@ -6,6 +6,7 @@ import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 
 export default function MahasiswaAdmin() {
     const router = useRouter();
@@ -19,6 +20,8 @@ export default function MahasiswaAdmin() {
     const [selectedFakultas, setSelectedFakultas] = useState('');
     const [selectedProdi, setSelectedProdi] = useState('');
     const [selectedKelas, setSelectedKelas] = useState('');
+    const [openDetailPendaftar, setOpenDetailPendaftar] = useState(false);
+    const [detailPendaftar, setDetailPendaftar] = useState([]);
     const [sortOrder, setSortOrder] = useState('desc');
     const filteredPendaftar = dataPendaftar
         .filter(m =>
@@ -144,7 +147,7 @@ export default function MahasiswaAdmin() {
                         <div>
                             <label className="block font-semibold mb-1">Fakultas</label>
                             <select className="w-full border px-3 py-2 rounded" value={selectedFakultas} onChange={(e) => setSelectedFakultas(e.target.value)}>
-                                <option value="">Pilih Fakultas</option>
+                                <option value="">Semua Fakultas</option>
                                 <option value="Fakultas Teknik">Fakultas Teknik</option>
                                 <option value="Fakultas Ekonomi">Fakultas Ekonomi</option>
                                 <option value="Fakultas Ilmu Sosial Dan Ilmu Politik">Fakultas Ilmu Sosial Dan Ilmu Politik</option>
@@ -155,7 +158,7 @@ export default function MahasiswaAdmin() {
                         <div>
                             <label className="block font-semibold mb-1">Prodi</label>
                             <select className="w-full border px-3 py-2 rounded" value={selectedProdi} onChange={(e) => setSelectedProdi(e.target.value)}>
-                                <option value="">Pilih Prodi</option>
+                                <option value="">Semua Prodi</option>
                                 <option value="Informatika">Informatika</option>
                                 <option value="Teknik Sipil">Teknik Sipil</option>
                                 <option value="Teknik Mesin">Teknik Mesin</option>
@@ -174,7 +177,7 @@ export default function MahasiswaAdmin() {
                         <div>
                             <label className="block font-semibold mb-1">Pilihan Kelas</label>
                             <select className="w-full border px-3 py-2 rounded" value={selectedKelas} onChange={(e) => setSelectedKelas(e.target.value)}>
-                                <option value="">Pilih Kelas</option>
+                                <option value="">Semua Kelas</option>
                                 <option value="weekday_offline">weekday_offline</option>
                                 <option value="weekday_online">weekday_online</option>
                                 <option value="weekend_offline">weekend_offline</option>
@@ -254,7 +257,10 @@ export default function MahasiswaAdmin() {
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                             <Pencil size={16} />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={()=>{
+                                            setOpenDetailPendaftar(true);
+                                            setDetailPendaftar(mhs);
+                                        }}>
                                             <Eye size={16} />
                                         </button>
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
@@ -293,6 +299,7 @@ export default function MahasiswaAdmin() {
                 </button>
             </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
+            <DetailPendaftar isOpen={openDetailPendaftar} close={()=>setOpenDetailPendaftar(false)} data={detailPendaftar}/>
         </div>
     );
 }
