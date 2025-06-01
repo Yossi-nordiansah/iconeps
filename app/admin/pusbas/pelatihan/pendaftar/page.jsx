@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
+import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 
 export default function MahasiswaAdmin() {
     const router = useRouter();
@@ -22,6 +23,7 @@ export default function MahasiswaAdmin() {
     const [selectedKelas, setSelectedKelas] = useState('');
     const [openDetailPendaftar, setOpenDetailPendaftar] = useState(false);
     const [detailPendaftar, setDetailPendaftar] = useState([]);
+    const [openDetailPembayaran, setOpenDetailPembayaran] = useState(false);
     const [sortOrder, setSortOrder] = useState('desc');
     const filteredPendaftar = dataPendaftar
         .filter(m =>
@@ -266,7 +268,10 @@ export default function MahasiswaAdmin() {
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                             <CheckIcon className="w-5 h-5" />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={()=>{
+                                            setOpenDetailPembayaran(true);
+                                            setDetailPendaftar(mhs);
+                                        }}>
                                             <DocumentCurrencyDollarIcon className="w-5 h-5" />
                                         </button>
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
@@ -300,6 +305,7 @@ export default function MahasiswaAdmin() {
             </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
             <DetailPendaftar isOpen={openDetailPendaftar} close={()=>setOpenDetailPendaftar(false)} data={detailPendaftar}/>
+            <BuktiPembayaran isOpen={openDetailPembayaran} close={()=>setOpenDetailPembayaran(false)} data={detailPendaftar}/>
         </div>
     );
 }

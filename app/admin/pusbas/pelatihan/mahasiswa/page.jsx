@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import DetailMahasiswa from "@/app/_component/detailMahasiswa";
+import DetailMahasiswa from "@/app/_component/admin/detailMahasiswa";
 import EditMahasiswa from "@/app/_component/admin/EditMahasiswa";
 import Swal from "sweetalert2";
 
