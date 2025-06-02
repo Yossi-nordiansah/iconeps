@@ -59,7 +59,6 @@ export default function MahasiswaAdmin() {
                 divisi: divisi
             });
             setDataPendaftar(response.data);
-            console.log(response.data);
             setStatusPendaftar(response.data.length === 0);
         } catch (error) {
             setStatusPendaftar(true);
@@ -94,7 +93,6 @@ export default function MahasiswaAdmin() {
     }, [searchTerm, selectedFakultas, selectedProdi, selectedSemester, selectedKelas, sortOrder]);
 
     const handleSaveEdit = async (updatedData) => {
-        console.log(updatedData)
         setDataPendaftar(prev =>
             prev.map(p => p.id === updatedData.id
                 ? {
@@ -110,7 +108,7 @@ export default function MahasiswaAdmin() {
             )
         );
         try {
-            await axios.put(`/api/peserta/${updatedData.id}`, {updatedData, divisi});
+            await axios.put(`/api/peserta/${updatedData.id}`, { updatedData, divisi });
             Swal.fire({
                 icon: 'success',
                 title: 'Data berhasil diperbarui!',
@@ -125,6 +123,38 @@ export default function MahasiswaAdmin() {
                 title: 'Gagal memperbarui data!',
                 text: 'Terjadi kesalahan pada Server',
             });
+        }
+    };
+
+    const handleDelete = async (id) => {
+        const confirm = await Swal.fire({
+            title: 'Apa anda yakin?',
+            text: "Data Pendaftar akan dihapus permanen",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        });
+        if (confirm.isConfirmed) {
+            try {
+                await axios.delete(`/api/peserta/${id}`);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Berhasil dihapus!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                getDataPendaftar();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal menghapus data!',
+                    text: 'Terjadi kesalahan saat menghapus data.',
+                });
+            }
         }
     }
 
@@ -291,7 +321,7 @@ export default function MahasiswaAdmin() {
                                     </td>
                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.peserta[0].pilihan_kelas}</td>
                                     <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(mhs.peserta[0].id)}>
                                             <Trash2 size={16} />
                                         </button>
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
