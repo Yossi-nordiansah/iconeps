@@ -21,7 +21,7 @@ export default function MahasiswaAdmin() {
         m.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const [isOpen, setIsOpen] = useState(false);
-    const [openDetailMahasiswa, setOpenDetailMahasiswa] = useState(false); 
+    const [openDetailMahasiswa, setOpenDetailMahasiswa] = useState(false);
     const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
@@ -75,9 +75,13 @@ export default function MahasiswaAdmin() {
                 timer: 2000,
             });
             getData();
-            console.log(data);
         } catch (error) {
             console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal memperbarui data!',
+                text: 'Terjadi kesalahan saat menghapus data.',
+            });
         }
     };
 
@@ -115,7 +119,6 @@ export default function MahasiswaAdmin() {
     };
 
     const allEmails = mahasiswa.map(m => m.email);
-    console.log(allEmails);
 
     return (
         <div className="p-6">
@@ -218,8 +221,8 @@ export default function MahasiswaAdmin() {
                     Next
                 </button>
             </div>
-            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} recipients={allEmails}/>
-            <DetailMahasiswa isOpen={openDetailMahasiswa} close={() => setOpenDetailMahasiswa(false)} data={selectedMahasiswa}/>
+            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} recipients={allEmails} />
+            <DetailMahasiswa isOpen={openDetailMahasiswa} close={() => setOpenDetailMahasiswa(false)} data={selectedMahasiswa} />
             <EditMahasiswa isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
         </div>
     );

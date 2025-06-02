@@ -171,7 +171,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
                                     <>
                                         <option value="" disabled>Pilih Loket</option>
                                         <option value="BNI">BNI</option>
-                                        <option value="NMT">BMT</option>
+                                        <option value="BMT">BMT</option>
                                         <option value="lainnya">Lainnya..</option>
                                     </>
                                 ) : (

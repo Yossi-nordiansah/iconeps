@@ -8,6 +8,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
+import EditPendaftar from "@/app/_component/admin/editPendaftar";
 
 export default function MahasiswaAdmin() {
     const router = useRouter();
@@ -21,6 +22,8 @@ export default function MahasiswaAdmin() {
     const [selectedFakultas, setSelectedFakultas] = useState('');
     const [selectedProdi, setSelectedProdi] = useState('');
     const [selectedKelas, setSelectedKelas] = useState('');
+    const [openEdit, setOpenEdit] = useState(false);
+    const [editData, setEditData] = useState();
     const [openDetailPendaftar, setOpenDetailPendaftar] = useState(false);
     const [detailPendaftar, setDetailPendaftar] = useState([]);
     const [openDetailPembayaran, setOpenDetailPembayaran] = useState(false);
@@ -89,6 +92,41 @@ export default function MahasiswaAdmin() {
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, selectedFakultas, selectedProdi, selectedSemester, selectedKelas, sortOrder]);
+
+    const handleSaveEdit = async (updatedData) => {
+        console.log(updatedData)
+        setDataPendaftar(prev =>
+            prev.map(p => p.id === updatedData.id
+                ? {
+                    ...p,
+                    peserta: {
+                        ...p.peserta,
+                        pilihan_kelas: updatedData.pilihan_kelas,
+                        nominal_pembayaran: updatedData.nominal_pembayaran,
+                        loket_pembayaran: updatedData.loket_pembayaran
+                    },
+                }
+                : p
+            )
+        );
+        try {
+            await axios.put(`/api/peserta/${updatedData.id}`, {updatedData, divisi});
+            Swal.fire({
+                icon: 'success',
+                title: 'Data berhasil diperbarui!',
+                showConfirmButton: false,
+                timer: 2000,
+            });
+            getDataPendaftar();
+        } catch (error) {
+            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal memperbarui data!',
+                text: 'Terjadi kesalahan pada Server',
+            });
+        }
+    }
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -195,7 +233,7 @@ export default function MahasiswaAdmin() {
                                         onChange={(e) => {
                                             setAllSemesterChecked(e.target.checked);
                                             if (e.target.checked) {
-                                                setSelectedSemester([]); // Reset ke semua semester
+                                                setSelectedSemester([]);
                                             }
                                         }}
                                         className="accent-blue-600"
@@ -256,10 +294,15 @@ export default function MahasiswaAdmin() {
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                             <Trash2 size={16} />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                            onClick={() => {
+                                                setEditData(mhs);
+                                                setOpenEdit(true);
+                                            }}
+                                        >
                                             <Pencil size={16} />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={()=>{
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
                                             setOpenDetailPendaftar(true);
                                             setDetailPendaftar(mhs);
                                         }}>
@@ -268,7 +311,7 @@ export default function MahasiswaAdmin() {
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                             <CheckIcon className="w-5 h-5" />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={()=>{
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
                                             setOpenDetailPembayaran(true);
                                             setDetailPendaftar(mhs);
                                         }}>
@@ -304,8 +347,9 @@ export default function MahasiswaAdmin() {
                 </button>
             </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
-            <DetailPendaftar isOpen={openDetailPendaftar} close={()=>setOpenDetailPendaftar(false)} data={detailPendaftar}/>
-            <BuktiPembayaran isOpen={openDetailPembayaran} close={()=>setOpenDetailPembayaran(false)} data={detailPendaftar}/>
+            <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
+            <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
+            <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
         </div>
     );
 }

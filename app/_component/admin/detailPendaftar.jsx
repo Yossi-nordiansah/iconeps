@@ -8,9 +8,11 @@ const DetailPendaftar = ({ isOpen, close, data }) => {
             <div className="bg-white p-5 rounded shadow-md w-fit">
                 <h2 className="text-xl font-bold mb-3">Detail Mahasiswa</h2>
                 <p><strong>Nama:</strong> {data.nama}</p>
+                <p><strong>NIM:</strong> {data.nim}</p>
                 <p><strong>Fakultas:</strong> {data.fakultas}</p>
                 <p><strong>Prodi:</strong> {data.prodi}</p>
                 <p><strong>Semester:</strong> {data.semester}</p>
+                <p><strong>Telp / WA:</strong> {data.nomor_telepon}</p>
                 <p><strong>Loket Pembayaran:</strong> {data.peserta[0].loket_pembayaran}</p>
                 <p><strong>Nominal:</strong> {data.peserta[0].nominal_pembayaran}</p>
                 <p><strong>Pilihan Kelas : </strong> {data.peserta[0].pilihan_kelas}</p>

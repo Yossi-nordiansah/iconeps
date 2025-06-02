@@ -35,7 +35,6 @@ export async function PUT(req) {
                 }
             }
         });
-        console.log(updateUser)
         return NextResponse.json({ message: "data berhasil diperbaharui" }, { status: 200 })
     } catch (error) {
         return NextResponse.json(error, { status: 500 })

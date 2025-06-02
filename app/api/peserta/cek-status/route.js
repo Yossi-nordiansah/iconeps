@@ -3,9 +3,8 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req) {
 
-    const body = await req.json(); // ✅ BACA body dengan .json()
+    const body = await req.json(); 
     const { id } = body;
-    console.log(id)
     try {
         const dataPeserta = await prisma.users.findUnique({
             where: {
@@ -19,7 +18,6 @@ export async function POST(req) {
                 }
             }
         });
-        console.log(dataPeserta);
         return NextResponse.json(dataPeserta, {status: 200})
     } catch (error) {
         return NextResponse.json(error, {status: 500})

@@ -19,7 +19,9 @@ export async function POST(req) {
                 nama: true,
                 fakultas: true,
                 prodi: true,
+                nomor_telepon: true,
                 semester: true,
+                nim: true,
                 peserta: {
                     where: {
                         divisi: divisi
@@ -31,8 +33,6 @@ export async function POST(req) {
         if (data.length === 0) {
             return NextResponse.json({ message: "data kosong" }, { status: 404 });
         }
-
-        console.log(data);
         return NextResponse.json(data, { status: 200 });
 
     } catch (error) {
