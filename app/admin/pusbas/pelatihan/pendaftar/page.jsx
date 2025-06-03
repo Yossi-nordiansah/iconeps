@@ -24,7 +24,9 @@ export default function MahasiswaAdmin() {
     const [selectedKelas, setSelectedKelas] = useState('');
     const [openEdit, setOpenEdit] = useState(false);
     const [editData, setEditData] = useState();
+    const [emailSegments, setEmailSegments] = useState(null);
     const [openDetailPendaftar, setOpenDetailPendaftar] = useState(false);
+    const [recipients, setRecipients] = useState("");
     const [detailPendaftar, setDetailPendaftar] = useState([]);
     const [openDetailPembayaran, setOpenDetailPembayaran] = useState(false);
     const [sortOrder, setSortOrder] = useState('desc');
@@ -156,6 +158,14 @@ export default function MahasiswaAdmin() {
                 });
             }
         }
+    };
+
+    const allEmails = dataPendaftar.map(p => p.users.email);
+
+    const handleSendEmail = (recipients, segment) => {
+        setRecipients(recipients);
+        setEmailSegments(segment);
+        setIsOpen(true);
     }
 
     return (
@@ -203,7 +213,7 @@ export default function MahasiswaAdmin() {
                     <button onClick={() => setShowFilter(!showFilter)} className={`${showFilter ? 'bg-red-500' : 'bg-gray-300'} px-4 py-2 rounded`}>
                         {showFilter ? "Tutup Filter" : "Filter"}
                     </button>
-                    <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => setIsOpen(true)}>
+                    <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => handleSendEmail(allEmails, lastSegmetst)}>
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
                         <span>Kirim Email</span>
                     </button>
@@ -326,8 +336,8 @@ export default function MahasiswaAdmin() {
                                         </button>
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
                                             onClick={() => {
-                                                setEditData(mhs);
                                                 setOpenEdit(true);
+                                                setEditData(mhs);
                                             }}
                                         >
                                             <Pencil size={16} />
@@ -347,7 +357,7 @@ export default function MahasiswaAdmin() {
                                         }}>
                                             <DocumentCurrencyDollarIcon className="w-5 h-5" />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={()=>handleSendEmail([mhs.users.email], mhs.nama)}>
                                             <Mail size={16} />
                                         </button>
                                     </td>
@@ -376,7 +386,7 @@ export default function MahasiswaAdmin() {
                     Next
                 </button>
             </div>
-            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
+            <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />

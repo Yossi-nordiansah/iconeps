@@ -37,7 +37,6 @@ const EmailEditor = ({ isOpen, close, segment, recipients }) => {
                 timer: 2000
             });
             close();
-            console.log(emails);
         } catch (error) {
             console.log(error);
             Swal.fire({
@@ -60,7 +59,7 @@ const EmailEditor = ({ isOpen, close, segment, recipients }) => {
                 isLoading && <Loading/>
             }
             <div className='bg-white px-3 py-2 w-[60%] rounded-lg'>
-                <h1 className='font-radjdhani_bold text-2xl text-center my-3'>Kirim Email Ke Seluruh {(segment === 'lulus' || segment === 'remidial') ? "Peserta Yang" : ""} {capitalizeFirstLetter(segment)}</h1>
+                <h1 className='font-radjdhani_bold text-2xl text-center my-3'>Kirim Email Ke {["mahasiswa", "kelas", "pendaftar", "peserta", "lulus", "remidial"].includes(segment) ? "Seluruh" : ""} {(segment === 'lulus' || segment === 'remidial') ? "Peserta Yang" : ""} {capitalizeFirstLetter(segment)}</h1>
                 <input
                     type="text"
                     placeholder='Subject...'

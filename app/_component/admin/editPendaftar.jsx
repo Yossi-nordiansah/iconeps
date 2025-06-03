@@ -14,13 +14,12 @@ export default function EditPendaftar({ isOpen, close, data, onSave }) {
     useEffect(() => {
         if (data) {
             setFormData({
-                id: data.id || "",
-                pilihan_kelas: data.peserta[0].pilihan_kelas || "",
-                nominal_pembayaran: data.peserta[0].nominal_pembayaran || "",
-                loket_pembayaran: data.peserta[0].loket_pembayaran || "",
+                id: data?.id || "",
+                pilihan_kelas: data?.peserta[0].pilihan_kelas || "",
+                nominal_pembayaran: data?.peserta[0].nominal_pembayaran || "",
+                loket_pembayaran: data?.peserta[0].loket_pembayaran || "",
             });
         };
-         console.log(data.peserta[0].pilihan_kelas)
     }, [data]);
 
     const handleChange = (e) => {
