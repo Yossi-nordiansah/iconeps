@@ -155,6 +155,7 @@ export default function MahasiswaAdmin() {
                     icon: 'error',
                     title: 'Gagal menghapus data!',
                     text: 'Terjadi kesalahan saat menghapus data.',
+                    timer: 1500
                 });
             }
         }

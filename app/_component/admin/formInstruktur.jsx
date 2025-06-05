@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Loading from '../Loading';
 
-const InstrukturForm = ({ isOpen, close, segments, onSuccess }) => {
+const InstrukturForm = ({ isOpen, close, segments, onSuccess, openEdit, selectedInstruktur }) => {
 
     const popupRef = useRef(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,24 +17,53 @@ const InstrukturForm = ({ isOpen, close, segments, onSuccess }) => {
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
+    useEffect(() => {
+        if (openEdit && selectedInstruktur) {
+            setForm({
+                nama: selectedInstruktur.nama || "",
+                kontak: selectedInstruktur.kontak || ""
+            });
+        }
+    }, [openEdit, selectedInstruktur]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('/api/pusbas/instruktur', {
-                nama: form.nama,
-                kontak: form.kontak,
-                divisi: segments
-            });
+            if (openEdit && selectedInstruktur) {
+                await axios.put(`/api/pusbas/instruktur/${selectedInstruktur.id}`, {
+                    nama: form.nama,
+                    kontak: form.kontak,
+                    divisi: segments
+                });
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Instruktur Berhasil Ditambahkan',
-                showConfirmButton: false,
-                timer: 2000,
-            });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Instruktur Berhasil Diperbarui',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+                setForm({
+                    nama: "",
+                    kontak: ""
+                });
+            } else {
+                // TAMBAH
+                await axios.post('/api/pusbas/instruktur', {
+                    nama: form.nama,
+                    kontak: form.kontak,
+                    divisi: segments
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Instruktur Berhasil Ditambahkan',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+            }
             onSuccess()
             close();
         } catch (error) {
@@ -59,12 +89,23 @@ const InstrukturForm = ({ isOpen, close, segments, onSuccess }) => {
         }
     };
 
+    const handleCancel = () => {
+        close();
+        setForm({
+            nama: "",
+            kontak: ""
+        });
+    }
+
     if (!isOpen) {
         return;
     };
 
     return (
         <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
+            {
+                isSubmitting && <Loading />
+            }
             <div
                 ref={popupRef}
                 className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
@@ -92,7 +133,7 @@ const InstrukturForm = ({ isOpen, close, segments, onSuccess }) => {
                     {/* Confirm Password */}
                     <div className='flex gap-4'>
                         <button
-                            onClick={close}
+                            onClick={handleCancel}
                             type="button"
                             className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
                         >

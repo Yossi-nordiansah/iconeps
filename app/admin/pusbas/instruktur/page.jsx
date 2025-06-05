@@ -4,17 +4,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import InstrukturForm from "@/app/_component/admin/formInstruktur";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function InstrukturAdmin() {
 
-    const [ instrukturs, setInstrukturs ] = useState([])
+    const [instrukturs, setInstrukturs] = useState([]);
+    const [selectedInstruktur, setSelectedInstruktur] = useState(null);
+    const [openEdit, setOpenEdit] = useState(false)
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 2];
 
-    const getInstruktur = async ()=>{
+    const getInstruktur = async () => {
         try {
             const response = await axios.get("/api/pusbas/instruktur");
             setInstrukturs(response.data);
@@ -24,9 +27,43 @@ export default function InstrukturAdmin() {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getInstruktur()
-    },[])
+    }, [])
+
+    const handleDelete = async (id) => {
+
+        const confirm = await Swal.fire({
+            title: "Apa anda yakin menghapus data ini?",
+            text: "Data Instruktur akan dihapus permanen",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Batal"
+        })
+
+        if (confirm.isConfirmed) {
+            try {
+                await axios.delete(`/api/pusbas/instruktur/${id}`);
+                Swal.fire({
+                    icon: "success",
+                    title: "Data Berhasil di Hapus!",
+                    timer: 1500
+                })
+                getInstruktur()
+            } catch (error) {
+                console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal menghapus data!',
+                    text: 'Terjadi kesalahan saat menghapus data.',
+                    timer: 1500
+                });
+            }
+        }
+    }
 
     return (
         <div className="pl-56 pt-24 pr-6">
@@ -62,10 +99,10 @@ export default function InstrukturAdmin() {
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.nama}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.kontak}</td>
                             <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(instruktur.id)}>
                                     <Trash2 size={16} />
                                 </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setSelectedInstruktur(instruktur); setOpenEdit(true); setIsOpen(true); }}>
                                     <Pencil size={16} />
                                 </button>
                             </td>
@@ -73,7 +110,7 @@ export default function InstrukturAdmin() {
                     ))}
                 </tbody>
             </table>
-            <InstrukturForm isOpen={isOpen} segments={lastSegmetst} close={()=> setIsOpen(false)} onSuccess={() => {getInstruktur(); }}/>
+            <InstrukturForm isOpen={isOpen} openEdit={openEdit} segments={lastSegmetst} close={() => { setIsOpen(false); setOpenEdit(false); setSelectedInstruktur(null) }} onSuccess={() => { getInstruktur(); }} selectedInstruktur={selectedInstruktur} />
         </div>
     );
 }
