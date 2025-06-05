@@ -1,31 +1,32 @@
 "use client"
 import { Trash2, Pencil, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import EmailEditor from "@/app/_component/admin/emailEditor";
-import { useState } from "react";
-
-const instrukturs = [
-    {
-        nama: "Instruktur A",
-        kontak: "085552320897",
-    },
-    {
-        nama: "Instruktur B",
-        kontak: "081789087634",
-    },
-    {
-        nama: "Instruktur C",
-        kontak: "097096853256",
-    }
-];
+import { useEffect, useState } from "react";
+import InstrukturForm from "@/app/_component/admin/formInstruktur";
+import axios from "axios";
 
 export default function InstrukturAdmin() {
 
+    const [ instrukturs, setInstrukturs ] = useState([])
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
-    const lastSegmetst = segments[segments.length - 1];
+    const lastSegmetst = segments[segments.length - 2];
+
+    const getInstruktur = async ()=>{
+        try {
+            const response = await axios.get("/api/pusbas/instruktur");
+            setInstrukturs(response.data);
+        } catch (error) {
+            console.log(error);
+            window.alert(`Gagal mendapatkan data ${error}`)
+        }
+    }
+
+    useEffect(()=>{
+        getInstruktur()
+    },[])
 
     return (
         <div className="pl-56 pt-24 pr-6">
@@ -72,7 +73,7 @@ export default function InstrukturAdmin() {
                     ))}
                 </tbody>
             </table>
-            <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
+            <InstrukturForm isOpen={isOpen} segments={lastSegmetst} close={()=> setIsOpen(false)} onSuccess={() => {getInstruktur(); }}/>
         </div>
     );
 }

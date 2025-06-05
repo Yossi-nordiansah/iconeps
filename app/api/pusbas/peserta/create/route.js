@@ -40,7 +40,6 @@ export async function POST(req) {
     await writeFile(filePath, buffer);
 
     try {
-
         const mahasiswa = await prisma.mahasiswa.findFirst({
             where: {
                 user_id: parseInt(mahasiswa_id)

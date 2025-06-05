@@ -1,0 +1,115 @@
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+const InstrukturForm = ({ isOpen, close, segments, onSuccess }) => {
+
+    const popupRef = useRef(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [form, setForm] = useState({
+        nama: "",
+        kontak: "",
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setIsSubmitting(true);
+
+        try {
+            const response = await axios.post('/api/pusbas/instruktur', {
+                nama: form.nama,
+                kontak: form.kontak,
+                divisi: segments
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Instruktur Berhasil Ditambahkan',
+                showConfirmButton: false,
+                timer: 2000,
+            });
+            onSuccess()
+            close();
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Instruktur Gagal ditambahkan',
+                    text: error.response.data.message,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Registrasi Gagal',
+                    text: 'Terjadi kesalahan saat registrasi.',
+                });
+            }
+        } finally {
+            setForm({
+                nama: "",
+                kontak: ""
+            });
+            setIsSubmitting(false);
+        }
+    };
+
+    if (!isOpen) {
+        return;
+    };
+
+    return (
+        <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
+            <div
+                ref={popupRef}
+                className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
+            >
+                <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">Tambah Instruktur</h2>
+                <form onSubmit={handleSubmit} className="space-y-3 w-full ">
+                    <input
+                        type="text"
+                        name="nama"
+                        placeholder="Nama Lengkap..."
+                        value={form.nama}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border rounded-lg border-blue-500 outline-blue-400"
+                        required
+                    />
+                    <input
+                        type="text"
+                        name="kontak"
+                        placeholder="Kontak..."
+                        value={form.kontak}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border rounded-lg border-blue-500 outline-blue-400"
+                        required
+                    />
+                    {/* Confirm Password */}
+                    <div className='flex gap-4'>
+                        <button
+                            onClick={close}
+                            type="button"
+                            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default InstrukturForm;
+

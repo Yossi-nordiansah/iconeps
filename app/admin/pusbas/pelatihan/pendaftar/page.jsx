@@ -57,7 +57,7 @@ export default function MahasiswaAdmin() {
 
     const getDataPendaftar = async () => {
         try {
-            const response = await axios.post("/api/peserta", {
+            const response = await axios.post("/api/pusbas/peserta", {
                 divisi: divisi
             });
             setDataPendaftar(response.data);
@@ -110,7 +110,7 @@ export default function MahasiswaAdmin() {
             )
         );
         try {
-            await axios.put(`/api/peserta/${updatedData.id}`, { updatedData, divisi });
+            await axios.put(`/api/pusbas/peserta/${updatedData.id}`, { updatedData, divisi });
             Swal.fire({
                 icon: 'success',
                 title: 'Data berhasil diperbarui!',
@@ -141,7 +141,7 @@ export default function MahasiswaAdmin() {
         });
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`/api/peserta/${id}`);
+                await axios.delete(`/api/pusbas/peserta/${id}`);
                 Swal.fire({
                     icon: 'success',
                     title: 'Data Berhasil dihapus!',

@@ -63,7 +63,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
         });
 
         try {
-            await axios.post("/api/peserta/create", formData);
+            await axios.post("/api/pusbas/peserta/create", formData);
             Swal.fire({
                 title: 'Pendaftaran Berhasil!',
                 text: 'Data berhasil diupload.',
