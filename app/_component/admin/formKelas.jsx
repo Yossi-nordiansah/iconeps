@@ -6,7 +6,7 @@ import Loading from '../Loading';
 import { useDispatch } from 'react-redux';
 import { fetchPeriodes } from '../../../lib/features/kelasSlice'
 
-const KelasForm = ({ isOpen, close, segment }) => {
+const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
 
     const dispatch = useDispatch();
     const [instrukturs, setInstrukturs] = useState([]);
@@ -55,7 +55,6 @@ const KelasForm = ({ isOpen, close, segment }) => {
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
-
         setLoading(true)
 
         if (formData.id_instruktur === "") {
@@ -84,12 +83,20 @@ const KelasForm = ({ isOpen, close, segment }) => {
                 timer: 2000
             });
             dispatch(fetchPeriodes());
+            setFormData({
+                nama_kelas: "",
+                id_instruktur: "",
+                tipe_kelas: "",
+                divisi: segment,
+                periode: ""
+            })
+            onSuccess?.();
             close()
         } catch (error) {
             console.log(error);
             window.alert(error);
             setLoading(false);
-        } finally{
+        } finally {
             setLoading(false);
         }
     }
@@ -97,7 +104,7 @@ const KelasForm = ({ isOpen, close, segment }) => {
     return (
         <div className='inset-0 flex justify-center items-center bg-black/50 absolute z-50 h-screen'>
             {
-                loading && <Loading/>
+                loading && <Loading />
             }
             <form className='p-4 bg-white rounded-xl w-80 space-y-3' onSubmit={handleOnSubmit}>
                 <h1 className='text-2xl font-robotoBold text-center mb-2'>Buat Kelas</h1>
@@ -108,12 +115,13 @@ const KelasForm = ({ isOpen, close, segment }) => {
                         className='border border-black py-1 px-2 rounded-md w-full'
                         value={formData.nama_kelas}
                         name="nama_kelas"
-                        onChange={handleOnChange} />
+                        onChange={handleOnChange}
+                        required />
                 </div>
                 <div className='flex flex-col'>
                     <label>Instruktur</label>
                     <div className='border border-black px-2 py-1 rounded-md w-full'>
-                        <select className='outline-none w-full' name='id_instruktur' value={formData.id_instruktur} onChange={handleOnChange}>
+                        <select className='outline-none w-full' name='id_instruktur' value={formData.id_instruktur} onChange={handleOnChange} required>
                             <option value="">-- Pilih Instruktur --</option>
                             {
                                 instrukturs.map((instruktur, index) => (
@@ -127,7 +135,7 @@ const KelasForm = ({ isOpen, close, segment }) => {
                     segment === "pusbas" && <div className='flex flex-col'>
                         <label>Tipe Kelas</label>
                         <div className='border border-black px-2 py-1 rounded-md w-full'>
-                            <select className='outline-none w-full' name="tipe_kelas" value={formData.tipe_kelas} onChange={handleOnChange}>
+                            <select className='outline-none w-full' name="tipe_kelas" value={formData.tipe_kelas} onChange={handleOnChange} required>
                                 <option value="">-- Pilih Tipe Kelas --</option>
                                 <option value="weekend_offline">Weekend (Offline)</option>
                                 <option value="weekday_online">Weekday (Online)</option>
@@ -142,7 +150,8 @@ const KelasForm = ({ isOpen, close, segment }) => {
                         value={formData.periode}
                         name="periode"
                         className='border border-black py-1 px-2 rounded-md w-full'
-                        onChange={handleOnChange} />
+                        onChange={handleOnChange} 
+                        required/>
                 </div>
                 <div className='flex justify-end gap-6'>
                     <button
