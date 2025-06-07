@@ -43,7 +43,7 @@ const EditProfile = ({ isOpen, close, id }) => {
         }
     };
 
-    if (!isOpen) return;
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">

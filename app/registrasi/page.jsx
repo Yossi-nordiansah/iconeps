@@ -54,7 +54,7 @@ const Registrasi = () => {
                 title: 'Oops...',
                 text: 'Password dan Konfirmasi Password tidak cocok!',
             });
-            return;
+            return null;
         }
 
         setIsSubmitting(true);

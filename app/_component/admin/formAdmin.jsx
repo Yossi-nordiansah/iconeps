@@ -33,7 +33,7 @@ const AdminForm = ({ isOpen, close, role }) => {
                 title: 'Oops...',
                 text: 'Password dan Konfirmasi Password tidak cocok!',
             });
-            return;
+            return null;
         }
 
         setIsSubmitting(true);
@@ -84,7 +84,7 @@ const AdminForm = ({ isOpen, close, role }) => {
     };
 
     if (!isOpen) {
-        return;
+        return null;
     };
 
     return (

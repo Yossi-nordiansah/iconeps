@@ -33,7 +33,7 @@ export default function NilaiAdmin() {
     const handleUpload = () => {
         if (!file) {
             alert("Silakan pilih file terlebih dahulu.");
-            return;
+            return null;
         }
     };
 

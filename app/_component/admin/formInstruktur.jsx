@@ -98,7 +98,7 @@ const InstrukturForm = ({ isOpen, close, segments, onSuccess, openEdit, selected
     }
 
     if (!isOpen) {
-        return;
+        return null;
     };
 
     return (
@@ -110,7 +110,7 @@ const InstrukturForm = ({ isOpen, close, segments, onSuccess, openEdit, selected
                 ref={popupRef}
                 className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
             >
-                <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">Tambah Instruktur</h2>
+                <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">{openEdit ? 'Edit' : "Tambah"} Instruktur</h2>
                 <form onSubmit={handleSubmit} className="space-y-3 w-full ">
                     <input
                         type="text"

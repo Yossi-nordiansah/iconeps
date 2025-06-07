@@ -17,7 +17,7 @@ const PuskomPage = () => {
 
     useEffect(() => {
         const getStatus = async () => {
-            if (!session?.user?.id) return;
+            if (!session?.user?.id) return null;
             try {
                 const res = await axios.post("/api/peserta/cek-status", {
                     id: session?.user?.id,
@@ -32,7 +32,7 @@ const PuskomPage = () => {
     }, [session]);
 
     const refreshDivisi = async () => {
-        if (!session?.user?.id) return;
+        if (!session?.user?.id) return null;
         try {
             const res = await axios.post("/api/peserta/cek-status", {
                 id: session.user.id,

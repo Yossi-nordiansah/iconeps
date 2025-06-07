@@ -4,43 +4,25 @@ import { PresentationChartBarIcon, CalendarDateRangeIcon } from '@heroicons/reac
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import KelasForm from "@/app/_component/admin/formKelas";
-
-const dataKelas = [
-    {
-        namaKelas: "A",
-        instruktur: "Instruktur A",
-        tipeKelas: "Weekend Online",
-        jumlahPeserta: 0
-    },
-    {
-        namaKelas: "B",
-        instruktur: "Instruktur B",
-        tipeKelas: "Weekday Offline",
-        jumlahPeserta: 0
-    },
-    {
-        namaKelas: "C",
-        instruktur: "Instruktur C",
-        tipeKelas: "Weekday Online",
-        jumlahPeserta: 0
-    }
-];
+import axios from "axios";
 
 export default function KelasAdmin() {
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const [dataKelas, setDataKelas] = useState([])
     const [showFilter, setShowFilter] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState([]);
     const segments = pathname.split('/').filter(Boolean);
-    const lastSegmetst = segments[segments.length - 1];
+    const lastSegmetst = segments[segments.length - 3];
 
-    const toggleSemester = (sem) => {
-        setSelectedSemester((prev) =>
-            prev.includes(sem)
-                ? prev.filter((s) => s !== sem)
-                : [...prev, sem]
-        );
+    const getDataKelas = async () => {
+        try {
+            const response = await axios.get("/api/pusbas/kelas");  
+            setDataKelas(response.data)
+        } catch (error) {
+            window.alert(`Gagal Fetch Data ${error}`)
+        }
     };
 
     return (

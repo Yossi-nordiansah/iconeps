@@ -20,7 +20,7 @@ const JadwalForm = ({ isOpen, close }) => {
   };
 
   if(!isOpen){
-    return;
+    return null;
   }
 
   return (

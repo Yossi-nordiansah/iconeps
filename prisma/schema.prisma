@@ -27,7 +27,7 @@ model informasi_periode {
 
   @@index([id_admin], map: "id_admin")
 }
- 
+
 model instruktur {
   id     Int               @id @default(autoincrement())
   nama   String            @db.VarChar(50)
@@ -50,17 +50,17 @@ model jadwal {
 }
 
 model kelas {
-  id            Int              @id @default(autoincrement())
-  nama_kelas    String           @db.VarChar(50)
+  id            Int          @id @default(autoincrement())
+  nama_kelas    String       @db.VarChar(50)
   id_instruktur Int
-  tipe_kelas    kelas_tipe_kelas
+  tipe_kelas    String       @db.VarChar(30)
   divisi        kelas_divisi
-  periode       String           @db.VarChar(18)
-  id_peserta    Int
-  link_ujian    String?          @db.VarChar(100)
+  periode       String       @db.VarChar(30)
+  id_peserta    Int?
+  link_ujian    String?      @db.VarChar(100)
   jadwal        jadwal[]
-  instruktur    instruktur       @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
-  peserta       peserta          @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "kelas_ibfk_1")
+  instruktur    instruktur   @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
+  peserta       peserta?     @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "kelas_ibfk_1")
 
   @@index([id_peserta], map: "id_peserta")
   @@index([id_peserta], map: "id_peserta_2")
@@ -152,11 +152,6 @@ enum peserta_status {
   peserta
   lulus
   remidial
-}
-
-enum kelas_tipe_kelas {
-  weekend
-  weekday
 }
 
 enum peserta_divisi {

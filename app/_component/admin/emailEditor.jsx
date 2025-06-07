@@ -19,7 +19,7 @@ const EmailEditor = ({ isOpen, close, segment, recipients }) => {
     }, [recipients])
 
     if (!isOpen) {
-        return;
+        return null;
     };
 
     const sendEmail = async () => {

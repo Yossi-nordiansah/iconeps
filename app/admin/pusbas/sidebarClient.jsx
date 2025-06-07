@@ -69,5 +69,5 @@ export default function SidebarClient({ name }) {
                 <p className="text-lg">Logout</p>
             </div>
         </div>
-    );;
+    );
 }
