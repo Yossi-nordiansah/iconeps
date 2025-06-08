@@ -6,6 +6,7 @@ import KelasForm from "@/app/_component/admin/formKelas";
 import { useRouter, usePathname } from "next/navigation";
 import { Trash2, Pencil, Plus } from "lucide-react";
 import { PresentationChartBarIcon, CalendarDateRangeIcon } from '@heroicons/react/24/solid';
+import Swal from 'sweetalert2';
 
 export default function KelasAdmin() {
     const { selectedPeriode } = useSelector((state) => state.kelas);
@@ -13,6 +14,7 @@ export default function KelasAdmin() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [dataKelas, setDataKelas] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedKelas, setSelectedKelas] = useState({})
     const segments = pathname.split('/').filter(Boolean);
@@ -33,6 +35,43 @@ export default function KelasAdmin() {
             getDataKelas();
         }
     }, [selectedPeriode]);
+
+    const handleDelete = async (id) => {
+
+        setLoading(true);
+
+        const confirm = await Swal.fire({
+            title: "Apa anda yakin menghapus data ini?",
+            text: "Data Kelas akan dihapus permanen",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Batal"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                await axios.delete(`/api/pusbas/kelas/${id}`);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'data berhaasil dihapus',
+                    timer: 2000
+                });
+                getDataKelas();
+            } catch (error) {
+                console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menghapus Data!',
+                    text: error,
+                    timer: 2000
+                })
+            }
+        }
+
+    }
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -66,14 +105,14 @@ export default function KelasAdmin() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     {dataKelas.map((kls, idx) => (
-                        <tr key={idx}>
+                        <tr key={kls.id}>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">{kls.id_peserta
                                 === null ? (0) : (kls.jumlahPeserta)}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
                                     <Trash2 size={16} />
                                 </button>
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {

@@ -23,4 +23,26 @@ export async function PUT(req, { params }) {
     } catch (error) {
         return NextResponse.json({error}, error.message, { status: 500 })
     }
+};
+
+export async function DELETE(req, { params }) {
+    
+    const param = await params;
+    const id = parseInt(param.id);
+    // console.log(param);
+
+    // return NextResponse.json({message: "Data berhasil dihapus"}, {status: 200})
+
+    try {
+        await prisma.kelas.delete({
+            where: {
+                id
+            }
+        })
+
+        return NextResponse.json({message: "Data berhasil dihapus"}, {status: 200})
+    } catch (error) {
+        return NextResponse.json({error}, error.message, {status: 500});
+    }
+
 }
