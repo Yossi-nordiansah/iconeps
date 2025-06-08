@@ -13,6 +13,8 @@ export default function KelasAdmin() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [dataKelas, setDataKelas] = useState([]);
+    const [openEdit, setOpenEdit] = useState(false);
+    const [selectedKelas, setSelectedKelas] = useState({})
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
 
@@ -74,7 +76,11 @@ export default function KelasAdmin() {
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Trash2 size={16} />
                                 </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                    setOpenEdit(true);
+                                    setSelectedKelas(kls);
+                                    setIsOpen(true);
+                                }}>
                                     <Pencil size={16} />
                                 </button>
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
@@ -86,7 +92,11 @@ export default function KelasAdmin() {
                 </tbody>
             </table>
 
-            <KelasForm isOpen={isOpen} segment={lastSegmetst} onSuccess={getDataKelas} close={() => setIsOpen(false)} />
+            <KelasForm isOpen={isOpen} segment={lastSegmetst} openEdit={openEdit} selectedKelas={selectedKelas} onSuccess={getDataKelas} close={() => {
+                setIsOpen(false);
+                setOpenEdit(false);
+                setSelectedKelas({});
+            }} />
         </div>
     );
 }

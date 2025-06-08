@@ -6,7 +6,7 @@ import Loading from '../Loading';
 import { useDispatch } from 'react-redux';
 import { fetchPeriodes } from '../../../lib/features/kelasSlice'
 
-const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
+const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas }) => {
 
     const dispatch = useDispatch();
     const [instrukturs, setInstrukturs] = useState([]);
@@ -17,7 +17,18 @@ const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
         tipe_kelas: "",
         divisi: segment,
         periode: ""
-    })
+    });
+
+    useEffect(() => {
+        if (openEdit && selectedKelas) {
+            setFormData({
+                nama_kelas: selectedKelas.nama_kelas,
+                id_instruktur: selectedKelas.instruktur.id,
+                tipe_kelas: selectedKelas.tipe_kelas,
+                periode: selectedKelas.periode
+            })
+        };
+    }, [openEdit, selectedKelas])
 
     const getDataInstruktur = async () => {
         try {
@@ -47,7 +58,6 @@ const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
             nama_kelas: "",
             id_instruktur: "",
             tipe_kelas: "",
-            divisi: segment,
             periode: ""
         });
         close();
@@ -57,47 +67,71 @@ const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
         e.preventDefault();
         setLoading(true)
 
-        if (formData.id_instruktur === "") {
-            Swal.fire({
-                icon: "warning",
-                title: "Instruktur Belum Dipilih",
-                text: "Silakan pilih instruktur terlebih dahulu."
-            });
-            return null;
-        }
+        if (openEdit && selectedKelas) {
+            try {
+                await axios.put(`/api/pusbas/kelas/${selectedKelas.id}`, formData);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Edit Data Kelas Berhasil',
+                    timer: 2000
+                })
+                onSuccess?.();
+                onCancel();
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Error',
+                    text: error,
+                    timer: 2000
+                });
+                onCancel();
+            } finally {
+                setLoading(false)
+            }
+        } else {
+            if (formData.id_instruktur === "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Instruktur Belum Dipilih",
+                    text: "Silakan pilih instruktur terlebih dahulu."
+                });
+                return null;
+            }
 
-        if (segment === "pusbas" && formData.tipe_kelas === "") {
-            Swal.fire({
-                icon: "warning",
-                title: "Tipe Kelas Belum Dipilih",
-                text: "Silakan pilih tipe kelas terlebih dahulu."
-            });
-            return null;
-        }
+            if (segment === "pusbas" && formData.tipe_kelas === "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Tipe Kelas Belum Dipilih",
+                    text: "Silakan pilih tipe kelas terlebih dahulu."
+                });
+                return null;
+            }
 
-        try {
-            await axios.post("/api/pusbas/kelas", formData);
-            Swal.fire({
-                icon: "success",
-                title: "Berhasil membuat Kelas",
-                timer: 2000
-            });
-            dispatch(fetchPeriodes());
-            setFormData({
-                nama_kelas: "",
-                id_instruktur: "",
-                tipe_kelas: "",
-                divisi: segment,
-                periode: ""
-            })
-            onSuccess?.();
-            close()
-        } catch (error) {
-            console.log(error);
-            window.alert(error);
-            setLoading(false);
-        } finally {
-            setLoading(false);
+            try {
+                await axios.post("/api/pusbas/kelas", formData);
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil membuat Kelas",
+                    timer: 2000
+                });
+                dispatch(fetchPeriodes());
+                setFormData({
+                    nama_kelas: "",
+                    id_instruktur: "",
+                    tipe_kelas: "",
+                    divisi: segment,
+                    periode: ""
+                })
+                onSuccess?.();
+                close()
+            } catch (error) {
+                console.log(error);
+                window.alert(error);
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -107,7 +141,7 @@ const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
                 loading && <Loading />
             }
             <form className='p-4 bg-white rounded-xl w-80 space-y-3' onSubmit={handleOnSubmit}>
-                <h1 className='text-2xl font-robotoBold text-center mb-2'>Buat Kelas</h1>
+                <h1 className='text-2xl font-robotoBold text-center mb-2'>{openEdit ? "Edit" : "Buat"} Kelas</h1>
                 <div className='flex flex-col'>
                     <label>Nama Kelas</label>
                     <input
@@ -150,8 +184,8 @@ const KelasForm = ({ isOpen, close, segment, onSuccess }) => {
                         value={formData.periode}
                         name="periode"
                         className='border border-black py-1 px-2 rounded-md w-full'
-                        onChange={handleOnChange} 
-                        required/>
+                        onChange={handleOnChange}
+                        required />
                 </div>
                 <div className='flex justify-end gap-6'>
                     <button

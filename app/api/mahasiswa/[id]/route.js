@@ -9,7 +9,7 @@ export async function PUT(req) {
         id,
         nama,
         nim,
-        email,
+        email, 
         password
     } = body;
 

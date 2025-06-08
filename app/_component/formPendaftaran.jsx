@@ -17,7 +17,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
         status: "pendaftar",
         bukti_pembayaran: "",
         divisi: segment[0].toLowerCase(),
-        pilihan_kelas: null,
+        pilihan_kelas: null, 
         tanggal_pembayaran: "",
         nominal_pembayaran: 0,
         loket_pembayaran: ""
