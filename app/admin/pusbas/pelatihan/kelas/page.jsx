@@ -9,11 +9,18 @@ import { PresentationChartBarIcon, CalendarDateRangeIcon } from '@heroicons/reac
 import Swal from 'sweetalert2';
 
 export default function KelasAdmin() {
+
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [dataKelas, setDataKelas] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentData = dataKelas.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(dataKelas.length / itemsPerPage);
     const [loading, setLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedKelas, setSelectedKelas] = useState({})
@@ -70,8 +77,12 @@ export default function KelasAdmin() {
                 })
             }
         }
+    };
 
-    }
+    const handlePageChange = (page) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+    };
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -104,7 +115,7 @@ export default function KelasAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {dataKelas.map((kls, idx) => (
+                    {currentData.map((kls) => (
                         <tr key={kls.id}>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
@@ -130,6 +141,32 @@ export default function KelasAdmin() {
                     ))}
                 </tbody>
             </table>
+            <div className="flex justify-center mt-4 space-x-2">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-gray-300' : ''}`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
+
 
             <KelasForm isOpen={isOpen} segment={lastSegmetst} openEdit={openEdit} selectedKelas={selectedKelas} onSuccess={getDataKelas} close={() => {
                 setIsOpen(false);

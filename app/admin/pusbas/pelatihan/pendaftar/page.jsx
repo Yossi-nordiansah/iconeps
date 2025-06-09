@@ -206,7 +206,7 @@ export default function MahasiswaAdmin() {
                             className="bg-transparent outline-none"
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value)}
-                        >
+                        > 
                             <option value="desc">Terbaru</option>
                             <option value="asc">Terlama</option>
                         </select>

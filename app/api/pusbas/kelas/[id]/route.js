@@ -29,9 +29,6 @@ export async function DELETE(req, { params }) {
     
     const param = await params;
     const id = parseInt(param.id);
-    // console.log(param);
-
-    // return NextResponse.json({message: "Data berhasil dihapus"}, {status: 200})
 
     try {
         await prisma.kelas.delete({
