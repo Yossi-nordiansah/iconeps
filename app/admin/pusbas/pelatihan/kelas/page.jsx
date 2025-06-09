@@ -24,7 +24,7 @@ export default function KelasAdmin() {
     const [loading, setLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedKelas, setSelectedKelas] = useState({})
-    const segments = pathname.split('/').filter(Boolean);
+    const segments = pathname.split('/').filter(Boolean); 
     const lastSegmetst = segments[segments.length - 3];
 
     const getDataKelas = async () => {
@@ -37,7 +37,6 @@ export default function KelasAdmin() {
     };
 
     useEffect(() => {
-        console.log()
         if (selectedPeriode) {
             getDataKelas();
         }
@@ -121,7 +120,7 @@ export default function KelasAdmin() {
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">{kls.id_peserta
-                                === null ? (0) : (kls.jumlahPeserta)}</td>
+                                === null ? (0) : (kls.jumlahPeserta )}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
                                     <Trash2 size={16} />

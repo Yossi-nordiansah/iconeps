@@ -9,16 +9,20 @@ import Swal from "sweetalert2";
 import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
+import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftar";
 
 export default function MahasiswaAdmin() {
+
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
+    const [openAcceptPendaftar, setOpenAcceptPendaftar] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [dataPendaftar, setDataPendaftar] = useState([]);
     const [allSemesterChecked, setAllSemesterChecked] = useState(true);
+    const [selectedPendaftar, setSelectedPendaftar] = useState({})
     const [selectedFakultas, setSelectedFakultas] = useState('');
     const [selectedProdi, setSelectedProdi] = useState('');
     const [selectedKelas, setSelectedKelas] = useState('');
@@ -65,7 +69,7 @@ export default function MahasiswaAdmin() {
         } catch (error) {
             setStatusPendaftar(true);
             setmessageErrorEmpty(`Belum ada pendaftar PUSBAS`)
-            window.alert(error)
+            // window.alert(error)
         }
     }
 
@@ -181,7 +185,11 @@ export default function MahasiswaAdmin() {
                         <span className="text-base font-semibold">Pendaftar</span>
                         <span className="text-base font-semibold">{filteredPendaftar.length}</span>
                     </div>
-                    <div className="p-2 w-fit bg-gray-300 rounded cursor-pointer">
+                    <div className="p-2 w-fit bg-gray-300 rounded cursor-pointer" onClick={() => {
+                        const ids = currentPendaftar.map(mhs => mhs.peserta[0]?.id).filter(Boolean);
+                        setSelectedPendaftar(ids);
+                        setOpenAcceptPendaftar(true);
+                    }}>
                         <CheckIcon className="w-5 h-5" />
                     </div>
                 </div>
@@ -206,7 +214,7 @@ export default function MahasiswaAdmin() {
                             className="bg-transparent outline-none"
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value)}
-                        > 
+                        >
                             <option value="desc">Terbaru</option>
                             <option value="asc">Terlama</option>
                         </select>
@@ -349,7 +357,10 @@ export default function MahasiswaAdmin() {
                                         }}>
                                             <Eye size={16} />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                            setOpenAcceptPendaftar(true);
+                                            setSelectedPendaftar([mhs.peserta[0].id])
+                                        }}>
                                             <CheckIcon className="w-5 h-5" />
                                         </button>
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
@@ -358,7 +369,7 @@ export default function MahasiswaAdmin() {
                                         }}>
                                             <DocumentCurrencyDollarIcon className="w-5 h-5" />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={()=>handleSendEmail([mhs.users.email], mhs.nama)}>
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.users.email], mhs.nama)}>
                                             <Mail size={16} />
                                         </button>
                                     </td>
@@ -391,6 +402,7 @@ export default function MahasiswaAdmin() {
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
+            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} />
         </div>
     );
 }

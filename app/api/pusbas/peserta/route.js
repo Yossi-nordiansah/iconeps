@@ -9,7 +9,8 @@ export async function POST(req) {
             where: {
                 peserta: {
                     some: {
-                        divisi: divisi
+                        divisi: divisi,
+                        status: 'pendaftar'
                     }
                 }
             },
@@ -40,6 +41,6 @@ export async function POST(req) {
         }
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error }, error.message, { status: 500 });
     }
 }

@@ -56,14 +56,10 @@ model kelas {
   tipe_kelas    String       @db.VarChar(30)
   divisi        kelas_divisi
   periode       String       @db.VarChar(30)
-  id_peserta    Int?
   link_ujian    String?      @db.VarChar(100)
   jadwal        jadwal[]
   instruktur    instruktur   @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
-  peserta       peserta?     @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "kelas_ibfk_1")
 
-  @@index([id_peserta], map: "id_peserta")
-  @@index([id_peserta], map: "id_peserta_2")
   @@index([id_instruktur], map: "insturktur relation")
 }
 
@@ -107,7 +103,7 @@ model peserta {
   tanggal_pembayaran  String          @db.VarChar(15)
   nominal_pembayaran  Int
   loket_pembayaran    String          @db.VarChar(25)
-  kelas               kelas[]
+  kelas               Int?
   nilai               nilai[]
   mahasiswa           mahasiswa       @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
   sertifikat          sertifikat[]
