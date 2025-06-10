@@ -3,7 +3,9 @@ import { Trash2, Pencil, Eye, Mail } from "lucide-react";
 import { UsersIcon } from '@heroicons/react/24/solid';
 import { useRouter, usePathname } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const mahasiswa = [
     {
@@ -50,17 +52,63 @@ const mahasiswa = [
         semester: 6,
         tanggalDaftar: "2025-03-30",
         pilihanKelas: "Weekend"
+    },
+    {
+        nim: "20250105",
+        nama: "Dewi Lestari",
+        fakultas: "Hukum",
+        prodi: "Ilmu Hukum",
+        semester: 6,
+        tanggalDaftar: "2025-03-30",
+        pilihanKelas: "Weekend"
+    },
+    {
+        nim: "20250105",
+        nama: "Dewi Lestari",
+        fakultas: "Hukum",
+        prodi: "Ilmu Hukum",
+        semester: 6,
+        tanggalDaftar: "2025-03-30",
+        pilihanKelas: "Weekend"
+    },
+    {
+        nim: "20250105",
+        nama: "Dewi Lestari",
+        fakultas: "Hukum",
+        prodi: "Ilmu Hukum",
+        semester: 6,
+        tanggalDaftar: "2025-03-30",
+        pilihanKelas: "Weekend"
     }
 ];
 
 export default function PesertaAdmin() {
+
+
     const router = useRouter();
+    const { selectedPeriode } = useSelector((state) => state.kelas);
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
-    const [showFilter, setShowFilter] = useState(false);
-    const [selectedSemester, setSelectedSemester] = useState([]);
+    const [dataKelas, setDataKelas] = useState([]);
+    const [selectedKelas, setSelectedkelas] = useState("Semua Kelas")
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
+
+    const getDataKelas = async () => {
+        try {
+            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
+            console.log(res.data)
+            setDataKelas(res.data);
+        } catch (err) {
+            window.alert(`Gagal fetch data: ${err}`);
+        }
+    };
+
+    useEffect(() => {
+        if (selectedPeriode) {
+            getDataKelas();
+        }
+    }, [selectedPeriode]);
 
     const toggleSemester = (sem) => {
         setSelectedSemester((prev) =>
@@ -99,9 +147,11 @@ export default function PesertaAdmin() {
                         <select className="bg-transparent outline-none">
                             <option value="" disabled>Kelas</option>
                             <option value="">Semua Kelas</option>
-                            <option value="">Kelas C (Weekend Online)</option>
-                            <option value="">Kelas A (Weekend Offline)</option>
-                            <option value="">Kelas B (Weekend Offline)</option>
+                            {
+                                dataKelas?.map((kelas) => (
+                                    <option key={kelas.id}>{kelas.nama_kelas + " " + kelas.tipe_kelas}</option>
+                                ))
+                            }
                         </select>
                     </div>
                     <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => setIsOpen(true)}>
@@ -112,7 +162,7 @@ export default function PesertaAdmin() {
             </div>
 
             {/* Tabel Pendaftar */}
-            <div>
+            <div className="overflow-y-auto max-h-[360px]">
                 <h1 className="text-xl font-radjdhani_bold bg-blue-500 px-1">Kelas C (Weekend Online)</h1>
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-200">

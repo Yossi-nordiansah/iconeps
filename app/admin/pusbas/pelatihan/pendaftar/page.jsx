@@ -61,15 +61,14 @@ export default function MahasiswaAdmin() {
 
     const getDataPendaftar = async () => {
         try {
-            const response = await axios.post("/api/pusbas/peserta", {
+            const response = await axios.post("/api/pusbas/pendaftar", {
                 divisi: divisi
             });
             setDataPendaftar(response.data);
             setStatusPendaftar(response.data.length === 0);
         } catch (error) {
             setStatusPendaftar(true);
-            setmessageErrorEmpty(`Belum ada pendaftar PUSBAS`)
-            // window.alert(error)
+            setmessageErrorEmpty(`Belum ada pendaftar PUSBAS`);
         }
     }
 
@@ -114,7 +113,7 @@ export default function MahasiswaAdmin() {
             )
         );
         try {
-            await axios.put(`/api/pusbas/peserta/${updatedData.id}`, { updatedData, divisi });
+            await axios.put(`/api/pusbas/pendaftar/${updatedData.id}`, { updatedData, divisi });
             Swal.fire({
                 icon: 'success',
                 title: 'Data berhasil diperbarui!',
@@ -145,7 +144,7 @@ export default function MahasiswaAdmin() {
         });
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`/api/pusbas/peserta/${id}`);
+                await axios.delete(`/api/pusbas/pendaftar/${id}`);
                 Swal.fire({
                     icon: 'success',
                     title: 'Data Berhasil dihapus!',

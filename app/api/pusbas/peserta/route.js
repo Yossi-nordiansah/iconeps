@@ -5,36 +5,26 @@ export async function POST(req) {
     const body = await req.json();
     const { divisi } = body;
     try {
-        const data = await prisma.mahasiswa.findMany({
+        const data = await prisma.peserta.findMany({
             where: {
-                peserta: {
-                    some: {
-                        divisi: divisi,
-                        status: 'pendaftar'
-                    }
-                }
+                divisi: divisi,
+                status: 'peserta'
             },
             select: {
                 id: true,
-                nama: true,
-                fakultas: true,
-                prodi: true,
-                nomor_telepon: true,
-                semester: true,
-                nim: true,
-                peserta: {
-                    where: {
-                        divisi: divisi
-                    }
+                pilihan_kelas: true,
+                mahasiswa: {
+                    nim: true,
+                    nama: true,
+                    fakultas: true,
+                    prodi: true,
+                    semester: true
                 },
-                users: {
-                    select: {
-                        id: true,
-                        email: true,
-                        role: true
-                    }
-                },
-            },
+                kelas: {
+                    nama_kelas: true,
+                    tipe_kelas: true
+                }
+            }
         });
         if (data.length === 0) {
             return NextResponse.json({ message: "data kosong" }, { status: 404 });
