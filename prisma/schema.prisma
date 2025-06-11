@@ -50,15 +50,16 @@ model jadwal {
 }
 
 model kelas {
-  id            Int          @id @default(autoincrement())
-  nama_kelas    String       @db.VarChar(50)
-  id_instruktur Int
-  tipe_kelas    String       @db.VarChar(30)
-  divisi        kelas_divisi
-  periode       String       @db.VarChar(30)
-  link_ujian    String?      @db.VarChar(100)
-  jadwal        jadwal[]
-  instruktur    instruktur   @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
+  id                           Int          @id @default(autoincrement())
+  nama_kelas                   String       @db.VarChar(50)
+  id_instruktur                Int
+  tipe_kelas                   String       @db.VarChar(30)
+  divisi                       kelas_divisi
+  periode                      String       @db.VarChar(30)
+  link_ujian                   String?      @db.VarChar(100)
+  jadwal                       jadwal[]
+  instruktur                   instruktur   @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
+  peserta_peserta_kelasTokelas peserta[]    @relation("peserta_kelasTokelas")
 
   @@index([id_instruktur], map: "insturktur relation")
 }
@@ -93,22 +94,24 @@ model nilai {
 }
 
 model peserta {
-  id                  Int             @id @default(autoincrement())
-  mahasiswa_id        Int
-  status              peserta_status? @default(pendaftar)
-  bukti_pembayaran    String          @db.VarChar(255)
-  divisi              peserta_divisi
-  tanggal_pendaftaran DateTime        @default(now()) @db.Timestamp(0)
-  pilihan_kelas       String?         @db.VarChar(30)
-  tanggal_pembayaran  String          @db.VarChar(15)
-  nominal_pembayaran  Int
-  loket_pembayaran    String          @db.VarChar(25)
-  kelas               Int?
-  nilai               nilai[]
-  mahasiswa           mahasiswa       @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
-  sertifikat          sertifikat[]
+  id                         Int             @id @default(autoincrement())
+  mahasiswa_id               Int
+  status                     peserta_status? @default(pendaftar)
+  bukti_pembayaran           String          @db.VarChar(255)
+  divisi                     peserta_divisi
+  tanggal_pendaftaran        DateTime        @default(now()) @db.Timestamp(0)
+  pilihan_kelas              String?         @db.VarChar(30)
+  tanggal_pembayaran         String          @db.VarChar(15)
+  nominal_pembayaran         Int
+  loket_pembayaran           String          @db.VarChar(25)
+  kelas                      Int?
+  nilai                      nilai[]
+  mahasiswa                  mahasiswa       @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
+  kelas_peserta_kelasTokelas kelas?          @relation("peserta_kelasTokelas", fields: [kelas], references: [id], onDelete: Cascade, map: "peserta_ibfk_2")
+  sertifikat                 sertifikat[]
 
   @@index([mahasiswa_id], map: "pendaftaran_ibfk_1")
+  @@index([kelas], map: "peserta_ibfk_2")
 }
 
 model sertifikat {

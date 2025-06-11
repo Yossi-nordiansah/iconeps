@@ -7,108 +7,46 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-const mahasiswa = [
-    {
-        nim: "20250101",
-        nama: "Rina Anggraini",
-        fakultas: "Ilmu Komputer",
-        prodi: "Informatika",
-        semester: 6,
-        tanggalDaftar: "2025-03-12",
-        pilihanKelas: "Weekend"
-    },
-    {
-        nim: "20250102",
-        nama: "Ahmad Fauzan",
-        fakultas: "Teknik",
-        prodi: "Teknik Elektro",
-        semester: 4,
-        tanggalDaftar: "2025-04-02",
-        pilihanKelas: "Weekday"
-    },
-    {
-        nim: "20250103",
-        nama: "Siti Nurhaliza",
-        fakultas: "Ekonomi",
-        prodi: "Akuntansi",
-        semester: 2,
-        tanggalDaftar: "2025-02-20",
-        pilihanKelas: "Weekend"
-    },
-    {
-        nim: "20250104",
-        nama: "Bagus Prasetyo",
-        fakultas: "Ilmu Sosial",
-        prodi: "Sosiologi",
-        semester: 8,
-        tanggalDaftar: "2025-01-15",
-        pilihanKelas: "Weekday"
-    },
-    {
-        nim: "20250105",
-        nama: "Dewi Lestari",
-        fakultas: "Hukum",
-        prodi: "Ilmu Hukum",
-        semester: 6,
-        tanggalDaftar: "2025-03-30",
-        pilihanKelas: "Weekend"
-    },
-    {
-        nim: "20250105",
-        nama: "Dewi Lestari",
-        fakultas: "Hukum",
-        prodi: "Ilmu Hukum",
-        semester: 6,
-        tanggalDaftar: "2025-03-30",
-        pilihanKelas: "Weekend"
-    },
-    {
-        nim: "20250105",
-        nama: "Dewi Lestari",
-        fakultas: "Hukum",
-        prodi: "Ilmu Hukum",
-        semester: 6,
-        tanggalDaftar: "2025-03-30",
-        pilihanKelas: "Weekend"
-    },
-    {
-        nim: "20250105",
-        nama: "Dewi Lestari",
-        fakultas: "Hukum",
-        prodi: "Ilmu Hukum",
-        semester: 6,
-        tanggalDaftar: "2025-03-30",
-        pilihanKelas: "Weekend"
-    }
-];
-
 export default function PesertaAdmin() {
-
 
     const router = useRouter();
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [dataKelas, setDataKelas] = useState([]);
-    const [selectedKelas, setSelectedkelas] = useState("Semua Kelas")
+    const [peserta, setPeserta] = useState([]);
+    const [kelasDipilih, setKelasDipilih] = useState("");
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
 
     const getDataKelas = async () => {
         try {
             const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
-            console.log(res.data)
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
         }
     };
 
+    const getDataPeserta = async () => {
+        try {
+            const response = await axios.post('/api/pusbas/peserta', { periode: selectedPeriode });
+            setPeserta(response.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         if (selectedPeriode) {
             getDataKelas();
+            getDataPeserta();
         }
     }, [selectedPeriode]);
+
+    useEffect(() => {
+
+    }, [])
 
     const toggleSemester = (sem) => {
         setSelectedSemester((prev) =>
@@ -117,6 +55,18 @@ export default function PesertaAdmin() {
                 : [...prev, sem]
         );
     };
+
+    const pesertaPerKelas = peserta.reduce((acc, item) => {
+        const namaKelas = item.kelas_peserta_kelasTokelas?.nama_kelas + " (" + item.kelas_peserta_kelasTokelas?.tipe_kelas + ")";
+
+        if (kelasDipilih && namaKelas !== kelasDipilih) return acc;
+
+        if (!acc[namaKelas]) {
+            acc[namaKelas] = [];
+        }
+        acc[namaKelas].push(item);
+        return acc;
+    }, {});
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -129,7 +79,7 @@ export default function PesertaAdmin() {
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <UsersIcon className="h-5" />
                         <span className="text-base font-semibold">Peserta</span>
-                        <span className="text-base font-semibold">40</span>
+                        <span className="text-base font-semibold">{peserta.length}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -144,14 +94,17 @@ export default function PesertaAdmin() {
                         </button>
                     </div>
                     <div className="px-2 py-2 border bg-gray-300 rounded cursor-pointer">
-                        <select className="bg-transparent outline-none">
-                            <option value="" disabled>Kelas</option>
+                        <select
+                            className="bg-transparent outline-none"
+                            value={kelasDipilih}
+                            onChange={(e) => setKelasDipilih(e.target.value)}
+                        >
                             <option value="">Semua Kelas</option>
-                            {
-                                dataKelas?.map((kelas) => (
-                                    <option key={kelas.id}>{kelas.nama_kelas + " " + kelas.tipe_kelas}</option>
-                                ))
-                            }
+                            {dataKelas?.map((kelas) => (
+                                <option key={kelas.id} value={`${kelas.nama_kelas} (${kelas.tipe_kelas})`}>
+                                    {kelas.nama_kelas + " (" + kelas.tipe_kelas + ")"}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => setIsOpen(true)}>
@@ -162,48 +115,48 @@ export default function PesertaAdmin() {
             </div>
 
             {/* Tabel Pendaftar */}
-            <div className="overflow-y-auto max-h-[360px]">
-                <h1 className="text-xl font-radjdhani_bold bg-blue-500 px-1">Kelas C (Weekend Online)</h1>
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-200">
-                        <tr>
-                            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
-                            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-                            <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                            <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
-                            <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {mahasiswa.map((mhs, idx) => (
-                            <tr key={idx}>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nim}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nama}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.fakultas}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.semester}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                        <Trash2 size={16} />
-                                    </button>
-                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                        <Pencil size={16} />
-                                    </button>
-                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                        <Eye size={16} />
-                                    </button>
-                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                        <Mail size={16} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="max-h-[360px] overflow-y-auto">
+                {Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
+                    <div key={namaKelas} className="mb-6">
+                        <h1 className="text-xl font-bold bg-blue-500 text-white px-2 py-1">{namaKelas}</h1>
+                        {
+                            daftarPeserta.length === 0 ? (
+                                <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                    Belum ada peserta di kelas ini.
+                                </div>
+                            ) : (    <table className="w-full text-left mt-0">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="px-3 py-2">NIM</th>
+                                    <th className="px-3 py-2">NAMA</th>
+                                    <th className="px-3 py-2">FAKULTAS</th>
+                                    <th className="px-3 py-2">PRODI</th>
+                                    <th className="px-3 py-2 text-center">SEMESTER</th>
+                                    <th className="px-3 py-2 text-right">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {daftarPeserta.map((mhs, idx) => (
+                                    <tr key={idx} className="border-t">
+                                        <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
+                                        <td className="px-3 py-2">{mhs.mahasiswa?.nama}</td>
+                                        <td className="px-3 py-2">{mhs.mahasiswa?.fakultas}</td>
+                                        <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
+                                        <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
+                                        <td className="px-3 py-2 text-right space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><Trash2 size={16} /></button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><Pencil size={16} /></button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><Eye size={16} /></button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><Mail size={16} /></button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>)
+                        }
+                    </div>
+                ))}
             </div>
-
-
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
         </div>
     );
