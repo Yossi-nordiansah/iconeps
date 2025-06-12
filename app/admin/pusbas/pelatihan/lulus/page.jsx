@@ -1,14 +1,16 @@
 "use client"
-import { Trash2, Pencil, Eye, Mail } from "lucide-react";
+import { Eye, Mail } from "lucide-react";
 import { CheckBadgeIcon } from '@heroicons/react/24/solid';
 import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DetailPesertaLulus from "@/app/_component/admin/detailPesertaLulus";
+import { useSelector } from "react-redux";
 
 export default function LulusAdmin() {
 
+    const { selectedPeriode } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
@@ -23,17 +25,16 @@ export default function LulusAdmin() {
 
     const getDataPesertaLulus = async () => {
         try {
-            const response = await axios.get('/api/pusbas/peserta/lulus');
-            console.log(response.data)
-            setPesertaLulus(response.data);
-        } catch (error) {
-
+            const res = await axios.get(`/api/pusbas/peserta/lulus/periode?periode=${selectedPeriode}`);
+            setPesertaLulus(res.data);
+        } catch (err) {
+            window.alert(`Gagal fetch data: ${err}`);
         }
     };
 
     useEffect(() => {
         getDataPesertaLulus();
-    }, []);
+    }, [selectedPeriode]);
 
     const allEmails = pesertaLulus.map(p => p.mahasiswa.email);
 
