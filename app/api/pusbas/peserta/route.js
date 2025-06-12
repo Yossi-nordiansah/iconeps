@@ -21,7 +21,9 @@ export async function POST(req) {
                         nama: true,
                         fakultas: true,
                         prodi: true,
-                        semester: true
+                        semester: true,
+                        email: true,
+                        nomor_telepon: true
                     }
                 },
                 kelas_peserta_kelasTokelas: {
