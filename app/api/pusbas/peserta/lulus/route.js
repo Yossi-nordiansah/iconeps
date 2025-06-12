@@ -8,7 +8,8 @@ export async function GET(){
                 status: 'lulus'
             },
             include: {
-                mahasiswa: true
+                mahasiswa: true,
+                kelas_peserta_kelasTokelas: true
             }
         })
         return NextResponse.json(dataPesertaLulus, {status: 200});
