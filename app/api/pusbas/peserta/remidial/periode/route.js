@@ -9,7 +9,7 @@ export async function GET(req) {
     try {
         const dataPesertaLulus = await prisma.peserta.findMany({
             where: {
-                status: 'lulus',
+                status: 'remidial',
                 kelas_peserta_kelasTokelas: {
                     periode: periode,
                 },
