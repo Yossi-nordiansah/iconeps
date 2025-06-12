@@ -15,6 +15,7 @@ export default function PesertaAdmin() {
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const pathname = usePathname();
     const [openDetailPeserta, setOpenDetailPeserta] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
     const [openChangeClass, setOpenChangeClass] = useState(false);
     const [selectedPeserta, setSelectedPeserta] = useState(null);
     const [detailPeserta, setDetailPesrta] = useState({});
@@ -56,17 +57,24 @@ export default function PesertaAdmin() {
 
     }, [])
 
-    const pesertaPerKelas = peserta.reduce((acc, item) => {
-        const namaKelas = item.kelas_peserta_kelasTokelas?.nama_kelas + " (" + item.kelas_peserta_kelasTokelas?.tipe_kelas + ")";
+    const pesertaPerKelas = peserta
+        .filter((item) => {
+            const keyword = searchTerm.toLowerCase();
+            const nama = item.mahasiswa?.nama?.toLowerCase() || "";
+            const nim = item.mahasiswa?.nim?.toLowerCase() || "";
+            return nama.includes(keyword) || nim.includes(keyword);
+        })
+        .reduce((acc, item) => {
+            const namaKelas = item.kelas_peserta_kelasTokelas?.nama_kelas + " (" + item.kelas_peserta_kelasTokelas?.tipe_kelas + ")";
 
-        if (kelasDipilih && namaKelas !== kelasDipilih) return acc;
+            if (kelasDipilih && namaKelas !== kelasDipilih) return acc;
 
-        if (!acc[namaKelas]) {
-            acc[namaKelas] = [];
-        }
-        acc[namaKelas].push(item);
-        return acc;
-    }, {});
+            if (!acc[namaKelas]) {
+                acc[namaKelas] = [];
+            }
+            acc[namaKelas].push(item);
+            return acc;
+        }, {});
 
     const handleSendEmail = (recipients, segment) => {
         setRecipients(recipients);
@@ -78,7 +86,7 @@ export default function PesertaAdmin() {
 
     useEffect(() => {
         console.log(selectedPeserta)
-    },[selectedPeserta])
+    }, [selectedPeserta])
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -100,6 +108,8 @@ export default function PesertaAdmin() {
                             type="text"
                             placeholder="Cari Peserta..."
                             className="outline-none px-3 py-1 w-64"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         <button className="bg-gray-300 p-2">
                             <img src="/icons/search.svg" alt="Search" className="w-5" />
@@ -151,8 +161,8 @@ export default function PesertaAdmin() {
                                     {daftarPeserta.map((mhs, idx) => (
                                         <tr key={idx} className="border-t">
                                             <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
-                                            <td className="px-3 py-2">{mhs.mahasiswa?.nama}</td>
-                                            <td className="px-3 py-2">{mhs.mahasiswa?.fakultas}</td>
+                                            <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
+                                            <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
                                             <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
                                             <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
                                             <td className="px-3 py-2 text-right space-x-2">

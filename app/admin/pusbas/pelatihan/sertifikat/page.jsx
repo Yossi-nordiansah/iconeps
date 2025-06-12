@@ -3,7 +3,8 @@ import { Trash2, Pencil, Eye, Mail } from "lucide-react";
 import { DocumentCheckIcon } from '@heroicons/react/24/solid';
 import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const mahasiswa = [
     {
@@ -28,11 +29,26 @@ const mahasiswa = [
 
 export default function SertifikatAdmin() {
 
+    const [pesertaLulus, setPesertaLulus] = useState([])
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
-    const lastSegmetst = segments[segments.length - 1];
+    const lastSegmetst = segments[segments.length - 3];
+    
+    const getDataPesertaLulus = async () => {
+        try {
+            const response = await axios.get('/api/pusbas/peserta/lulus');
+            console.log(response.data)
+            setPesertaLulus(response.data);
+        } catch (error) {
+            
+        }
+    };
+
+    useEffect(() => {
+        getDataPesertaLulus();
+    },[])
 
     return (
         <div className="p-6">
@@ -78,12 +94,12 @@ export default function SertifikatAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {mahasiswa.map((mhs, idx) => (
+                    {pesertaLulus.map((mhs, idx) => (
                         <tr key={idx}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.noSertifikat}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{mhs.tanggalDiterbitkan}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">0</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">0</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Trash2 size={16} />
