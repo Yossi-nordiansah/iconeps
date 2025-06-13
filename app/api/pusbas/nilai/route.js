@@ -134,7 +134,6 @@ export async function POST(req) {
           color: rgb(0, 0, 0),
         });
 
-        // Format tanggal sertifikat (misal: 05 October 2025)
         const now = new Date();
         const tanggalFormatted = now.toLocaleDateString('en-GB', {
           day: '2-digit',
@@ -154,10 +153,19 @@ export async function POST(req) {
 
         const outputDir = path.join(process.cwd(), 'public/sertifikat');
         if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-
         fs.writeFileSync(path.join(outputDir, `sertifikat_${nim}.pdf`), pdfBytes);
-      }
 
+        const fileName = `sertifikat_${nim}.pdf`;
+
+        await prisma.sertifikat.create({
+          data: {
+            jenis: 'pusbas',
+            id_peserta: peserta.id,
+            nomor_sertifikat: student.no !== undefined ? `${student.no}` : null,
+            path: `/public/sertifikat/${fileName}`
+          }
+        });
+      };
 
       await prisma.peserta.update({
         where: { id: peserta.id },
@@ -185,7 +193,7 @@ export async function POST(req) {
       notFoundData: notFound
     });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Terjadi kesalahan saat memproses data.' }, { status: 500 });
+    // return NextResponse.json({ error: 'Terjadi kesalahan saat memproses data.' }, { status: 500 });
+    return NextResponse.json({ error }, error.message, { status: 500 });
   }
 }

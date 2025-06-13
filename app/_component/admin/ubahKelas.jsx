@@ -7,7 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../Loading';
 
-const UbahKelas = ({ isOpen, close, selectedPeserta }) => {
+const UbahKelas = ({ isOpen, close, selectedPeserta }) => { 
 
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);

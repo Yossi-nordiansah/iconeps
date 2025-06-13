@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import DetailPeserta from "@/app/_component/admin/detailPeserta";
-import UbahKelas from "@/app/_component/admin/ubahKelas";
+import UbahKelas from "@/app/_component/admin/ubahKelas"; 
 
 export default function PesertaAdmin() {
 

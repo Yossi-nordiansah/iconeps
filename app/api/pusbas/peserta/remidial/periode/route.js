@@ -3,16 +3,10 @@ import prisma from "@/lib/prisma";
 
 export async function GET(req) {
 
-    const { searchParams } = new URL(req.url);
-    const periode = searchParams.get('periode');
-
     try {
         const dataPesertaLulus = await prisma.peserta.findMany({
             where: {
                 status: 'remidial',
-                kelas_peserta_kelasTokelas: {
-                    periode: periode,
-                },
             },
             include: {
                 mahasiswa: true,

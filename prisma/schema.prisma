@@ -119,7 +119,8 @@ model sertifikat {
   jenis               String   @db.VarChar(10)
   id_peserta          Int
   nomor_sertifikat    String?  @db.VarChar(50)
-  tanggal_diterbitkan DateTime @db.Date
+  tanggal_diterbitkan DateTime @default(now()) @db.Timestamp(0)
+  path                String   @db.VarChar(255)
   peserta             peserta  @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "id_peserta_fk")
 
   @@index([id_peserta], map: "id_peserta_fk")

@@ -5,50 +5,36 @@ import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { format } from 'date-fns';
+import PreviewSertifikat from "@/app/_component/admin/previewSertifikat";
 
-const mahasiswa = [
-    {
-        noSertifikat: 1201,
-        nama: 'Yossi Nordiansah',
-        prodi: 'Informatika',
-        tanggalDiterbitkan: '01-01-2025'
-    },
-    {
-        noSertifikat: 1202,
-        nama: 'Rudi Ardiansyah',
-        prodi: 'Manajemen',
-        tanggalDiterbitkan: '01-01-2025'
-    },
-    {
-        noSertifikat: 1203,
-        nama: 'Imam Fatoni',
-        prodi: 'Teknik Mesin',
-        tanggalDiterbitkan: '01-01-2025'
-    }
-];
 
 export default function SertifikatAdmin() {
 
-    const [pesertaLulus, setPesertaLulus] = useState([])
+    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const [sertifikat, setSertifikat] = useState([]);
+    const [openPreview, setOpenPreview] = useState(false);
+    const [sertifikatPath, setSertifikatPath] = useState("")
     const router = useRouter();
-    const pathname = usePathname();
+    const pathname = usePathname(); 
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
     
     const getDataPesertaLulus = async () => {
         try {
-            const response = await axios.get('/api/pusbas/peserta/lulus');
-            console.log(response.data)
-            setPesertaLulus(response.data);
+            const response = await axios.get(`/api/pusbas/peserta/lulus/sertifikat?periode=${selectedPeriode}`);
+            setSertifikat(response.data);
         } catch (error) {
-            
+            console.log(error);
+            window.alert(error)
         }
     };
 
     useEffect(() => {
         getDataPesertaLulus();
-    },[])
+    },[selectedPeriode])
 
     return (
         <div className="p-6">
@@ -94,20 +80,17 @@ export default function SertifikatAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {pesertaLulus.map((mhs, idx) => (
+                    {sertifikat.map((mhs, idx) => (
                         <tr key={idx}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">0</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.sertifikat[0].nomor_sertifikat}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">0</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{format(new Date(mhs.sertifikat[0].tanggal_diterbitkan), 'dd-MM-yyyy')}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Trash2 size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Pencil size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                    setOpenPreview(true);
+                                    setSertifikatPath(mhs.sertifikat[0].path);
+                                }}>
                                     <Eye size={16} />
                                 </button>
                             </td>
@@ -116,6 +99,7 @@ export default function SertifikatAdmin() {
                 </tbody>
             </table>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
+            <PreviewSertifikat isOpen={openPreview} close={() => setOpenPreview(false)} data={sertifikatPath} />
         </div>
     );
 }

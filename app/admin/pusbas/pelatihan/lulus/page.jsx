@@ -37,7 +37,7 @@ export default function LulusAdmin() {
     }, [selectedPeriode]);
 
     const allEmails = pesertaLulus.map(p => p.mahasiswa.email);
-
+ 
     const filteredPeserta = pesertaLulus.filter((mhs) => {
         const nim = mhs.mahasiswa.nim?.toString().toLowerCase();
         const nama = mhs.mahasiswa.nama?.toLowerCase();

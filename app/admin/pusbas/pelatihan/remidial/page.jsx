@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import DetailPesertaLulus from "@/app/_component/admin/detailPesertaLulus";
 import { useSelector } from "react-redux";
+import UbahKelas from "@/app/_component/admin/ubahKelas";
 
 export default function RemidiAdmin() {
 
@@ -15,6 +16,8 @@ export default function RemidiAdmin() {
     const [detailPeserta, setDetailPeserta] = useState({});
     const [pesertaRemidial, setPesertaRemidial] = useState([]);
     const [emailSegments, setEmailSegments] = useState(null);
+    const [openChangeClass, setOpenChangeClass] = useState(false);
+    const [selectedPeserta, setSelectedPeserta] = useState(null);
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
@@ -99,10 +102,14 @@ export default function RemidiAdmin() {
                         <tr key={idx}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.fakultas}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.fakultas.substring(9)}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.kelas_peserta_kelasTokelas.nama_kelas}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
+                                    setSelectedPeserta(mhs);
+                                    setOpenChangeClass(true);
+                                }} /></button>
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
                                     setOpenDetailPeserta(true);
                                     setDetailPeserta(mhs);
@@ -123,6 +130,7 @@ export default function RemidiAdmin() {
             </table>
             <EmailEditor isOpen={isOpen} segment={emailSegments} close={() => setIsOpen(false)} recipients={recipients} />
             <DetailPesertaLulus isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
+            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
         </div>
     );
 }
