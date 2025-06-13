@@ -1,83 +1,10 @@
-// import { NextResponse } from 'next/server';
-// import * as XLSX from 'xlsx';
-// import prisma from '@/lib/prisma';
-
-// export async function POST(req) {
-//     try {
-//         const formData = await req.formData();
-//         const file = formData.get('file');
-
-//         if (!file) {
-//             return NextResponse.json({ error: 'File tidak ditemukan.' }, { status: 400 });
-//         }
-
-//         const bytes = await file.arrayBuffer();
-//         const buffer = Buffer.from(bytes);
-//         const workbook = XLSX.read(buffer, { type: 'buffer' });
-//         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-//         const studentData = XLSX.utils.sheet_to_json(sheet);
-
-//         // Ambil peserta yang sudah ada
-//         const existingPeserta = await prisma.peserta.findMany({
-//             include: {
-//                 mahasiswa: { select: { nim: true } }
-//             }
-//         });
-
-//         const pesertaMap = new Map(
-//             existingPeserta.map(p => [p.mahasiswa.nim, p])
-//         );
-
-//         console.log(pesertaMap);
-
-//         const results = [];
-
-//         for (const student of studentData) {
-//             const nim = String(student.nim); // ubah ke string
-//             const { reading, listening, structure } = student;
-
-//             if (!pesertaMap.has(nim)) {
-//                 console.log(`NIM tidak ditemukan: ${nim}`);
-//                 continue;
-//             }
-
-//             const peserta = pesertaMap.get(nim);
-//             const totalScore = reading + listening + structure;
-//             const status = totalScore >= 30 ? 'lulus' : 'remidial';
-
-//             await prisma.peserta.update({
-//                 where: { id: peserta.id },
-//                 data: { status }
-//             });
-
-//             await prisma.nilai.create({
-//                 data: {
-//                     id_peserta: peserta.id,
-//                     reading,
-//                     listening,
-//                     structure,
-//                     total: totalScore,
-//                 }
-//             });
-
-//             results.push({ nim, status });
-//         }
-
-
-//         return NextResponse.json({
-//             message: 'Upload dan update nilai berhasil.',
-//             updated: results.length,
-//             detail: results
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         return NextResponse.json({ error: 'Terjadi kesalahan saat memproses data.' }, { status: 500 });
-//     }
-// }
-
 import { NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import prisma from '@/lib/prisma';
+import fs from 'fs';
+import path from 'path';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 
 export async function POST(req) {
   try {
@@ -109,7 +36,7 @@ export async function POST(req) {
 
     for (const student of studentData) {
       const nim = String(student.nim); // ubah ke string
-      const { nama, reading, listening, structure } = student;
+      const { nama, reading, listening, structure, total } = student;
 
       if (!pesertaMap.has(nim)) {
         notFound.push({ nim, nama }); // tambahkan nim dan nama
@@ -117,8 +44,120 @@ export async function POST(req) {
       }
 
       const peserta = pesertaMap.get(nim);
-      const totalScore = reading + listening + structure;
-      const status = totalScore >= 30 ? 'lulus' : 'remidial';
+      const totalScore = total;
+      const status = totalScore >= 400 ? 'lulus' : 'remidial';
+
+      if (status === 'lulus') {
+        const templatePath = path.join(process.cwd(), 'public/template/sertifikat-template.pdf');
+        const existingPdfBytes = fs.readFileSync(templatePath);
+
+        // Load template PDF
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        pdfDoc.registerFontkit(fontkit);
+        const [page] = pdfDoc.getPages();
+
+        const fontPathRegular = path.join(process.cwd(), 'public/fonts/times-new-roman.ttf');
+        let fontRegular;
+        if (fs.existsSync(fontPathRegular)) {
+          const fontRegularBytes = fs.readFileSync(fontPathRegular);
+          fontRegular = await pdfDoc.embedFont(fontRegularBytes);
+        } else {
+          fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        };
+
+        // Font: Times New Roman Bold (pakai font custom jika tersedia, jika tidak Helvetica)
+        const fontPath = path.join(process.cwd(), 'public/fonts/times-new-roman-bold.ttf');
+        let font;
+        if (fs.existsSync(fontPath)) {
+          const fontBytes = fs.readFileSync(fontPath);
+          font = await pdfDoc.embedFont(fontBytes);
+        } else {
+          font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        }
+
+        const { width } = page.getSize();
+
+        if (student.no !== undefined) {
+          const nomorText = `Number: ${student.no}/ILLC-UNIM/III/2025`;
+          const nomorWidth = fontRegular.widthOfTextAtSize(nomorText, 18);
+          const nomorX = (width - nomorWidth) / 2;
+
+          page.drawText(nomorText, {
+            x: nomorX,
+            y: 435,
+            size: 18,
+            font: fontRegular,
+            color: rgb(0, 0, 0),
+          });
+        }
+
+        // Nama di tengah halaman
+        const namaUpper = nama.toUpperCase();
+        const namaWidth = font.widthOfTextAtSize(namaUpper, 24);
+        const namaX = (width - namaWidth) / 2;
+        page.drawText(namaUpper, {
+          x: namaX,
+          y: 374,
+          size: 24,
+          font,
+          color: rgb(0, 0, 0),
+        });
+
+        // Tampilkan skor detail
+        page.drawText(`${reading}`, {
+          x: 494,
+          y: 255,
+          size: 16,
+          font,
+          color: rgb(0, 0, 0),
+        });
+        page.drawText(`${listening}`, {
+          x: 494,
+          y: 233,
+          size: 16,
+          font,
+          color: rgb(0, 0, 0),
+        });
+        page.drawText(`${structure}`, {
+          x: 494,
+          y: 212,
+          size: 16,
+          font,
+          color: rgb(0, 0, 0),
+        });
+
+        page.drawText(`${totalScore}`, {
+          x: 564,
+          y: 231,
+          size: 31,
+          font,
+          color: rgb(0, 0, 0),
+        });
+
+        // Format tanggal sertifikat (misal: 05 October 2025)
+        const now = new Date();
+        const tanggalFormatted = now.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        });
+        page.drawText(tanggalFormatted, {
+          x: 660,
+          y: 169,
+          size: 15,
+          font: fontRegular,
+          color: rgb(0, 0, 0),
+        });
+
+        // Simpan PDF
+        const pdfBytes = await pdfDoc.save();
+
+        const outputDir = path.join(process.cwd(), 'public/sertifikat');
+        if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+        fs.writeFileSync(path.join(outputDir, `sertifikat_${nim}.pdf`), pdfBytes);
+      }
+
 
       await prisma.peserta.update({
         where: { id: peserta.id },
@@ -150,4 +189,3 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Terjadi kesalahan saat memproses data.' }, { status: 500 });
   }
 }
-
