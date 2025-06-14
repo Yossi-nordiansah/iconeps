@@ -37,7 +37,7 @@ model instruktur {
 }
 
 model jadwal {
-  id          Int      @id
+  id          Int      @id @default(autoincrement())
   id_kelas    Int
   hari        String   @db.VarChar(10)
   tanggal     DateTime @db.Date

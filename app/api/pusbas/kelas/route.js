@@ -22,12 +22,10 @@ export async function POST(req) {
 }
 
 export async function GET(){
-
     try {
         const data = await prisma.kelas.findMany();
         return NextResponse.json(data, {status: 200});
     } catch (error) {
         return NextResponse.json(error.message, {status: 500})
     }
-
 }
