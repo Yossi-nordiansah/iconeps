@@ -14,6 +14,20 @@ const PusbasPage = () => {
     const [divisi, setDivisi] = useState([]);
     const [listed, setListed] = useState(false);
     const { data: session } = useSession();
+    const [informasiPeriode, setInformasiPeriode] = useState('');
+
+    useEffect(() => {
+        const getInformasi = async () => {
+            try {
+                const res = await axios.get('/api/pusbas/informasi-periode');
+                console.log("ISI HTML:", res.data.keterangan); 
+                setInformasiPeriode(res.data.keterangan); 
+            } catch (error) {
+                console.error("Gagal ambil informasi periode", error);
+            }
+        };
+        getInformasi();
+    }, []);
 
     useEffect(() => {
         const getStatus = async () => {
@@ -68,11 +82,10 @@ const PusbasPage = () => {
                     </div>
                     <div>
                         <h1 className='text-yellow-400 font-robotoBold sm:pl-16 pl-12 sm:text-2xl text-xl mb-3'>Periode Pelatihan :</h1>
-                        <ol className='text-yellow-400 sm:pl-20 pl-10 pr-4 list-decimal selection:text-lg'>
-                            <li>PERIODE 20 JAN- 16 FEB 2025 (Untuk pendaftaran yang diterima  pada 8 Agustus 2024 - 12 Januari 2025)</li>
-                            <li>PERIODE 12 MEI- 8 JUNI 2025 (Untuk pendaftaran yang diterima pada 13 Januari 2025 - 4 Mei 2025)</li>
-                            <li>PERIODE 11AGUSTUS- 7 SEPTEMBER 2025 (Untuk pendaftaran yang diterima pada 5 Mei 2025 - 4 Agustus 2025)</li>
-                        </ol>
+                        <div
+                            className="text-yellow-400 list-decimal sm:pl-20 pl-10 pr-4 prose prose-invert prose-li:marker:text-yellow-400"
+                            dangerouslySetInnerHTML={{ __html: informasiPeriode }}
+                        />
                     </div>
                 </div>
             </div>
@@ -104,7 +117,7 @@ const PusbasPage = () => {
                     </div>
                 </div>
             </div>
-            <FormPendaftaran isOpen={isOpen} close={() => setIsOpen(false)} segment={segments} onSubmitSuccess={refreshDivisi}/>
+            <FormPendaftaran isOpen={isOpen} close={() => setIsOpen(false)} segment={segments} onSubmitSuccess={refreshDivisi} />
         </div>
     )
 }

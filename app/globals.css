@@ -25,6 +25,10 @@
   }
 }
 
+ol {
+  @apply list-decimal;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
