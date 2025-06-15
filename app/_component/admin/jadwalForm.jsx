@@ -6,7 +6,7 @@ import { fetchPeriodes, setSelectedPeriode } from '../../../lib/features/kelasSl
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
-const JadwalForm = ({ isOpen, close, data }) => {
+const JadwalForm = ({ isOpen, close, data, onSuccess }) => {
 
   const dispatch = useDispatch()
   const [datakelas, setDataKelas] = useState([]);
@@ -87,20 +87,21 @@ const JadwalForm = ({ isOpen, close, data }) => {
           jadwal: jadwalList
         });
         Swal.fire({ icon: 'success', title: 'Jadwal berhasil diperbarui' });
+        onSuccess();
       } else {
         await axios.post('/api/pusbas/jadwal', {
           kelasId: kelasDipilih,
           jadwal: jadwalList
         });
         Swal.fire({ icon: 'success', title: 'Jadwal berhasil disimpan' });
-      }
+      };
+      onSuccess();
       handleCancel();
     } catch (err) {
       console.error(err);
       Swal.fire({ icon: 'error', title: 'Gagal menyimpan jadwal' });
     }
   };
-
 
   const handleChange = (index, field, value) => {
     const updated = [...jadwalList];
@@ -139,7 +140,7 @@ const JadwalForm = ({ isOpen, close, data }) => {
                   <label>Hari</label>
                   <div className='border border-black w-fit px-2 py-1 rounded-md'>
                     <select
-                      className='outline-none border border-black px-2 py-1 rounded-md'
+                      className='outline-none px-2 py-1 rounded-md'
                       value={item.hari}
                       onChange={(e) => {
                         const updated = [...jadwalList];
