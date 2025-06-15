@@ -19,7 +19,7 @@ const PuskomPage = () => {
         const getStatus = async () => {
             if (!session?.user?.id) return null;
             try {
-                const res = await axios.post("/api/peserta/cek-status", {
+                const res = await axios.post("/api/puskom/peserta/cek-status", {
                     id: session?.user?.id,
                 });
                 const divisi = res.data.mahasiswa.peserta.map((item) => item.divisi);
@@ -34,7 +34,7 @@ const PuskomPage = () => {
     const refreshDivisi = async () => {
         if (!session?.user?.id) return null;
         try {
-            const res = await axios.post("/api/peserta/cek-status", {
+            const res = await axios.post("/api/puskom/peserta/cek-status", {
                 id: session.user.id,
             });
             const divisiBaru = res.data.mahasiswa.peserta.map((item) => item.divisi);

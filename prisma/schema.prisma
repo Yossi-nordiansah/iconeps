@@ -53,7 +53,7 @@ model kelas {
   id                           Int          @id @default(autoincrement())
   nama_kelas                   String       @db.VarChar(50)
   id_instruktur                Int
-  tipe_kelas                   String       @db.VarChar(30)
+  tipe_kelas                   String?      @db.VarChar(30)
   divisi                       kelas_divisi
   periode                      String       @db.VarChar(30)
   link_ujian                   String?      @db.VarChar(100)

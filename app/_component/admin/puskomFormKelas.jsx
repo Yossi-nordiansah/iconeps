@@ -4,7 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../Loading';
 import { useDispatch } from 'react-redux';
-import { fetchPeriodes } from '../../../lib/features/kelasSlice'
+import { fetchPeriodes } from '../../../lib/features/kelasPusbasSlice'
 
 const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas }) => {
 
@@ -14,7 +14,6 @@ const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas 
     const [formData, setFormData] = useState({
         nama_kelas: "",
         id_instruktur: "",
-        tipe_kelas: "",
         divisi: segment,
         periode: ""
     });
@@ -32,7 +31,8 @@ const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas 
 
     const getDataInstruktur = async () => {
         try {
-            const response = await axios.get("/api/pusbas/instruktur");
+            const response = await axios.get("/api/puskom/instruktur");
+            console.log(response.data)
             setInstrukturs(response.data);
         } catch (error) {
             console.log(error);
@@ -58,6 +58,7 @@ const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas 
             nama_kelas: "",
             id_instruktur: "",
             tipe_kelas: "",
+            divisi: "",
             periode: ""
         });
         close();
@@ -69,7 +70,7 @@ const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas 
 
         if (openEdit && selectedKelas) {
             try {
-                await axios.put(`/api/pusbas/kelas/${selectedKelas.id}`, formData);
+                await axios.put(`/api/puskom/kelas/${selectedKelas.id}`, formData);
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil',
@@ -109,7 +110,7 @@ const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas 
             }
 
             try {
-                await axios.post("/api/pusbas/kelas", formData);
+                await axios.post("/api/puskom/kelas", formData);
                 Swal.fire({
                     icon: "success",
                     title: "Berhasil membuat Kelas",
@@ -120,7 +121,7 @@ const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas 
                     nama_kelas: "",
                     id_instruktur: "",
                     tipe_kelas: "",
-                    divisi: segment,
+                    divisi: "",
                     periode: ""
                 })
                 onSuccess?.();

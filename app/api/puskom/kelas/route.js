@@ -10,26 +10,25 @@ export async function POST(req) {
             data: {
                 nama_kelas: body.nama_kelas,
                 id_instruktur: parseInt(body.id_instruktur),
-                tipe_kelas: body.tipe_kelas,
-                divisi: "pusbas",
+                divisi: "puskom",
                 periode: body.periode
             }
         })
         return NextResponse.json(data, { status: 200 })
     } catch (error) {
-        return NextResponse.json(error.message, { status: 500 })
+        return NextResponse.json({ error }, error.message, { status: 500 })
     }
 }
 
-export async function GET(){
+export async function GET() {
     try {
         const data = await prisma.kelas.findMany({
             where: {
-                divisi: "pusbas"
-            }
+                divisi: 'puskom'
+            },
         });
-        return NextResponse.json(data, {status: 200});
+        return NextResponse.json(data, { status: 200 });
     } catch (error) {
-        return NextResponse.json(error.message, {status: 500})
+        return NextResponse.json({ error }, error.message, { status: 500 })
     }
 }

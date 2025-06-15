@@ -15,7 +15,6 @@ const PelatihanAdminPage = () => {
     { title: 'Nilai', value: 0, icon: <AcademicCapIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/nilai' },
     { title: 'Lulus', value: 0, icon: <CheckBadgeIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/lulus' },
     { title: 'Remidial', value: 0, icon: <ArrowPathIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/remidial' },
-    { title: 'Sertifikat', value: 0, icon: <DocumentCheckIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/sertifikat' },
   ];
   return (
     <div className=''>
