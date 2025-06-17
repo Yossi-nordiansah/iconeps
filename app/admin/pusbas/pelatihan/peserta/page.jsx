@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import DetailPeserta from "@/app/_component/admin/detailPeserta";
-import UbahKelas from "@/app/_component/admin/ubahKelas"; 
+import UbahKelas from "@/app/_component/admin/ubahKelas";
 
 export default function PesertaAdmin() {
 
@@ -40,6 +40,7 @@ export default function PesertaAdmin() {
     const getDataPeserta = async () => {
         try {
             const response = await axios.post('/api/pusbas/peserta', { periode: selectedPeriode });
+            console.log(response.data.length)
             setPeserta(response.data);
         } catch (error) {
             console.log(error)
@@ -86,7 +87,9 @@ export default function PesertaAdmin() {
 
     useEffect(() => {
         console.log(selectedPeserta)
-    }, [selectedPeserta])
+    }, [selectedPeserta]);
+
+    console.log(`peserta ${peserta.length}`)
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -136,55 +139,63 @@ export default function PesertaAdmin() {
                 </div>
             </div>
 
-            {/* Tabel Pendaftar */}
+            {/* Tabel Pendaftar */} 
             <div className="max-h-[360px] overflow-y-auto">
-                {Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
-                    <div key={namaKelas} className="mb-6">
-                        <h1 className="text-xl font-bold bg-blue-500 text-white px-2 py-1">{namaKelas}</h1>
-                        {
-                            daftarPeserta.length === 0 ? (
-                                <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                                    Belum ada peserta di kelas ini.
-                                </div>
-                            ) : (<table className="w-full text-left mt-0">
-                                <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="px-3 py-2">NIM</th>
-                                        <th className="px-3 py-2">NAMA</th>
-                                        <th className="px-3 py-2">FAKULTAS</th>
-                                        <th className="px-3 py-2">PRODI</th>
-                                        <th className="px-3 py-2 text-center">SEMESTER</th>
-                                        <th className="px-3 py-2 text-right">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {daftarPeserta.map((mhs, idx) => (
-                                        <tr key={idx} className="border-t">
-                                            <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
-                                            <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
-                                            <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
-                                            <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
-                                            <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
-                                            <td className="px-3 py-2 text-right space-x-2">
-                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
-                                                    setSelectedPeserta(mhs);
-                                                    setOpenChangeClass(true);
-                                                }} /></button>
-                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                                                    onClick={() => {
-                                                        setOpenDetailPeserta(true);
-                                                        setDetailPesrta(mhs);
-                                                    }}
-                                                ><Eye size={16} /></button>
-                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.mahasiswa?.email], mhs.mahasiswa?.nama)}><Mail size={16} /></button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>)
-                        }
-                    </div>
-                ))}
+                {
+                    peserta.length === 0 ? (
+                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                            Belum ada peserta.
+                        </div>
+                    )
+                        :
+                        (Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
+                            <div key={namaKelas} className="mb-6">
+                                <h1 className="text-xl font-bold bg-blue-500 text-white px-2 py-1">{namaKelas}</h1>
+                                {
+                                    daftarPeserta.length === 0 ? (
+                                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                            Belum ada peserta di kelas ini.
+                                        </div>
+                                    ) : (<table className="w-full text-left mt-0">
+                                        <thead>
+                                            <tr className="bg-gray-100">
+                                                <th className="px-3 py-2">NIM</th>
+                                                <th className="px-3 py-2">NAMA</th>
+                                                <th className="px-3 py-2">FAKULTAS</th>
+                                                <th className="px-3 py-2">PRODI</th>
+                                                <th className="px-3 py-2 text-center">SEMESTER</th>
+                                                <th className="px-3 py-2 text-right">AKSI</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {daftarPeserta.map((mhs, idx) => (
+                                                <tr key={idx} className="border-t">
+                                                    <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
+                                                    <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
+                                                    <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
+                                                    <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
+                                                    <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
+                                                    <td className="px-3 py-2 text-right space-x-2">
+                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
+                                                            setSelectedPeserta(mhs);
+                                                            setOpenChangeClass(true);
+                                                        }} /></button>
+                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                                            onClick={() => {
+                                                                setOpenDetailPeserta(true);
+                                                                setDetailPesrta(mhs);
+                                                            }}
+                                                        ><Eye size={16} /></button>
+                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.mahasiswa?.email], mhs.mahasiswa?.nama)}><Mail size={16} /></button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>)
+                                }
+                            </div>
+                        )))
+                }
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPeserta isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />

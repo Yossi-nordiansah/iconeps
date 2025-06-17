@@ -83,33 +83,41 @@ export default function InstrukturAdmin() {
                     </button>
                 </div>
             </div>
-
-            {/* Tabel */}
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="min-w-full bg-gray-200">
-                    <tr className="min-w-full">
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontak</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {instrukturs.map((instruktur, idx) => (
-                        <tr key={idx} className="">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.kontak}</td>
-                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(instruktur.id)}>
-                                    <Trash2 size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setSelectedInstruktur(instruktur); setOpenEdit(true); setIsOpen(true); }}>
-                                    <Pencil size={16} />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="max-h-[360px] overflow-y-auto">
+                {
+                    instrukturs.length === 0 ? (
+                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                            Tidak Ada Instruktur
+                        </div>
+                    ) : (
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="min-w-full bg-gray-200">
+                                <tr className="min-w-full">
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontak</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {instrukturs.map((instruktur, idx) => (
+                                    <tr key={idx} className="">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.nama}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.kontak}</td>
+                                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(instruktur.id)}>
+                                                <Trash2 size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => { setSelectedInstruktur(instruktur); setOpenEdit(true); setIsOpen(true); }}>
+                                                <Pencil size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )
+                }
+            </div>
             <InstrukturForm isOpen={isOpen} openEdit={openEdit} segments={lastSegmetst} close={() => { setIsOpen(false); setOpenEdit(false); setSelectedInstruktur(null) }} onSuccess={() => { getInstruktur(); }} selectedInstruktur={selectedInstruktur} />
         </div>
     );

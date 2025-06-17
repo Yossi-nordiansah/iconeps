@@ -21,7 +21,11 @@ export async function POST(req) {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const studentData = XLSX.utils.sheet_to_json(sheet);
 
+    // Ambil hanya peserta dengan divisi 'pusbas'
     const existingPeserta = await prisma.peserta.findMany({
+      where: {
+        divisi: 'pusbas'
+      },
       include: {
         mahasiswa: { select: { nim: true } }
       }
@@ -35,11 +39,11 @@ export async function POST(req) {
     const notFound = [];
 
     for (const student of studentData) {
-      const nim = String(student.nim); // ubah ke string
+      const nim = String(student.nim).trim();
       const { nama, reading, listening, structure, total } = student;
 
       if (!pesertaMap.has(nim)) {
-        notFound.push({ nim, nama }); // tambahkan nim dan nama
+        notFound.push({ nim, nama });
         continue;
       }
 
@@ -47,11 +51,11 @@ export async function POST(req) {
       const totalScore = total;
       const status = totalScore >= 400 ? 'lulus' : 'remidial';
 
+      // Hanya generate sertifikat jika lulus
       if (status === 'lulus') {
         const templatePath = path.join(process.cwd(), 'public/template/sertifikat-template.pdf');
         const existingPdfBytes = fs.readFileSync(templatePath);
 
-        // Load template PDF
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
         pdfDoc.registerFontkit(fontkit);
         const [page] = pdfDoc.getPages();
@@ -63,13 +67,12 @@ export async function POST(req) {
           fontRegular = await pdfDoc.embedFont(fontRegularBytes);
         } else {
           fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        };
+        }
 
-        // Font: Times New Roman Bold (pakai font custom jika tersedia, jika tidak Helvetica)
-        const fontPath = path.join(process.cwd(), 'public/fonts/times-new-roman-bold.ttf');
+        const fontPathBold = path.join(process.cwd(), 'public/fonts/times-new-roman-bold.ttf');
         let font;
-        if (fs.existsSync(fontPath)) {
-          const fontBytes = fs.readFileSync(fontPath);
+        if (fs.existsSync(fontPathBold)) {
+          const fontBytes = fs.readFileSync(fontPathBold);
           font = await pdfDoc.embedFont(fontBytes);
         } else {
           font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -77,13 +80,12 @@ export async function POST(req) {
 
         const { width } = page.getSize();
 
+        // Nomor sertifikat (optional)
         if (student.no !== undefined) {
           const nomorText = `Number: ${student.no}/ILLC-UNIM/III/2025`;
           const nomorWidth = fontRegular.widthOfTextAtSize(nomorText, 18);
-          const nomorX = (width - nomorWidth) / 2;
-
           page.drawText(nomorText, {
-            x: nomorX,
+            x: (width - nomorWidth) / 2,
             y: 435,
             size: 18,
             font: fontRegular,
@@ -91,49 +93,24 @@ export async function POST(req) {
           });
         }
 
-        // Nama di tengah halaman
+        // Nama Mahasiswa
         const namaUpper = nama.toUpperCase();
         const namaWidth = font.widthOfTextAtSize(namaUpper, 24);
-        const namaX = (width - namaWidth) / 2;
         page.drawText(namaUpper, {
-          x: namaX,
+          x: (width - namaWidth) / 2,
           y: 374,
           size: 24,
           font,
           color: rgb(0, 0, 0),
         });
 
-        // Tampilkan skor detail
-        page.drawText(`${reading}`, {
-          x: 494,
-          y: 255,
-          size: 16,
-          font,
-          color: rgb(0, 0, 0),
-        });
-        page.drawText(`${listening}`, {
-          x: 494,
-          y: 233,
-          size: 16,
-          font,
-          color: rgb(0, 0, 0),
-        });
-        page.drawText(`${structure}`, {
-          x: 494,
-          y: 212,
-          size: 16,
-          font,
-          color: rgb(0, 0, 0),
-        });
+        // Skor
+        page.drawText(`${reading}`, { x: 494, y: 255, size: 16, font, color: rgb(0, 0, 0) });
+        page.drawText(`${listening}`, { x: 494, y: 233, size: 16, font, color: rgb(0, 0, 0) });
+        page.drawText(`${structure}`, { x: 494, y: 212, size: 16, font, color: rgb(0, 0, 0) });
+        page.drawText(`${totalScore}`, { x: 564, y: 231, size: 31, font, color: rgb(0, 0, 0) });
 
-        page.drawText(`${totalScore}`, {
-          x: 564,
-          y: 231,
-          size: 31,
-          font,
-          color: rgb(0, 0, 0),
-        });
-
+        // Tanggal sekarang
         const now = new Date();
         const tanggalFormatted = now.toLocaleDateString('en-GB', {
           day: '2-digit',
@@ -148,30 +125,31 @@ export async function POST(req) {
           color: rgb(0, 0, 0),
         });
 
-        // Simpan PDF
+        // Simpan sertifikat
         const pdfBytes = await pdfDoc.save();
-
         const outputDir = path.join(process.cwd(), 'public/sertifikat');
         if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-        fs.writeFileSync(path.join(outputDir, `sertifikat_${nim}.pdf`), pdfBytes);
 
         const fileName = `sertifikat_${nim}.pdf`;
+        fs.writeFileSync(path.join(outputDir, fileName), pdfBytes);
 
         await prisma.sertifikat.create({
           data: {
             jenis: 'pusbas',
             id_peserta: peserta.id,
             nomor_sertifikat: student.no !== undefined ? `${student.no}` : null,
-            path: `/public/sertifikat/${fileName}`
+            path: `/public/sertifikat/${fileName}`,
           }
         });
-      };
+      }
 
+      // Update status peserta
       await prisma.peserta.update({
         where: { id: peserta.id },
-        data: { status }
+        data: { status },
       });
 
+      // Simpan nilai
       await prisma.nilai.create({
         data: {
           id_peserta: peserta.id,
@@ -193,7 +171,6 @@ export async function POST(req) {
       notFoundData: notFound
     });
   } catch (error) {
-    // return NextResponse.json({ error: 'Terjadi kesalahan saat memproses data.' }, { status: 500 });
     return NextResponse.json({ error }, error.message, { status: 500 });
   }
 }

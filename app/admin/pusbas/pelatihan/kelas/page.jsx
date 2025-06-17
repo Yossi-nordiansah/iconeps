@@ -24,7 +24,7 @@ export default function KelasAdmin() {
     const [loading, setLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedKelas, setSelectedKelas] = useState({})
-    const segments = pathname.split('/').filter(Boolean); 
+    const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
 
     const getDataKelas = async () => {
@@ -102,44 +102,54 @@ export default function KelasAdmin() {
                 </button>
             </div>
 
-            {/* Table */}
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kelas</th>
-                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instruktur</th>
-                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
-                        <th className="px-3 py-3 text-xs  text-center font-medium text-gray-500 uppercase tracking-wider">Jumlah Peserta</th>
-                        <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {currentData.map((kls) => (
-                        <tr key={kls.id}>
-                            <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">{kls.id_peserta
-                                === null ? (0) : (kls.jumlahPeserta )}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
-                                    <Trash2 size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                    setOpenEdit(true);
-                                    setSelectedKelas(kls);
-                                    setIsOpen(true);
-                                }}>
-                                    <Pencil size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <CalendarDateRangeIcon className="h-5" />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            {
+                dataKelas.length === 0 ? (
+                    <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                        Belum ada kelas.
+                    </div>
+                ) : (
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-200">
+                            <tr>
+                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kelas</th>
+                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instruktur</th>
+                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                                <th className="px-3 py-3 text-xs  text-center font-medium text-gray-500 uppercase tracking-wider">Jumlah Peserta</th>
+                                <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {currentData.map((kls) => (
+                                <tr key={kls.id}>
+                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
+                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
+                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
+                                    <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">
+                                        {kls.id_peserta
+                                            === null ? (0) : (kls.jumlahPeserta)}
+                                    </td>
+                                    <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
+                                            <Trash2 size={16} />
+                                        </button>
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                            setOpenEdit(true);
+                                            setSelectedKelas(kls);
+                                            setIsOpen(true);
+                                        }}>
+                                            <Pencil size={16} />
+                                        </button>
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                            <CalendarDateRangeIcon className="h-5" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )
+            }
+
             <div className="flex justify-center mt-4 space-x-2">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}

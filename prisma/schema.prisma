@@ -37,14 +37,14 @@ model instruktur {
 }
 
 model jadwal {
-  id          Int      @id @default(autoincrement())
-  id_kelas    Int
-  hari        String   @db.VarChar(10)
-  tanggal     DateTime @db.Date
-  jam_mulai   String   @db.VarChar(7)
-  jam_selesai String   @db.VarChar(7)
-  agenda      String   @db.VarChar(10)
-  kelas       kelas    @relation(fields: [id_kelas], references: [id], onDelete: Cascade, map: "id_kelas_fk")
+  id          Int       @id @default(autoincrement())
+  id_kelas    Int?
+  hari        String    @db.VarChar(10)
+  tanggal     DateTime? @db.Date
+  jam_mulai   String    @db.VarChar(7)
+  jam_selesai String    @db.VarChar(7)
+  agenda      String?   @db.VarChar(10)
+  kelas       kelas?    @relation(fields: [id_kelas], references: [id], onDelete: Cascade, map: "id_kelas_fk")
 
   @@index([id_kelas], map: "id_kelas_fk")
 }

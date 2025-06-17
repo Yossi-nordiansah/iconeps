@@ -118,7 +118,7 @@ const Registrasi = () => {
                     <input
                         type="email"
                         name="email"
-                        placeholder="Email"
+                        placeholder="Email Aktif"
                         value={form.email}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded-lg border-blue-500 outline-blue-400"

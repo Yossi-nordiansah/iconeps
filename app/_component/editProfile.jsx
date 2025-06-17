@@ -154,26 +154,6 @@ const EditProfile = ({ isOpen, close, id }) => {
                             {showPasswordButton ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>
-
-                    {/* Confirm Password */}
-                    <div className="relative">
-                        <input
-                            type={showConfirmPasswordButton ? "text" : "password"}
-                            name="confirmPassword"
-                            placeholder="Confirm Password"
-                            value={form.confirmPassword}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded-lg pr-10 border-blue-500 outline-blue-400"
-                            required
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirmPasswordButton((prev) => !prev)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
-                        >
-                            {showConfirmPasswordButton ? <FaEye /> : <FaEyeSlash />}
-                        </button>
-                    </div>
                     <div className='flex gap-4'>
                         <button
                             onClick={close}

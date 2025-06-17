@@ -37,7 +37,7 @@ export default function LulusAdmin() {
     }, [selectedPeriode]);
 
     const allEmails = pesertaLulus.map(p => p.mahasiswa.email);
- 
+
     const filteredPeserta = pesertaLulus.filter((mhs) => {
         const nim = mhs.mahasiswa.nim?.toString().toLowerCase();
         const nama = mhs.mahasiswa.nama?.toLowerCase();
@@ -81,49 +81,54 @@ export default function LulusAdmin() {
                     </button>
                 </div>
             </div>
-
-            {/* Tabel */}
             <div className="max-h-[360px] overflow-y-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-200">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredPeserta.map((mhs, idx) => (
-                            <tr key={idx}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.mahasiswa.nama}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.mahasiswa.fakultas.substring(9)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.kelas_peserta_kelasTokelas.nama_kelas}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                        setOpenDetailPeserta(true);
-                                        setDetailPeserta(mhs);
-                                    }}>
-                                        <Eye size={16} />
-                                    </button>
-                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                        setRecipients([mhs.mahasiswa.email]);
-                                        setIsOpen(true);
-                                        setEmailSegments(mhs.mahasiswa.nama);
-                                    }}>
-                                        <Mail size={16} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                {
+                    pesertaLulus.length === 0 ? (
+                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                            Belum ada peserta lulus.
+                        </div>
+                    ) : (
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-200">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {filteredPeserta.map((mhs, idx) => (
+                                    <tr key={idx}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.mahasiswa.nama}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.mahasiswa.fakultas.substring(9)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.kelas_peserta_kelasTokelas.nama_kelas}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                setOpenDetailPeserta(true);
+                                                setDetailPeserta(mhs);
+                                            }}>
+                                                <Eye size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                setRecipients([mhs.mahasiswa.email]);
+                                                setIsOpen(true);
+                                                setEmailSegments(mhs.mahasiswa.nama);
+                                            }}>
+                                                <Mail size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )
+                }
             </div>
-
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPesertaLulus isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
         </div>

@@ -27,7 +27,9 @@ const PelatihanAdminPage = () => {
             </div>
             <div className="flex flex-col justify-center items-center gap-1">
               <div className="text-2xl font-radjdhani_bold">{card.title}</div>
-              <div className="text-3xl font-radjdhani_bold">{card.value}</div>
+              {
+                card.title === 'Nilai' ? null : (<div className="text-3xl font-radjdhani_bold">{card.value}</div>)
+              }
             </div>
           </div>
         ))}

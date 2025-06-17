@@ -6,7 +6,7 @@ import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
+import DetailPendaftar from "@/app/_component/admin/detailPendaftar"; 
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
 import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftar";
@@ -61,7 +61,7 @@ export default function MahasiswaAdmin() {
 
     const getDataPendaftar = async () => {
         try {
-            const response = await axios.post("/api/pusbas/pendaftar", {
+            const response = await axios.post("/api/puskom/pendaftar", {
                 divisi: divisi
             });
             setDataPendaftar(response.data);
@@ -113,7 +113,7 @@ export default function MahasiswaAdmin() {
             )
         );
         try {
-            await axios.put(`/api/pusbas/pendaftar/${updatedData.id}`, { updatedData, divisi });
+            await axios.put(`/api/puskom/pendaftar/${updatedData.id}`, { updatedData, divisi });
             Swal.fire({
                 icon: 'success',
                 title: 'Data berhasil diperbarui!',

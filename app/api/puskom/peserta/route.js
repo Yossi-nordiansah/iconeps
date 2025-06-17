@@ -11,9 +11,6 @@ export async function POST(req) {
                 kelas_peserta_kelasTokelas: {
                     periode: periode
                 },
-                status: {
-                    in: ["peserta", "lulus", "remidial"]
-                }
             },
             select: {
                 id: true,
@@ -32,7 +29,6 @@ export async function POST(req) {
                 kelas_peserta_kelasTokelas: {
                     select: {
                         nama_kelas: true,
-                        tipe_kelas: true
                     }
                 }
             }
@@ -40,6 +36,6 @@ export async function POST(req) {
 
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error }, error.message, { status: 500 });
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
