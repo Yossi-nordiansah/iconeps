@@ -1,13 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { PDFDocument, rgb } from 'pdf-lib';
+import * as XLSX from 'xlsx';
 import axios from 'axios';
-import fontkit from '@pdf-lib/fontkit';
+import { Download } from 'lucide-react';
 
 export default function AdminCetakLaporan() {
     const [tahun, setTahun] = useState('');
     const [listTahun, setListTahun] = useState([]);
-    const [pdfUrl, setPdfUrl] = useState(null);
+    const [previewData, setPreviewData] = useState([]);
+    const [excelBlob, setExcelBlob] = useState(null); // Simpan blob untuk tombol download
 
     useEffect(() => {
         const fetchTahun = async () => {
@@ -19,10 +20,10 @@ export default function AdminCetakLaporan() {
         fetchTahun();
     }, []);
 
-    const handleBuatLaporan = async () => {
+    const handlePreviewLaporan = async () => {
         if (!tahun) {
             alert("Pilih tahun terlebih dahulu.");
-            return;
+            return null;
         }
 
         try {
@@ -32,22 +33,35 @@ export default function AdminCetakLaporan() {
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            if (!res.ok) throw new Error('Gagal unduh laporan');
+            if (!res.ok) throw new Error('Gagal ambil laporan');
 
             const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `laporan_${tahun}.xlsx`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            setExcelBlob(blob); // Simpan blob untuk nanti diunduh
+
+            // Parse Excel ke JSON untuk preview
+            const arrayBuffer = await blob.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+            setPreviewData(jsonData);
         } catch (err) {
-            alert('Terjadi kesalahan saat membuat laporan.');
+            alert('Terjadi kesalahan saat membuat preview laporan.');
             console.error(err);
         }
     };
 
+    const handleUnduhLaporan = () => {
+        if (!excelBlob || !tahun) return null;
+
+        const url = window.URL.createObjectURL(excelBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `laporan_${tahun}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    };
 
     return (
         <div className="relative pl-52 pr-6 pt-20">
@@ -67,12 +81,52 @@ export default function AdminCetakLaporan() {
                     </select>
                 </div>
                 <button
-                    className='px-2 py-1 bg-blue-700 text-white font-semibold rounded'
-                    onClick={handleBuatLaporan}
+                    className='px-2 py-1 bg-blue-700 text-white font-semibold rounded hover:bg-blue-800 transition'
+                    onClick={handlePreviewLaporan}
                 >
                     Buat Laporan
                 </button>
             </div>
+
+            <div className='max-h-[350px] min-h-[350px] overflow-y-auto border p-2 rounded'>
+                {previewData.length > 0 ? (
+                    <div className="overflow-auto">
+                        <h2 className="text-lg font-semibold mb-2">Preview Data:</h2>
+                        <table className="table-auto border-collapse border w-full text-sm">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    {Object.keys(previewData[0]).map((key) => (
+                                        <th key={key} className="border p-2">{key}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {previewData.map((row, idx) => (
+                                    <tr key={idx}>
+                                        {Object.values(row).map((val, i) => (
+                                            <td key={i} className="border p-2">{val}</td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <p className="text-sm text-gray-500 italic text-center mt-28">Belum ada preview, pilih tahun dan klik "Buat Laporan".</p>
+                )}
+            </div>
+
+            <button
+                onClick={handleUnduhLaporan}
+                disabled={!excelBlob}
+                className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto mt-4 flex items-center justify-center gap-2 transition ${
+                    !excelBlob ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+            >
+                <Download size={18} />
+                Unduh Sebagai File Excel
+            </button>
         </div>
     );
 }
+

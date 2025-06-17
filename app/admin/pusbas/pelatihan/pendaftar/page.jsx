@@ -10,6 +10,7 @@ import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
 import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftar";
+import { Download } from 'lucide-react';
 
 export default function MahasiswaAdmin() {
 
@@ -170,7 +171,28 @@ export default function MahasiswaAdmin() {
         setRecipients(recipients);
         setEmailSegments(segment);
         setIsOpen(true);
-    }
+    };
+
+    const handleDownloadExcel = async () => {
+        try {
+            const res = await fetch('/api/pusbas/pendaftar/export');
+
+            if (!res.ok) throw new Error('Gagal mengunduh file');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pendaftar_pusbas.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error('Gagal unduh:', error);
+            alert('Terjadi kesalahan saat mengunduh file.');
+        }
+    };
+
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -224,6 +246,12 @@ export default function MahasiswaAdmin() {
                     <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => handleSendEmail(allEmails, lastSegmetst)}>
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
                         <span>Kirim Email</span>
+                    </button>
+                    <button
+                        onClick={handleDownloadExcel}
+                        className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
+                    >
+                        <Download size={18} />
                     </button>
                 </div>
             </div>
