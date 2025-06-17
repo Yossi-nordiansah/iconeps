@@ -17,7 +17,6 @@ export async function GET() {
         });
 
         const tahunList = Array.from(tahunSet).sort((a, b) => b - a);
-        console.log(tahunList)
         return NextResponse.json(tahunList);
     } catch (error) {
         console.error("Gagal fetch periode:", error);

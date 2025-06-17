@@ -27,7 +27,6 @@ export async function GET(req, { params }) {
             const total = kls.peserta_peserta_kelasTokelas.length;
             const lulus = kls.peserta_peserta_kelasTokelas.filter(p => p.status === 'lulus').length;
             const remidi = kls.peserta_peserta_kelasTokelas.filter(p => p.status === 'remidial').length;
-
             return {
                 periode: kls.periode,
                 peserta: total,
