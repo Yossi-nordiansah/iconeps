@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import DetailPeserta from "@/app/_component/admin/detailPeserta";
 import UbahKelas from "@/app/_component/admin/ubahKelas";
+import { Download } from "lucide-react";
 
 export default function PesertaAdmin() {
 
@@ -89,7 +90,25 @@ export default function PesertaAdmin() {
         console.log(selectedPeserta)
     }, [selectedPeserta]);
 
-    console.log(`peserta ${peserta.length}`)
+    const handleDownloadExcel = async () => {
+        try {
+            const res = await fetch('/api/pusbas/peserta/export');
+
+            if (!res.ok) throw new Error('Gagal mengunduh file');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pendaftar_pusbas.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error('Gagal unduh:', error);
+            alert('Terjadi kesalahan saat mengunduh file.');
+        }
+    };
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -136,10 +155,16 @@ export default function PesertaAdmin() {
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
                         <span>Kirim Email</span>
                     </button>
+                    <button
+                        onClick={handleDownloadExcel}
+                        className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
+                    >
+                        <Download size={18} />
+                    </button>
                 </div>
             </div>
 
-            {/* Tabel Pendaftar */} 
+            {/* Tabel Pendaftar */}
             <div className="max-h-[360px] overflow-y-auto">
                 {
                     peserta.length === 0 ? (
