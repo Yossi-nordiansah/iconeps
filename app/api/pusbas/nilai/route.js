@@ -24,7 +24,8 @@ export async function POST(req) {
     // Ambil hanya peserta dengan divisi 'pusbas'
     const existingPeserta = await prisma.peserta.findMany({
       where: {
-        divisi: 'pusbas'
+        divisi: 'pusbas',
+        status: { in: ['peserta', 'lulus', 'remidial'] }
       },
       include: {
         mahasiswa: { select: { nim: true } }

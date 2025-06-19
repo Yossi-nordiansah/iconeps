@@ -4,17 +4,17 @@ import prisma from "@/lib/prisma";
 export async function GET(req) {
 
     try {
-        const dataPesertaLulus = await prisma.peserta.findMany({
+        const dataPesertaRemidial = await prisma.peserta.findMany({
             where: {
                 status: 'remidial',
-                divisi: 'puskom'
+                divisi: 'pusbas'
             },
             include: {
                 mahasiswa: true,
                 kelas_peserta_kelasTokelas: true
             },
         })
-        return NextResponse.json(dataPesertaLulus, { status: 200 });
+        return NextResponse.json(dataPesertaRemidial, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error }, error.message, { status: 500 });
     }

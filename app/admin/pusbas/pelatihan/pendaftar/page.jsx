@@ -132,6 +132,10 @@ export default function MahasiswaAdmin() {
         }
     };
 
+    const onSuccess = () => {
+        getDataPendaftar();
+    }
+
     const handleDelete = async (id) => {
         const confirm = await Swal.fire({
             title: 'Apa anda yakin?',
@@ -429,7 +433,7 @@ export default function MahasiswaAdmin() {
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
-            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} />
+            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess}/>
         </div>
     );
 }

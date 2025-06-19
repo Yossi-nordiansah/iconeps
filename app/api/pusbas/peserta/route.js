@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req) {
 
-    const { periode } = await req.json();
+    const { periode } = await req.json(); 
 
     try {
         const data = await prisma.peserta.findMany({

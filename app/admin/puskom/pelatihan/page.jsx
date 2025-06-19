@@ -15,6 +15,7 @@ const PelatihanAdminPage = () => {
     { title: 'Nilai', value: 0, icon: <AcademicCapIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/nilai' },
     { title: 'Lulus', value: 30, icon: <CheckBadgeIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/lulus' },
     { title: 'Remidial', value: 5, icon: <ArrowPathIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/remidial' },
+    { title: 'Sertifikat', value: 0, icon: <DocumentCheckIcon className="h-20 w-20" />, path: '/admin/puskom/pelatihan/sertifikat' },
   ];
   return (
     <div className=''>
@@ -27,7 +28,7 @@ const PelatihanAdminPage = () => {
             <div className="flex flex-col justify-center items-center gap-1">
               <div className="text-2xl font-radjdhani_bold">{card.title}</div>
               {
-                card.title === 'Nilai' ? null : (<div className="text-3xl font-radjdhani_bold">{card.value}</div>)
+                card.title === 'Nilai' || card.title === 'Sertifikat' ? null : (<div className="text-3xl font-radjdhani_bold">{card.value}</div>)
               }
             </div>
           </div>

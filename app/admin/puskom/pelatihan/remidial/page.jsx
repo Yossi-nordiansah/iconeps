@@ -23,7 +23,7 @@ export default function RemidiAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
-    const [recipients, setRecipients] = useState([]);
+    const [recipients, setRecipients] = useState([]); 
     const [searchTerm, setSearchTerm] = useState("");
 
     const getDataPesertaRemidial = async () => {

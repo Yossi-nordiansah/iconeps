@@ -1,5 +1,4 @@
 "use client";
-import { setSelectedPeriode } from '@/lib/features/kelasSlice';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { CheckIcon } from '@heroicons/react/24/solid';
@@ -8,12 +7,11 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../Loading';
 
-const AcceptPendaftar = ({ isOpen, close, selectedPendaftar }) => {
+const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
 
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({});
 
     const getDataKelas = async () => {
         try {
@@ -34,30 +32,27 @@ const AcceptPendaftar = ({ isOpen, close, selectedPendaftar }) => {
     if (!isOpen) return null;
 
     const onCancel = () => {
+        onSuccess();
         close();
     };
 
     const onAcceptHandle = async (id) => {
-        setLoading(true);
-
         try {
             await axios.put(`/api/pusbas/kelas/peserta/${id}`, selectedPendaftar);
             await Swal.fire({
                 icon: 'success',
                 title: 'Berhasil',
                 text: `Pendaftar Berhasil ditambahkan ke Kelas`,
-                timer: 3000
+                timer: 2000
             });
-            setTimeout(() => {
-                onCancel();
-            }, 3000);
+            onCancel();
         } catch (error) {
             console.log(error);
             await Swal.fire({
                 icon: 'error',
                 title: 'Gagal Menambahkan Pendaftar',
                 text: error,
-                timer: 3000
+                timer: 2000
             })
         } finally {
             setLoading(false)
@@ -80,7 +75,7 @@ const AcceptPendaftar = ({ isOpen, close, selectedPendaftar }) => {
                                         <td className="px-3 min-w-20 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
                                         <td className="px-3 min-w-32 w-44 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
                                         <td className="px-3 py-4  whitespace-nowrap text-sm text-gray-700">
-                                            <button className="p-1 rounded bg-[#00e64d] hover:bg-[#009933] text-white" onClick={() => onAcceptHandle(kls.id)}>
+                                            <button className="p-1 rounded bg-[#00e64d] hover:bg-[#009933] text-white" type="button" onClick={() => onAcceptHandle(kls.id)}>
                                                 <CheckIcon className="w-5 h-5" />
                                             </button>
                                         </td>

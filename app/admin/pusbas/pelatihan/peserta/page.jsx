@@ -39,7 +39,7 @@ export default function PesertaAdmin() {
     };
 
     const getDataPeserta = async () => {
-        try {
+        try { 
             const response = await axios.post('/api/pusbas/peserta', { periode: selectedPeriode });
             console.log(response.data.length)
             setPeserta(response.data);
@@ -175,7 +175,10 @@ export default function PesertaAdmin() {
                         :
                         (Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
                             <div key={namaKelas} className="mb-6">
-                                <h1 className="text-xl font-bold bg-blue-500 text-white px-2 py-1">{namaKelas}</h1>
+                                <div className="text-xl font-bold bg-blue-500 text-white px-2 py-1 flex justify-between">
+                                    <h1 className="">{namaKelas}</h1>
+                                    <h1>{daftarPeserta.length}</h1>
+                                </div>
                                 {
                                     daftarPeserta.length === 0 ? (
                                         <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
