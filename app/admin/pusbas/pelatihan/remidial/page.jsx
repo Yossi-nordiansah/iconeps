@@ -68,6 +68,10 @@ export default function RemidiAdmin() {
         }
     };
 
+     const onSuccess = () => {
+        getDataPesertaRemidial()
+    };
+
     return (
         <div className="p-6">
             {/* Header dan Pencarian */}
@@ -166,7 +170,7 @@ export default function RemidiAdmin() {
 
             <EmailEditor isOpen={isOpen} segment={emailSegments} close={() => setIsOpen(false)} recipients={recipients} />
             <DetailPesertaLulus isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
-            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
+            <UbahKelas isOpen={openChangeClass} onSuccess={onSuccess} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
         </div>
     );
 }

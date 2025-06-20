@@ -7,7 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../Loading';
 
-const UbahKelas = ({ isOpen, close, selectedPeserta }) => { 
+const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess }) => {
 
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);
@@ -43,11 +43,10 @@ const UbahKelas = ({ isOpen, close, selectedPeserta }) => {
                 icon: 'success',
                 title: 'Berhasil',
                 text: `Pendaftar Berhasil ditambahkan ke Kelas`,
-                timer: 3000
+                timer: 2000
             });
-            setTimeout(() => {
-                onCancel();
-            }, 3000);
+            onCancel();
+            onSuccess();
         } catch (error) {
             console.log(error);
             await Swal.fire({
@@ -77,7 +76,7 @@ const UbahKelas = ({ isOpen, close, selectedPeserta }) => {
                                         <td className="px-3 min-w-20 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
                                         <td className="px-3 min-w-32 w-44 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
                                         <td className="px-3 py-4  whitespace-nowrap text-sm text-gray-700">
-                                            <button className="p-1 rounded bg-[#00e64d] hover:bg-[#009933] text-white" onClick={() => onAcceptHandle(kls.id)}>
+                                            <button type='button' className="p-1 rounded bg-[#00e64d] hover:bg-[#009933] text-white" onClick={() => onAcceptHandle(kls.id)}>
                                                 <CheckIcon className="w-5 h-5" />
                                             </button>
                                         </td>

@@ -9,6 +9,8 @@ import axios from "axios";
 import DetailPeserta from "@/app/_component/admin/detailPeserta";
 import UbahKelas from "@/app/_component/admin/ubahKelas";
 import { Download } from "lucide-react";
+import { Upload } from "lucide-react";
+import LinkUjianForm from "@/app/_component/admin/uploadLinkUjian";
 
 export default function PesertaAdmin() {
 
@@ -27,6 +29,9 @@ export default function PesertaAdmin() {
     const [kelasDipilih, setKelasDipilih] = useState("");
     const segments = pathname.split('/').filter(Boolean);
     const [emailSegments, setEmailSegments] = useState(null);
+    const [openLink, setOpenLink] = useState(false);
+    const [openEditLink, setOpenEditLink] = useState(false);
+    const [selectedKelas, setSelectedKelas] = useState(null);
     const lastSegmetst = segments[segments.length - 1];
 
     const getDataKelas = async () => {
@@ -39,9 +44,8 @@ export default function PesertaAdmin() {
     };
 
     const getDataPeserta = async () => {
-        try { 
+        try {
             const response = await axios.post('/api/pusbas/peserta', { periode: selectedPeriode });
-            console.log(response.data.length)
             setPeserta(response.data);
         } catch (error) {
             console.log(error)
@@ -100,7 +104,7 @@ export default function PesertaAdmin() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'pendaftar_pusbas.xlsx';
+            a.download = 'peserta_pusbas.xlsx';
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -109,6 +113,10 @@ export default function PesertaAdmin() {
             alert('Terjadi kesalahan saat mengunduh file.');
         }
     };
+
+    const onSuccess = () => {
+        getDataPeserta()
+    }
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -177,7 +185,22 @@ export default function PesertaAdmin() {
                             <div key={namaKelas} className="mb-6">
                                 <div className="text-xl font-bold bg-blue-500 text-white px-2 py-1 flex justify-between">
                                     <h1 className="">{namaKelas}</h1>
-                                    <h1>{daftarPeserta.length}</h1>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            title="Upload link ujian"
+                                            onClick={() => {
+                                                const selected = dataKelas.find(k =>
+                                                    `${k.nama_kelas} (${k.tipe_kelas})` === namaKelas
+                                                );
+                                                setSelectedKelas(selected);
+                                                setOpenLink(true);
+                                                setOpenEditLink(!!selected?.link_ujian);
+                                            }}
+                                        >
+                                            <Upload size={18} />
+                                        </button>
+                                        <h1>{daftarPeserta.length}</h1>
+                                    </div>
                                 </div>
                                 {
                                     daftarPeserta.length === 0 ? (
@@ -227,7 +250,15 @@ export default function PesertaAdmin() {
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPeserta isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
-            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
+            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} onSuccess={onSuccess} selectedPeserta={selectedPeserta} />
+            <LinkUjianForm
+                isOpen={openLink}
+                segment="pusbas"
+                openEdit={openEditLink}
+                data={selectedKelas}
+                close={() => setOpenLink(false)}
+                onSuccess={getDataKelas}
+            />
         </div>
     );
 }

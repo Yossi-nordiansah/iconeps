@@ -176,13 +176,12 @@ export default function KelasAdmin() {
                 </button>
             </div>
 
-
             <KelasForm isOpen={isOpen} segment={lastSegmetst} openEdit={openEdit} selectedKelas={selectedKelas} onSuccess={getDataKelas} close={() => {
                 setIsOpen(false);
                 setOpenEdit(false);
                 setSelectedKelas({});
             }} />
         </div>
-    );
+    ); 
 }
 

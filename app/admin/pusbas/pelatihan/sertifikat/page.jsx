@@ -47,7 +47,7 @@ export default function SertifikatAdmin() {
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <DocumentCheckIcon className="h-5" />
                         <span className="text-base font-semibold">Sertifikat</span>
-                        <span className="text-base font-semibold">40</span>
+                        <span className="text-base font-semibold">{sertifikat.length}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -71,7 +71,7 @@ export default function SertifikatAdmin() {
                 {
                     sertifikat.length === 0 ? (
                         <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                            Belum ada peserta.
+                            Belum ada peserta lulus.
                         </div>
                     ) : (
                         <table className="min-w-full divide-y divide-gray-200">
