@@ -8,7 +8,7 @@ export async function PUT(req, { params }) {
     const body = await req.json();
 
     try {
-        const updateDatakelas = await prisma.kelas.update({
+        const updateDatakelas = await prisma.kelas.update({ 
             where: {
                 id
             },

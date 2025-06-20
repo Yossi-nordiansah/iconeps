@@ -7,6 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Trash2, Pencil, Plus } from "lucide-react";
 import { PresentationChartBarIcon, CalendarDateRangeIcon } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
+import JadwalPopup from '@/app/_component/admin/JadwalPopup';
 
 export default function KelasAdmin() {
 
@@ -26,6 +27,9 @@ export default function KelasAdmin() {
     const [selectedKelas, setSelectedKelas] = useState({})
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
+    const [jadwalPopupOpen, setJadwalPopupOpen] = useState(false);
+    const [selectedJadwal, setSelectedJadwal] = useState([]);
+    const [selectedKelasName, setSelectedKelasName] = useState("");
 
     const getDataKelas = async () => {
         try {
@@ -83,6 +87,17 @@ export default function KelasAdmin() {
         setCurrentPage(page);
     };
 
+    const handleOpenJadwal = async (kelas) => {
+        try {
+            const res = await axios.get(`/api/pusbas/jadwal/kelas/${kelas.id}`);
+            setSelectedJadwal(res.data);
+            setSelectedKelasName(`${kelas.nama_kelas} (${kelas.tipe_kelas})`);
+            setJadwalPopupOpen(true);
+        } catch (err) {
+            Swal.fire("Gagal mengambil jadwal", err.message, "error");
+        }
+    };
+
     return (
         <div className="p-6 overflow-y-auto">
             {/* Header */}
@@ -125,8 +140,7 @@ export default function KelasAdmin() {
                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
                                     <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">
-                                        {kls.id_peserta
-                                            === null ? (0) : (kls.jumlahPeserta)}
+                                        {kls._count?.peserta_peserta_kelasTokelas ?? 0}
                                     </td>
                                     <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                         <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
@@ -139,7 +153,10 @@ export default function KelasAdmin() {
                                         }}>
                                             <Pencil size={16} />
                                         </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                        <button
+                                            className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                            onClick={() => handleOpenJadwal(kls)}
+                                        >
                                             <CalendarDateRangeIcon className="h-5" />
                                         </button>
                                     </td>
@@ -181,7 +198,13 @@ export default function KelasAdmin() {
                 setOpenEdit(false);
                 setSelectedKelas({});
             }} />
+            <JadwalPopup
+                isOpen={jadwalPopupOpen}
+                onClose={() => setJadwalPopupOpen(false)}
+                jadwal={selectedJadwal}
+                namaKelas={selectedKelasName}
+            />
         </div>
-    ); 
+    );
 }
 

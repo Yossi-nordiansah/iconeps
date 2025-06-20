@@ -9,15 +9,20 @@ export async function GET(req) {
     if (!periode) {
         return NextResponse.json({ error: 'Periode is required' }, { status: 400 });
     }
+    try {
+        const kelas = await prisma.kelas.findMany({
+            where: { periode },
+            include: {
+                instruktur: true,
+                _count: {
+                    select: { peserta_peserta_kelasTokelas: true }
+                }
+            }
+        });
 
-    const data = await prisma.kelas.findMany({
-        where: {
-            periode: periode
-        },
-        include: {
-            instruktur: true
-        }
-    });
-
-    return NextResponse.json(data);
+        return NextResponse.json(kelas);
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: "Gagal mengambil data kelas" }, { status: 500 });
+    }
 }
