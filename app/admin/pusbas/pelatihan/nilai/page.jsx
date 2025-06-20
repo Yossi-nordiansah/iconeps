@@ -4,6 +4,7 @@ import { AcademicCapIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import DataMissing from '@/app/_component/admin/dataMissing';
+import { Download } from 'lucide-react';
 
 export default function NilaiAdmin() {
     const [dragActive, setDragActive] = useState(false);
@@ -87,8 +88,15 @@ export default function NilaiAdmin() {
                     <span className="text-base font-semibold">Data Missing</span>
                     <span className="text-base font-semibold">{notFoundData.length}</span>
                 </div>
+                <a
+                    href="/template_file.xlsx"
+                    download
+                    className="bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 flex items-center justify-center gap-2 transition"
+                >
+                    <Download size={18} />
+                    Unduh Template File Excel
+                </a>
             </div>
-
             <div
                 className={`w-full mx-auto mt-10 max-w-md bg-gray-300 p-8 rounded-lg text-center transition ${dragActive ? "ring-2 ring-black" : ""
                     }`}
@@ -117,7 +125,7 @@ export default function NilaiAdmin() {
                     </button>
                 </div>
             </div>
-            <DataMissing isOpen={openDataMissing} close={() => setOpenDataMissing(false)} data={notFoundData}/>
+            <DataMissing isOpen={openDataMissing} close={() => setOpenDataMissing(false)} data={notFoundData} />
         </div>
     );
 }
