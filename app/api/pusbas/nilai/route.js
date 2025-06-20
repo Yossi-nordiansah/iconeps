@@ -151,15 +151,34 @@ export async function POST(req) {
       });
 
       // Simpan nilai
-      await prisma.nilai.create({
-        data: {
-          id_peserta: peserta.id,
-          reading,
-          listening,
-          structure,
-          total: totalScore,
-        }
+      const existingNilai = await prisma.nilai.findFirst({
+        where: { id_peserta: peserta.id }
       });
+
+      if (existingNilai) {
+        // Kalau sudah ada, lakukan update
+        await prisma.nilai.update({
+          where: { id: existingNilai.id },
+          data: {
+            reading,
+            listening,
+            structure,
+            total: totalScore,
+          }
+        });
+      } else {
+        // Kalau belum ada, buat baru
+        await prisma.nilai.create({
+          data: {
+            id_peserta: peserta.id,
+            reading,
+            listening,
+            structure,
+            total: totalScore,
+          }
+        });
+      }
+
 
       results.push({ nim, nama, status });
     }

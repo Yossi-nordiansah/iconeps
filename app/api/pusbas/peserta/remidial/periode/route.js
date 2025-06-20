@@ -8,10 +8,11 @@ export async function GET(req) {
             where: {
                 status: 'remidial',
                 divisi: 'pusbas'
-            },
+            }, 
             include: {
                 mahasiswa: true,
-                kelas_peserta_kelasTokelas: true
+                kelas_peserta_kelasTokelas: true,
+                nilai: true
             },
         })
         return NextResponse.json(dataPesertaRemidial, { status: 200 });

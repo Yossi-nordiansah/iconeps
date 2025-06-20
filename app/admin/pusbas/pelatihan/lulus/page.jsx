@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { Download } from "lucide-react";
 
 export default function LulusAdmin() {
-
+ 
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
@@ -120,9 +120,10 @@ export default function LulusAdmin() {
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Listening</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Structure</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Reading</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
@@ -131,9 +132,10 @@ export default function LulusAdmin() {
                                     <tr key={idx}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.mahasiswa.nama}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.mahasiswa.fakultas.substring(9)}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.kelas_peserta_kelasTokelas.nama_kelas}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nilai[0]?.listening}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.structure}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.reading}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.total}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                             <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
                                                 setOpenDetailPeserta(true);
