@@ -11,7 +11,8 @@ export async function GET(req) {
             },
             include: {
                 mahasiswa: true,
-                kelas_peserta_kelasTokelas: true
+                kelas_peserta_kelasTokelas: true,
+                nilai: true
             },
         })
         return NextResponse.json(dataPesertaLulus, { status: 200 });

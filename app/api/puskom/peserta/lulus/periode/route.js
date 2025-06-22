@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
- 
+
 export async function GET(req) {
 
     const { searchParams } = new URL(req.url);
@@ -14,10 +14,11 @@ export async function GET(req) {
                 kelas_peserta_kelasTokelas: {
                     periode: periode,
                 },
-            }, 
+            },
             include: {
                 mahasiswa: true,
-                kelas_peserta_kelasTokelas: true
+                kelas_peserta_kelasTokelas: true,
+                nilai: true
             },
         })
         return NextResponse.json(dataPesertaLulus, { status: 200 });

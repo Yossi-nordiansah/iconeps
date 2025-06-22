@@ -9,7 +9,7 @@ export async function GET() {
                 peserta: {
                     some: {
                         status: 'remidial',
-                        divisi: 'pusbas'
+                        divisi: 'puskom'
                     }
                 }
             },
@@ -23,7 +23,7 @@ export async function GET() {
                 peserta: {
                     where: {
                         status: 'remidial',
-                        divisi: 'pusbas'
+                        divisi: 'puskom'
                     },
                     select: {
                         pilihan_kelas: true,
@@ -33,16 +33,15 @@ export async function GET() {
                         tanggal_pembayaran: true,
                         nilai: {
                             select: {
-                                listening: true,
-                                structure: true,
-                                reading: true,
+                                excel_2016_e: true,
+                                powerpoint_2016_e: true,
+                                word_2016_e: true,
                                 total: true
                             }
                         },
                         kelas_peserta_kelasTokelas: {
                             select: {
                                 nama_kelas: true,
-                                tipe_kelas: true,
                                 periode: true
                             }
                         }
@@ -62,24 +61,22 @@ export async function GET() {
                 NIM: mhs.nim,
                 Telepon: mhs.nomor_telepon,
                 Semester: mhs.semester,
-                Pilihan_Kelas: peserta.pilihan_kelas || '',
                 Tanggal_Daftar: peserta.tanggal_pendaftaran?.toISOString().split('T')[0] || '',
                 Loket_Pembayaran: peserta.loket_pembayaran || '',
                 Nominal_Pembayaran: peserta.nominal_pembayaran || 0,
                 Tanggal_Pembayaran: peserta.tanggal_pembayaran || '',
-                Nama_Kelas: peserta.kelas_peserta_kelasTokelas?.nama_kelas || '',
-                Tipe_Kelas: peserta.kelas_peserta_kelasTokelas?.tipe_kelas || '',
-                Periode: peserta.kelas_peserta_kelasTokelas?.periode || '',
-                Listening: nilai.listening ?? '',
-                Structure: nilai.structure ?? '',
-                Reading: nilai.reading ?? '',
+                Nama_Kelas: peserta.kelas_peserta_kelasTokelas.nama_kelas,
+                Periode: peserta.kelas_peserta_kelasTokelas.periode,
+                excel_2016_e: nilai.excel_2016_e ?? '',
+                powerpoint_2016_e: nilai.powerpoint_2016_e ?? '',
+                word_2016_e: nilai.word_2016_e ?? '',
                 Total: nilai.total ?? '',
             };
         });
 
         const worksheet = XLSX.utils.json_to_sheet(flatData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Remidial");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Lulus");
 
         const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 

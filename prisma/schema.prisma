@@ -57,6 +57,7 @@ model kelas {
   divisi                       kelas_divisi
   periode                      String       @db.VarChar(30)
   link_ujian                   String?      @db.VarChar(100)
+  link_sertifikat_puskom       String?      @db.VarChar(100)
   jadwal                       jadwal[]
   instruktur                   instruktur   @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
   peserta_peserta_kelasTokelas peserta[]    @relation("peserta_kelasTokelas")

@@ -38,6 +38,13 @@ export async function GET() {
                                 reading: true,
                                 total: true
                             }
+                        },
+                        kelas_peserta_kelasTokelas: {
+                            select: {
+                                nama_kelas: true,
+                                tipe_kelas: true,
+                                periode: true
+                            }
                         }
                     }
                 }
@@ -60,6 +67,9 @@ export async function GET() {
                 Loket_Pembayaran: peserta.loket_pembayaran || '',
                 Nominal_Pembayaran: peserta.nominal_pembayaran || 0,
                 Tanggal_Pembayaran: peserta.tanggal_pembayaran || '',
+                Nama_Kelas: peserta.kelas_peserta_kelasTokelas?.nama_kelas || '',
+                Tipe_Kelas: peserta.kelas_peserta_kelasTokelas?.tipe_kelas || '',
+                Periode: peserta.kelas_peserta_kelasTokelas?.periode || '',
                 Listening: nilai.listening ?? '',
                 Structure: nilai.structure ?? '',
                 Reading: nilai.reading ?? '',

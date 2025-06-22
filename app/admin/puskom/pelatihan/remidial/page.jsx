@@ -8,6 +8,7 @@ import axios from "axios";
 import DetailPesertaLulus from "@/app/_component/admin/detailPesertaLulus";
 import { useSelector } from "react-redux";
 import UbahKelas from "@/app/_component/admin/ubahKelas";
+import { Download } from "lucide-react";
 
 export default function RemidiAdmin() {
 
@@ -23,7 +24,7 @@ export default function RemidiAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 1];
-    const [recipients, setRecipients] = useState([]); 
+    const [recipients, setRecipients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
     const getDataPesertaRemidial = async () => {
@@ -46,6 +47,25 @@ export default function RemidiAdmin() {
         const nama = mhs.mahasiswa.nama?.toLowerCase();
         return nim.includes(searchTerm.toLowerCase()) || nama.includes(searchTerm.toLowerCase());
     });
+
+       const handleDownloadExcel = async () => {
+        try {
+            const res = await fetch('/api/puskom/peserta/remidial/export');
+
+            if (!res.ok) throw new Error('Gagal mengunduh file');
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'lulus_puskom.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error('Gagal unduh:', error);
+            alert('Terjadi kesalahan saat mengunduh file.');
+        }
+    };
 
     return (
         <div className="p-6">
@@ -82,6 +102,12 @@ export default function RemidiAdmin() {
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
                         <span>Kirim Email</span>
                     </button>
+                    <button
+                        onClick={handleDownloadExcel}
+                        className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
+                    >
+                        <Download size={18} />
+                    </button>
                 </div>
             </div>
 
@@ -91,9 +117,10 @@ export default function RemidiAdmin() {
                     <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Excel</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Powerpoint</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Word</th>
+                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                         <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -102,9 +129,10 @@ export default function RemidiAdmin() {
                         <tr key={idx}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.fakultas.substring(9)}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.kelas_peserta_kelasTokelas.nama_kelas}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nilai[0]?.excel_2016_e}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.powerpoint_2016_e}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.word_2016_e}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.total + ' %'}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
                                     setSelectedPeserta(mhs);
