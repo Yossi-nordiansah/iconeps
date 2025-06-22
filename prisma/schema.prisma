@@ -87,10 +87,10 @@ model nilai {
   listening         Int?
   structure         Int?
   reading           Int?
-  excel_2016_e      Int?
-  powerpoint_2016_e Int?
-  word_2016_e       Int?
-  total             Int?
+  excel_2016_e      String? @db.VarChar(10)
+  powerpoint_2016_e String? @db.VarChar(10)
+  word_2016_e       String? @db.VarChar(10)
+  total             Float?  @db.Float
   peserta           peserta @relation(fields: [id_peserta], references: [id], onDelete: Cascade, map: "relasi_peserta")
 
   @@index([id_peserta], map: "relasi_peserta")
