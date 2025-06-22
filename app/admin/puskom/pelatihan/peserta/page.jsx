@@ -8,8 +8,12 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import DetailPeserta from "@/app/_component/admin/detailPeserta";
 import UbahKelas from "@/app/_component/admin/ubahKelas";
+import { Download } from "lucide-react";
+import { Upload } from "lucide-react";
+import LinkUjianForm from "@/app/_component/admin/uploadLinkUjian";
 
 export default function PesertaAdmin() {
+
     const router = useRouter();
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const pathname = usePathname();
@@ -25,6 +29,9 @@ export default function PesertaAdmin() {
     const [kelasDipilih, setKelasDipilih] = useState("");
     const segments = pathname.split('/').filter(Boolean);
     const [emailSegments, setEmailSegments] = useState(null);
+    const [openLink, setOpenLink] = useState(false);
+    const [openEditLink, setOpenEditLink] = useState(false);
+    const [selectedKelas, setSelectedKelas] = useState(null);
     const lastSegmetst = segments[segments.length - 1];
 
     const getDataKelas = async () => {
@@ -43,7 +50,7 @@ export default function PesertaAdmin() {
         } catch (error) {
             console.log(error)
         }
-    };
+    }
 
     useEffect(() => {
         if (selectedPeriode) {
@@ -85,7 +92,31 @@ export default function PesertaAdmin() {
 
     useEffect(() => {
         console.log(selectedPeserta)
-    }, [selectedPeserta])
+    }, [selectedPeserta]);
+
+    const handleDownloadExcel = async () => {
+        try {
+            const res = await fetch('/api/puskom/peserta/export');
+
+            if (!res.ok) throw new Error('Gagal mengunduh file');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'peserta_pusbas.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error('Gagal unduh:', error);
+            alert('Terjadi kesalahan saat mengunduh file.');
+        }
+    };
+
+    const onSuccess = () => {
+        getDataPeserta()
+    }
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -132,62 +163,102 @@ export default function PesertaAdmin() {
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
                         <span>Kirim Email</span>
                     </button>
+                    <button
+                        onClick={handleDownloadExcel}
+                        className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
+                    >
+                        <Download size={18} />
+                    </button>
                 </div>
             </div>
 
             {/* Tabel Pendaftar */}
             <div className="max-h-[360px] overflow-y-auto">
-                {Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
-                    <div key={namaKelas} className="mb-6">
-                        <h1 className="text-xl font-bold bg-blue-500 text-white px-2 py-1">{namaKelas}</h1>
-                        {
-                            daftarPeserta.length === 0 ? (
-                                <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                                    Belum ada peserta di kelas ini.
+                {
+                    peserta.length === 0 ? (
+                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                            Belum ada peserta.
+                        </div>
+                    )
+                        :
+                        (Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
+                            <div key={namaKelas} className="mb-6">
+                                <div className="text-xl font-bold bg-blue-500 text-white px-2 py-1 flex justify-between">
+                                    <h1 className="">{namaKelas}</h1>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            title="Upload link ujian"
+                                            onClick={() => {
+                                                const selected = dataKelas.find(k =>
+                                                    `${k.nama_kelas} (${k.tipe_kelas})` === namaKelas
+                                                );
+                                                setSelectedKelas(selected);
+                                                setOpenLink(true);
+                                                setOpenEditLink(!!selected?.link_ujian);
+                                            }}
+                                        >
+                                            <Upload size={18} />
+                                        </button>
+                                        <h1>{daftarPeserta.length}</h1>
+                                    </div>
                                 </div>
-                            ) : (<table className="w-full text-left mt-0">
-                                <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="px-3 py-2">NIM</th>
-                                        <th className="px-3 py-2">NAMA</th>
-                                        <th className="px-3 py-2">FAKULTAS</th>
-                                        <th className="px-3 py-2">PRODI</th>
-                                        <th className="px-3 py-2 text-center">SEMESTER</th>
-                                        <th className="px-3 py-2 text-right">AKSI</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {daftarPeserta.map((mhs, idx) => (
-                                        <tr key={idx} className="border-t">
-                                            <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
-                                            <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
-                                            <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
-                                            <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
-                                            <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
-                                            <td className="px-3 py-2 text-right space-x-2">
-                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
-                                                    setSelectedPeserta(mhs);
-                                                    setOpenChangeClass(true);
-                                                }} /></button>
-                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                                                    onClick={() => {
-                                                        setOpenDetailPeserta(true);
-                                                        setDetailPesrta(mhs);
-                                                    }}
-                                                ><Eye size={16} /></button>
-                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.mahasiswa?.email], mhs.mahasiswa?.nama)}><Mail size={16} /></button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>)
-                        }
-                    </div>
-                ))}
+                                {
+                                    daftarPeserta.length === 0 ? (
+                                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                            Belum ada peserta di kelas ini.
+                                        </div>
+                                    ) : (<table className="w-full text-left mt-0">
+                                        <thead>
+                                            <tr className="bg-gray-100">
+                                                <th className="px-3 py-2">NIM</th>
+                                                <th className="px-3 py-2">NAMA</th>
+                                                <th className="px-3 py-2">FAKULTAS</th>
+                                                <th className="px-3 py-2">PRODI</th>
+                                                <th className="px-3 py-2 text-center">SEMESTER</th>
+                                                <th className="px-3 py-2 text-right">AKSI</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {daftarPeserta.map((mhs, idx) => (
+                                                <tr key={idx} className="border-t">
+                                                    <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
+                                                    <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
+                                                    <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
+                                                    <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
+                                                    <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
+                                                    <td className="px-3 py-2 text-right space-x-2">
+                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
+                                                            setSelectedPeserta(mhs);
+                                                            setOpenChangeClass(true);
+                                                        }} /></button>
+                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                                            onClick={() => {
+                                                                setOpenDetailPeserta(true);
+                                                                setDetailPesrta(mhs);
+                                                            }}
+                                                        ><Eye size={16} /></button>
+                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.mahasiswa?.email], mhs.mahasiswa?.nama)}><Mail size={16} /></button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>)
+                                }
+                            </div>
+                        )))
+                }
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPeserta isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
-            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
+            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} onSuccess={onSuccess} selectedPeserta={selectedPeserta} />
+            <LinkUjianForm
+                isOpen={openLink}
+                segment="pusbas"
+                openEdit={openEditLink}
+                data={selectedKelas}
+                close={() => setOpenLink(false)}
+                onSuccess={getDataKelas}
+            />
         </div>
     );
 }

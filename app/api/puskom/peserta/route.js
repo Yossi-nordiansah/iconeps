@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req) {
 
-    const { periode } = await req.json();
+    const { periode } = await req.json(); 
 
     try {
         const data = await prisma.peserta.findMany({
@@ -11,6 +11,10 @@ export async function POST(req) {
                 kelas_peserta_kelasTokelas: {
                     periode: periode
                 },
+                divisi: 'puskom',
+                status: {
+                    in: ["peserta", "lulus", "remidial"]
+                }
             },
             select: {
                 id: true,
@@ -29,6 +33,7 @@ export async function POST(req) {
                 kelas_peserta_kelasTokelas: {
                     select: {
                         nama_kelas: true,
+                        tipe_kelas: true
                     }
                 }
             }
@@ -36,6 +41,6 @@ export async function POST(req) {
 
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error }, error.message, { status: 500 });
     }
 }

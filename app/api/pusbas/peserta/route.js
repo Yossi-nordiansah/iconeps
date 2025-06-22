@@ -11,6 +11,7 @@ export async function POST(req) {
                 kelas_peserta_kelasTokelas: {
                     periode: periode
                 },
+                divisi: 'pusbas',
                 status: {
                     in: ["peserta", "lulus", "remidial"]
                 }

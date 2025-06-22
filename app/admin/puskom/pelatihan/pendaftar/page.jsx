@@ -6,10 +6,11 @@ import EmailEditor from "@/app/_component/admin/emailEditor";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import DetailPendaftar from "@/app/_component/admin/detailPendaftar"; 
+import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
-import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftar";
+import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftarPuskom";
+import { Download } from 'lucide-react';
 
 export default function MahasiswaAdmin() {
 
@@ -131,6 +132,10 @@ export default function MahasiswaAdmin() {
         }
     };
 
+    const onSuccess = () => {
+        getDataPendaftar();
+    }
+
     const handleDelete = async (id) => {
         const confirm = await Swal.fire({
             title: 'Apa anda yakin?',
@@ -144,7 +149,7 @@ export default function MahasiswaAdmin() {
         });
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`/api/pusbas/pendaftar/${id}`);
+                await axios.delete(`/api/puskom/pendaftar/${id}`);
                 Swal.fire({
                     icon: 'success',
                     title: 'Data Berhasil dihapus!',
@@ -170,7 +175,28 @@ export default function MahasiswaAdmin() {
         setRecipients(recipients);
         setEmailSegments(segment);
         setIsOpen(true);
-    }
+    };
+
+    const handleDownloadExcel = async () => {
+        try {
+            const res = await fetch('/api/puskom/pendaftar/export');
+
+            if (!res.ok) throw new Error('Gagal mengunduh file');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pendaftar_puskom.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error('Gagal unduh:', error);
+            alert('Terjadi kesalahan saat mengunduh file.');
+        }
+    };
+
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -225,6 +251,12 @@ export default function MahasiswaAdmin() {
                         <img src="/icons/email.svg" alt="Email" className="w-6" />
                         <span>Kirim Email</span>
                     </button>
+                    <button
+                        onClick={handleDownloadExcel}
+                        className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
+                    >
+                        <Download size={18} />
+                    </button>
                 </div>
             </div>
 
@@ -260,6 +292,15 @@ export default function MahasiswaAdmin() {
                                 <option value="Pendidikan Bahasa Inggris">Pendidikan Bahasa Inggris</option>
                                 <option value="Pendidikan Matematika">Pendidikan Matematika</option>
                                 <option value="Pendidikan Kepelatihan Olahraga">Pendidikan Kepelatihan Olahraga</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block font-semibold mb-1">Pilihan Kelas</label>
+                            <select className="w-full border px-3 py-2 rounded" value={selectedKelas} onChange={(e) => setSelectedKelas(e.target.value)}>
+                                <option value="">Semua Kelas</option>
+                                <option value="weekday_offline">weekday_offline</option>
+                                <option value="weekday_online">weekday_online</option>
+                                <option value="weekend_offline">weekend_offline</option>
                             </select>
                         </div>
                         <div>
@@ -390,7 +431,7 @@ export default function MahasiswaAdmin() {
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
-            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} />
+            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess}/>
         </div>
     );
 }
