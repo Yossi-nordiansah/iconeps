@@ -104,7 +104,7 @@ export default function PesertaAdmin() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'peserta_pusbas.xlsx';
+            a.download = 'peserta_puskom.xlsx';
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -190,7 +190,7 @@ export default function PesertaAdmin() {
                                             title="Upload link ujian"
                                             onClick={() => {
                                                 const selected = dataKelas.find(k =>
-                                                    `${k.nama_kelas} (${k.tipe_kelas})` === namaKelas
+                                                    `${k.nama_kelas}` === namaKelas
                                                 );
                                                 setSelectedKelas(selected);
                                                 setOpenLink(true);
@@ -253,7 +253,7 @@ export default function PesertaAdmin() {
             <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} onSuccess={onSuccess} selectedPeserta={selectedPeserta} />
             <LinkUjianForm
                 isOpen={openLink}
-                segment="pusbas"
+                segment="puskom"
                 openEdit={openEditLink}
                 data={selectedKelas}
                 close={() => setOpenLink(false)}

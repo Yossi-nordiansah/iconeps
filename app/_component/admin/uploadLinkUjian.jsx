@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-export default function LinkUjianForm({ isOpen, data, openEdit, close, onSuccess }) {
+export default function LinkUjianForm({ isOpen, data, openEdit, close, onSuccess, segment }) {
     const [link, setLink] = useState("");
+    console.log(data)
 
     useEffect(() => {
         if (data && openEdit) {
@@ -17,9 +18,9 @@ export default function LinkUjianForm({ isOpen, data, openEdit, close, onSuccess
     const handleSubmit = async () => {
         try {
             if (openEdit) {
-                await axios.patch(`/api/pusbas/kelas/${data.id}/ujian`, { link_ujian: link });
+                await axios.patch(`/api/${segment}/kelas/${data.id}/ujian`, { link_ujian: link });
             } else {
-                await axios.post(`/api/pusbas/kelas/${data.id}/ujian`, { link_ujian: link });
+                await axios.post(`/api/${segment}/kelas/${data.id}/ujian`, { link_ujian: link });
             }
             Swal.fire({
                 icon: 'success',
