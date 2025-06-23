@@ -8,7 +8,7 @@ export async function GET(req) {
             where: {
                 status: 'remidial',
                 divisi: 'puskom'
-            },
+            }, 
             include: {
                 mahasiswa: true,
                 kelas_peserta_kelasTokelas: true,

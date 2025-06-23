@@ -1,9 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { Pencil, Trash2, Plus } from 'lucide-react';
-import JadwalForm from '@/app/_component/admin/jadwalForm';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import JadwalFormPuskom from '@/app/_component/admin/jadwalFormPuskom';
 
 export default function AdminJadwal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +70,7 @@ export default function AdminJadwal() {
             <div key={kelas.id} className="mb-6">
               <div className="mb-2 flex items-center gap-2 w-11/12 mx-auto">
                 <h1 className="font-radjdhani_bold text-xl">
-                  {kelas.nama_kelas} ({kelas.tipe_kelas})
+                  {kelas.nama_kelas}
                 </h1>
                 <button
                   onClick={() => handleEditKelas(kelas)}
@@ -82,10 +82,8 @@ export default function AdminJadwal() {
                   <thead className="bg-gray-200">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hari</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jam Mulai</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jam Selesai</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Agenda</th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Aksi</th>
                     </tr>
                   </thead>
@@ -95,10 +93,8 @@ export default function AdminJadwal() {
                       .map((item) => (
                         <tr key={item.id}>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.hari}</td>
-                          <td className="px-6 py-4 text-sm text-gray-700">{new Date(item.tanggal).toLocaleDateString()}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.jam_mulai}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.jam_selesai}</td>
-                          <td className="px-6 py-4 text-sm text-gray-700">{item.agenda}</td>
                           <td className="px-6 py-4 text-right text-sm font-medium">
                             <button className="bg-green-500 hover:bg-green-400 text-white px-2 py-1 rounded text-xs mr-2">
                               <Pencil size={14} className="inline mr-1" /> Edit
@@ -115,12 +111,13 @@ export default function AdminJadwal() {
             </div>
           ))}
       </div>
-
-      <JadwalForm isOpen={isOpen} close={() => {
-        setIsOpen(false);
-        setDataToEdit(null);
-      }} data={dataToEdit}
-      onSuccess={onSuccess} />
+      <JadwalFormPuskom
+        isOpen={isOpen} close={() => {
+          setIsOpen(false);
+          setDataToEdit(null);
+        }} data={dataToEdit}
+        onSuccess={onSuccess}
+      />
     </div>
   );
 }

@@ -7,9 +7,6 @@ export async function PUT(req, {params}){
     const kelasId = param.id;
     const pesertaId = await req.json();
 
-    // console.log(pesertaId);
-    // return NextResponse.json({status: 200});
-    
     try {
         const updatedPesertaList = await Promise.all(
             pesertaId.map(async (pesertaId) => {

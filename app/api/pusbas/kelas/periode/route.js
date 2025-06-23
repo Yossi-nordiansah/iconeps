@@ -11,7 +11,9 @@ export async function GET(req) {
     }
     try {
         const kelas = await prisma.kelas.findMany({
-            where: { periode },
+            where: { periode,
+                divisi: 'pusbas'
+             }, 
             include: {
                 instruktur: true,
                 _count: {

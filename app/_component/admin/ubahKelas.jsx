@@ -7,7 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../Loading';
 
-const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess }) => {
+const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
 
     const { selectedPeriode } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);
@@ -15,7 +15,7 @@ const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess }) => {
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriode}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -38,7 +38,7 @@ const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess }) => {
         setLoading(true);
 
         try {
-            await axios.put(`/api/pusbas/peserta/pindah-kelas/${id}`, selectedPeserta);
+            await axios.put(`/api/${segment}/peserta/pindah-kelas/${id}`, selectedPeserta);
             await Swal.fire({
                 icon: 'success',
                 title: 'Berhasil',

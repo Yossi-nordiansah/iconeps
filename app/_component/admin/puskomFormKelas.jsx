@@ -4,7 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loading from '../Loading';
 import { useDispatch } from 'react-redux';
-import { fetchPeriodes } from '../../../lib/features/kelasPusbasSlice'
+import { fetchPeriodes } from '../../../lib/features/kelasPuskomSlice'
 
 const KelasForm = ({ isOpen, close, segment, onSuccess, openEdit, selectedKelas }) => {
 

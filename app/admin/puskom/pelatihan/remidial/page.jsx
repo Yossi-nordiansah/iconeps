@@ -29,7 +29,7 @@ export default function RemidiAdmin() {
 
     const getDataPesertaRemidial = async () => {
         try {
-            const res = await axios.get(`/api/puskom/peserta/remidial/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/puskom/peserta/remidial/periode`);
             setPesertaRemidial(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -158,7 +158,7 @@ export default function RemidiAdmin() {
             </table>
             <EmailEditor isOpen={isOpen} segment={emailSegments} close={() => setIsOpen(false)} recipients={recipients} />
             <DetailPesertaLulus isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
-            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
+            <UbahKelas segment='puskom' isOpen={openChangeClass} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
         </div>
     );
 }

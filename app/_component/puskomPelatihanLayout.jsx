@@ -1,6 +1,6 @@
 "use client";
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchPeriodes, setSelectedPeriode } from '../../lib/features/kelasPusbasSlice';
+import { fetchPeriodes, setSelectedPeriode } from '../../lib/features/kelasPuskomSlice';
 import { useEffect } from 'react';
 
 const PuskomPelatihanLayout = ({ children }) => {

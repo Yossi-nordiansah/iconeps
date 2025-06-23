@@ -5,7 +5,7 @@ export async function GET(req) {
 
     try {
         const dataPesertaRemidial = await prisma.peserta.findMany({
-            where: {
+            where: { 
                 status: 'remidial',
                 divisi: 'pusbas'
             }, 
@@ -19,4 +19,4 @@ export async function GET(req) {
     } catch (error) {
         return NextResponse.json({ error }, error.message, { status: 500 });
     }
-}
+} 

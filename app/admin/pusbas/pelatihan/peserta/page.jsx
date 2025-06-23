@@ -250,7 +250,7 @@ export default function PesertaAdmin() {
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPeserta isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
-            <UbahKelas isOpen={openChangeClass} close={() => setOpenChangeClass(false)} onSuccess={onSuccess} selectedPeserta={selectedPeserta} />
+            <UbahKelas isOpen={openChangeClass} segment="pusbas" close={() => setOpenChangeClass(false)} onSuccess={onSuccess} selectedPeserta={selectedPeserta} />
             <LinkUjianForm
                 isOpen={openLink}
                 segment="pusbas"

@@ -12,23 +12,27 @@ export default function SertifikatAdmin() {
     const router = useRouter();
     const { selectedPeriode } = useSelector((state) => state.kelas);
 
-    useEffect(() => {
-        const fetchLink = async () => {
-            if (!selectedPeriode) return;
+useEffect(() => {
+    setLink("");  // clear dulu agar user lihat perubahan
+    setIsEdit(false);
 
-            try {
-                const res = await axios.get(`/api/puskom/peserta/sertifikat?periode=${selectedPeriode}`);
-                if (res.data?.link) {
-                    setLink(res.data.link);
-                    setIsEdit(true);
-                }
-            } catch (err) {
-                console.error(err);
+    const fetchLink = async () => {
+        if (!selectedPeriode) return;
+
+        try {
+            const res = await axios.get(`/api/puskom/peserta/sertifikat?periode=${selectedPeriode}`);
+            if (res.data?.link) {
+                setLink(res.data.link);
+                setIsEdit(true);
             }
-        };
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-        fetchLink();
-    }, [selectedPeriode]);
+    fetchLink();
+}, [selectedPeriode]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

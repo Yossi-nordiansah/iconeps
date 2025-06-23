@@ -5,7 +5,7 @@ export async function GET() {
     try {
         const periodes = await prisma.kelas.findMany({
             where: {
-                divisi: 'pusbas'
+                divisi: "puskom"
             },
             select: {
                 periode: true,

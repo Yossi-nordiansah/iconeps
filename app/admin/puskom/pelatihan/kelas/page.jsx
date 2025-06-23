@@ -5,7 +5,7 @@ import axios from "axios";
 import KelasForm from '@/app/_component/admin/puskomFormKelas';
 import { useRouter, usePathname } from "next/navigation";
 import { Trash2, Pencil, Plus } from "lucide-react";
-import { PresentationChartBarIcon, CalendarDateRangeIcon } from '@heroicons/react/24/solid';
+import { PresentationChartBarIcon } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
 
 export default function KelasAdmin() {
@@ -24,7 +24,7 @@ export default function KelasAdmin() {
     const [loading, setLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedKelas, setSelectedKelas] = useState({})
-    const segments = pathname.split('/').filter(Boolean); 
+    const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
 
     const getDataKelas = async () => {
@@ -83,8 +83,6 @@ export default function KelasAdmin() {
         setCurrentPage(page);
     };
 
-    console.log(lastSegmetst)
-
     return (
         <div className="p-6 overflow-y-auto">
             {/* Header */}
@@ -119,8 +117,7 @@ export default function KelasAdmin() {
                         <tr key={kls.id}>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
-                            <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">{kls.id_peserta
-                                === null ? (0) : (kls.jumlahPeserta )}</td>
+                            <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">{kls._count?.peserta_peserta_kelasTokelas ?? 0}</td>
                             <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
                                     <Trash2 size={16} />
@@ -132,9 +129,9 @@ export default function KelasAdmin() {
                                 }}>
                                     <Pencil size={16} />
                                 </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
+                                {/* <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <CalendarDateRangeIcon className="h-5" />
-                                </button>
+                                </button> */}
                             </td>
                         </tr>
                     ))}

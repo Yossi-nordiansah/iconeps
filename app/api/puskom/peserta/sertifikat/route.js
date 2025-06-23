@@ -36,7 +36,9 @@ export async function GET(req) {
 
   if (!periode) {
     return NextResponse.json({ error: "Periode wajib diisi" }, { status: 400 });
-  }
+  };
+
+  console.log(periode);
 
   const kelas = await prisma.kelas.findFirst({
     where: {
