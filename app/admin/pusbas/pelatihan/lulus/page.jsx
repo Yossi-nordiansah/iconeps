@@ -11,7 +11,7 @@ import { Download } from "lucide-react";
 
 export default function LulusAdmin() {
  
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function LulusAdmin() {
 
     const getDataPesertaLulus = async () => {
         try {
-            const res = await axios.get(`/api/pusbas/peserta/lulus/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/pusbas/peserta/lulus/periode?periode=${selectedPeriodePusbas}`);
             setPesertaLulus(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -35,7 +35,7 @@ export default function LulusAdmin() {
 
     useEffect(() => {
         getDataPesertaLulus();
-    }, [selectedPeriode]);
+    }, [selectedPeriodePusbas]);
 
     const allEmails = pesertaLulus.map(p => p.mahasiswa.email);
 

@@ -15,7 +15,7 @@ import LinkUjianForm from "@/app/_component/admin/uploadLinkUjian";
 export default function PesertaAdmin() {
 
     const router = useRouter();
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
     const pathname = usePathname();
     const [openDetailPeserta, setOpenDetailPeserta] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -36,7 +36,7 @@ export default function PesertaAdmin() {
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriodePuskom}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -45,7 +45,7 @@ export default function PesertaAdmin() {
 
     const getDataPeserta = async () => {
         try {
-            const response = await axios.post('/api/puskom/peserta', { periode: selectedPeriode });
+            const response = await axios.post('/api/puskom/peserta', { periode: selectedPeriodePuskom });
             setPeserta(response.data);
         } catch (error) {
             console.log(error)
@@ -53,11 +53,11 @@ export default function PesertaAdmin() {
     }
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePuskom) {
             getDataKelas();
             getDataPeserta();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePuskom]);
 
     useEffect(() => {
 

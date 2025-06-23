@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 export default function KelasAdmin() {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function KelasAdmin() {
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriodePuskom}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -37,10 +37,10 @@ export default function KelasAdmin() {
     };
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePuskom) {
             getDataKelas();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePuskom]);
 
     const handleDelete = async (id) => {
 

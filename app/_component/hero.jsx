@@ -39,7 +39,7 @@ const Hero = () => {
                 <p className='mx-auto mb-6 text-3xl text-center text-white drop-shadow-custom-light font-radjdhani_bold sm:text-4xl'>
                     Tingkatkan Strategi Belajar dan Skill Kamu. Belajar Lebih Efektif dan Fleksibel. Buat Portofolio Yang Lebih Professional dengan Dibekali keterampilan Bahasa Inggris dan Microsoft Office.
                 </p>
-                <button className='block px-3 py-2 mx-auto text-xl text-white shadow-custom-light xl:text-base bg-secondary font-robotoExtraBold rounded-xl'>Daftar Sekarang</button>
+                <a href='#program' className='w-fit block px-3 py-2 mx-auto text-xl text-white shadow-custom-light xl:text-base bg-secondary font-robotoExtraBold rounded-xl'>Daftar Sekarang</a>
             </div>
         </div>
     )

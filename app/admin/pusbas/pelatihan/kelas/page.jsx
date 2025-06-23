@@ -11,7 +11,7 @@ import JadwalPopup from '@/app/_component/admin/JadwalPopup';
 
 export default function KelasAdmin() {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ export default function KelasAdmin() {
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -41,10 +41,10 @@ export default function KelasAdmin() {
     };
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePusbas) {
             getDataKelas();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePusbas]);
 
     const handleDelete = async (id) => {
 

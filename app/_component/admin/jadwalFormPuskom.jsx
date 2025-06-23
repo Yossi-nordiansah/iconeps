@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import axios from 'axios';
-import { fetchPeriodes, setSelectedPeriode } from '../../../lib/features/kelasPuskomSlice';
+import { fetchPeriodes, setSelectedPeriodePuskom } from '../../../lib/features/kelasPuskomSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
@@ -10,24 +10,24 @@ const JadwalFormPuskom = ({ isOpen, close, data, onSuccess }) => {
 
   const dispatch = useDispatch()
   const [datakelas, setDataKelas] = useState([]);
-  const { selectedPeriode } = useSelector((state) => state.kelas);
+  const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
   const [kelasDipilih, setKelasDipilih] = useState("");
 
   const getDataKelas = async () => {
     try {
-      const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriode}`);
+      const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriodePuskom}`);
       setDataKelas(res.data);
     } catch (err) {
       window.alert(`Gagal fetch data: ${err}`);
-      console.log(`selected periode : ${selectedPeriode}`);
+      console.log(`selected periode : ${selectedPeriodePuskom}`);
     }
   };
 
   useEffect(() => {
     dispatch(fetchPeriodes()).then((res) => {
       const periodes = res.payload;
-      if (!selectedPeriode && periodes?.length > 0) {
-        dispatch(setSelectedPeriode(periodes[periodes.length - 1]));
+      if (!selectedPeriodePuskom && periodes?.length > 0) {
+        dispatch(setSelectedPeriodePuskom(periodes[periodes.length - 1]));
       }
     });
   }, []);
@@ -44,10 +44,10 @@ const JadwalFormPuskom = ({ isOpen, close, data, onSuccess }) => {
   }, [data]);
 
   useEffect(() => {
-    if (selectedPeriode) {
+    if (selectedPeriodePuskom) {
       getDataKelas();
     }
-  }, [selectedPeriode]);
+  }, [selectedPeriodePuskom]);
 
   const [jadwalList, setJadwalList] = useState([
     { hari: '', jamMulai: '', jamSelesai: '' },

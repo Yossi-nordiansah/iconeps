@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import axios from 'axios';
-import { fetchPeriodes, setSelectedPeriode } from '../../../lib/features/kelasSlice';
+import { fetchPeriodes, setSelectedPeriodePusbas } from '../../../lib/features/kelasSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 
@@ -10,25 +10,25 @@ const JadwalForm = ({ isOpen, close, data, onSuccess }) => {
 
   const dispatch = useDispatch()
   const [datakelas, setDataKelas] = useState([]);
-  const { selectedPeriode } = useSelector((state) => state.kelas);
+  const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
   const [kelasDipilih, setKelasDipilih] = useState("");
 
   const getDataKelas = async () => {
     try {
-      const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
-      console.log(`selected periode : ${selectedPeriode}`);
+      const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
+      console.log(`selected periode : ${selectedPeriodePusbas}`);
       setDataKelas(res.data);
     } catch (err) {
       window.alert(`Gagal fetch data: ${err}`);
-      console.log(`selected periode : ${selectedPeriode}`);
+      console.log(`selected periode : ${selectedPeriodePusbas}`);
     }
   };
 
   useEffect(() => {
     dispatch(fetchPeriodes()).then((res) => {
       const periodes = res.payload;
-      if (!selectedPeriode && periodes?.length > 0) {
-        dispatch(setSelectedPeriode(periodes[periodes.length - 1]));
+      if (!selectedPeriodePusbas && periodes?.length > 0) {
+        dispatch(setSelectedPeriodePusbas(periodes[periodes.length - 1]));
       }
     });
   }, []);
@@ -47,10 +47,10 @@ const JadwalForm = ({ isOpen, close, data, onSuccess }) => {
   }, [data]);
 
   useEffect(() => {
-    if (selectedPeriode) {
+    if (selectedPeriodePusbas) {
       getDataKelas();
     }
-  }, [selectedPeriode]);
+  }, [selectedPeriodePusbas]);
 
   const [jadwalList, setJadwalList] = useState([
     { hari: '', tanggal: '', jamMulai: '', jamSelesai: '', agenda: '' },

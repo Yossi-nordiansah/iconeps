@@ -12,7 +12,7 @@ import PreviewSertifikat from "@/app/_component/admin/previewSertifikat";
 
 export default function SertifikatAdmin() {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const [sertifikat, setSertifikat] = useState([]);
     const [openPreview, setOpenPreview] = useState(false);
     const [sertifikatPath, setSertifikatPath] = useState("")
@@ -24,7 +24,7 @@ export default function SertifikatAdmin() {
 
     const getDataPesertaLulus = async () => {
         try {
-            const response = await axios.get(`/api/pusbas/peserta/lulus/sertifikat?periode=${selectedPeriode}`);
+            const response = await axios.get(`/api/pusbas/peserta/lulus/sertifikat?periode=${selectedPeriodePusbas}`);
             setSertifikat(response.data);
         } catch (error) {
             console.log(error);
@@ -34,7 +34,7 @@ export default function SertifikatAdmin() {
 
     useEffect(() => {
         getDataPesertaLulus();
-    }, [selectedPeriode])
+    }, [selectedPeriodePusbas])
 
     return (
         <div className="p-6">

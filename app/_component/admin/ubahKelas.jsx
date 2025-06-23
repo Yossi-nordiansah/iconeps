@@ -9,13 +9,13 @@ import Loading from '../Loading';
 
 const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriodePusbas}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -23,10 +23,10 @@ const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
     };
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePusbas) {
             getDataKelas();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePusbas]);
 
     if (!isOpen) return null;
 

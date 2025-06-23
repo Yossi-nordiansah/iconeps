@@ -12,7 +12,7 @@ import { Download } from "lucide-react";
 
 export default function RemidiAdmin() {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const [openDetailPeserta, setOpenDetailPeserta] = useState(false);
     const [detailPeserta, setDetailPeserta] = useState({});
     const [pesertaRemidial, setPesertaRemidial] = useState([]);
@@ -38,7 +38,7 @@ export default function RemidiAdmin() {
 
     useEffect(() => {
         getDataPesertaRemidial();
-    }, [selectedPeriode]);
+    }, [selectedPeriodePusbas]);
 
     const allEmails = pesertaRemidial.map(p => p.mahasiswa.email);
 

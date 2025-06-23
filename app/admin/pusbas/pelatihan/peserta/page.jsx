@@ -15,7 +15,7 @@ import LinkUjianForm from "@/app/_component/admin/uploadLinkUjian";
 export default function PesertaAdmin() {
 
     const router = useRouter();
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const pathname = usePathname();
     const [openDetailPeserta, setOpenDetailPeserta] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -36,7 +36,7 @@ export default function PesertaAdmin() {
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -45,7 +45,7 @@ export default function PesertaAdmin() {
 
     const getDataPeserta = async () => {
         try {
-            const response = await axios.post('/api/pusbas/peserta', { periode: selectedPeriode });
+            const response = await axios.post('/api/pusbas/peserta', { periode: selectedPeriodePusbas });
             setPeserta(response.data);
         } catch (error) {
             console.log(error)
@@ -53,11 +53,11 @@ export default function PesertaAdmin() {
     }
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePusbas) {
             getDataKelas();
             getDataPeserta();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePusbas]);
 
     useEffect(() => {
 

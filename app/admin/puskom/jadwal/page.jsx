@@ -4,24 +4,26 @@ import { Pencil, Trash2, Plus } from 'lucide-react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import JadwalFormPuskom from '@/app/_component/admin/jadwalFormPuskom';
+import { useSelector } from 'react-redux';
 
 export default function AdminJadwal() {
+  const {selectedPeriodePuskom} = useSelector((state) => state.kelasPuskom)
   const [isOpen, setIsOpen] = useState(false);
   const [jadwals, setJadwals] = useState([]);
   const [dataToEdit, setDataToEdit] = useState(null);
 
-  useEffect(() => {
-    fetchJadwal();
-  }, []);
-
   const fetchJadwal = async () => {
     try {
-      const res = await axios.get('/api/puskom/jadwal');
+      const res = await axios.get(`/api/puskom/jadwal?periode=${selectedPeriodePuskom}`);
       setJadwals(res.data);
     } catch (err) {
       console.error('Error fetching jadwal:', err);
     }
   };
+
+  useEffect(() => {
+    fetchJadwal();
+  }, [selectedPeriodePuskom]);
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -36,7 +38,7 @@ export default function AdminJadwal() {
     });
 
     if (confirm.isConfirmed) {
-      try {
+      try { 
         await axios.delete(`/api/puskom/jadwal/${id}`);
         fetchJadwal();
         Swal.fire('Terhapus!', 'Jadwal berhasil dihapus.', 'success');

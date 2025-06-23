@@ -4,24 +4,26 @@ import { Pencil, Trash2, Plus } from 'lucide-react';
 import JadwalForm from '@/app/_component/admin/jadwalForm';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
-export default function AdminJadwal() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function AdminJadwal() { 
+  const {selectedPeriodePusbas} = useSelector((state) => state.kelas)
+  const [isOpen, setIsOpen] = useState(false); 
   const [jadwals, setJadwals] = useState([]);
   const [dataToEdit, setDataToEdit] = useState(null);
 
-  useEffect(() => {
-    fetchJadwal();
-  }, []);
-
   const fetchJadwal = async () => {
     try {
-      const res = await axios.get('/api/pusbas/jadwal');
+      const res = await axios.get(`/api/pusbas/jadwal?periode=${selectedPeriodePusbas}`);
       setJadwals(res.data);
     } catch (err) {
       console.error('Error fetching jadwal:', err);
     }
   };
+
+  useEffect(() => {
+    fetchJadwal();
+  }, [selectedPeriodePusbas]);
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -55,7 +57,15 @@ export default function AdminJadwal() {
 
   const onSuccess = () => {
     fetchJadwal();
-  }
+  };
+
+  const formatTanggal = (tanggal) => {
+  const date = new Date(tanggal);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
   return (
     <div className="relative pl-52 pr-6 pt-20">
@@ -95,7 +105,7 @@ export default function AdminJadwal() {
                       .map((item) => (
                         <tr key={item.id}>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.hari}</td>
-                          <td className="px-6 py-4 text-sm text-gray-700">{new Date(item.tanggal).toLocaleDateString()}</td>
+                          <td className="px-6 py-4 text-sm text-gray-700">{formatTanggal(item.tanggal)}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.jam_mulai}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.jam_selesai}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.agenda}</td>

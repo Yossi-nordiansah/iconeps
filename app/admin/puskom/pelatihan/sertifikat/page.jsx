@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { DocumentCheckIcon } from '@heroicons/react/24/solid';
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -10,17 +10,17 @@ export default function SertifikatAdmin() {
     const [link, setLink] = useState("");
     const [isEdit, setIsEdit] = useState(false);
     const router = useRouter();
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
 
 useEffect(() => {
     setLink("");  // clear dulu agar user lihat perubahan
     setIsEdit(false);
 
     const fetchLink = async () => {
-        if (!selectedPeriode) return;
+        if (!selectedPeriodePuskom) return;
 
         try {
-            const res = await axios.get(`/api/puskom/peserta/sertifikat?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/puskom/peserta/sertifikat?periode=${selectedPeriodePuskom}`);
             if (res.data?.link) {
                 setLink(res.data.link);
                 setIsEdit(true);
@@ -31,7 +31,7 @@ useEffect(() => {
     };
 
     fetchLink();
-}, [selectedPeriode]);
+}, [selectedPeriodePuskom]);
 
 
     const handleSubmit = async (e) => {
@@ -42,14 +42,14 @@ useEffect(() => {
             return;
         }
 
-        if (!selectedPeriode) {
+        if (!selectedPeriodePuskom) {
             Swal.fire("Error", "Periode belum dipilih", "error");
             return;
         }
 
         try {
             const res = await axios.post("/api/puskom/peserta/sertifikat", {
-                periode: selectedPeriode,
+                periode: selectedPeriodePuskom,
                 link,
             });
 

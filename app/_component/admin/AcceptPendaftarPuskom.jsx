@@ -9,14 +9,13 @@ import Loading from '../Loading';
 
 const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
     const [dataKelas, setDataKelas] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({});
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriodePuskom}`);
             console.log(res.data)
             setDataKelas(res.data);
         } catch (err) {
@@ -25,10 +24,10 @@ const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
     };
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePuskom) {
             getDataKelas();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePuskom]);
 
     if (!isOpen) return null;
 

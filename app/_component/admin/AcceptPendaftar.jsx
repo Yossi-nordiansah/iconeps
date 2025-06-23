@@ -9,13 +9,13 @@ import Loading from '../Loading';
 
 const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
 
-    const { selectedPeriode } = useSelector((state) => state.kelas);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriode}`);
+            const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
             console.log(res.data)
             setDataKelas(res.data);
         } catch (err) {
@@ -24,10 +24,10 @@ const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
     };
 
     useEffect(() => {
-        if (selectedPeriode) {
+        if (selectedPeriodePusbas) {
             getDataKelas();
         }
-    }, [selectedPeriode]);
+    }, [selectedPeriodePusbas]);
 
     if (!isOpen) return null;
 
