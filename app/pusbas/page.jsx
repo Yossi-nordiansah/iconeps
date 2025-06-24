@@ -20,7 +20,6 @@ const PusbasPage = () => {
         const getInformasi = async () => {
             try {
                 const res = await axios.get('/api/pusbas/informasi-periode');
-                console.log("ISI HTML:", res.data.keterangan); 
                 setInformasiPeriode(res.data.keterangan); 
             } catch (error) {
                 console.error("Gagal ambil informasi periode", error);
