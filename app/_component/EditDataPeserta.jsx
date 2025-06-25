@@ -15,25 +15,38 @@ const EditPendaftaran = ({ isOpen, close, segment, id }) => {
     const [form, setForm] = useState({
         mahasiswa_id: session?.user?.id,
         bukti_pembayaran: "",
-        divisi: segment[0].toLowerCase(),
-        pilihan_kelas: null, 
+        divisi: segment,
+        pilihan_kelas: null,
         tanggal_pembayaran: "",
         nominal_pembayaran: 0,
         loket_pembayaran: ""
     });
 
     const getDataPeserta = async () => {
-        const response = axios.get()
-    }
+        try {
+            const response = await axios.get(`/api/pusbas/peserta/${id}`);
+            const data = response.data;
+
+            // Set ke form agar muncul di input
+            setForm({
+                mahasiswa_id: data.mahasiswa_id,
+                bukti_pembayaran: data.bukti_pembayaran ? `${data.bukti_pembayaran}` : "", // file tidak bisa dimasukkan langsung
+                divisi: data.divisi,
+                pilihan_kelas: data.pilihan_kelas || "",
+                tanggal_pembayaran: data.tanggal_pembayaran || "",
+                nominal_pembayaran: data.nominal_pembayaran || 0,
+                loket_pembayaran: data.loket_pembayaran || "",
+            });
+        } catch (error) {
+            window.alert(`Gagal Fetch Data ${error.message}`);
+        }
+    };
 
     useEffect(() => {
-        if (session?.user?.id) {
-            setForm(prev => ({
-                ...prev,
-                mahasiswa_id: session.user.id
-            }));
+        if (isOpen && id) {
+            getDataPeserta();
         }
-    }, [id]);
+    }, [isOpen, id]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -45,61 +58,85 @@ const EditPendaftaran = ({ isOpen, close, segment, id }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true)
+        setLoading(true);
+
         const formData = new FormData();
-        Object.entries(form).forEach(([key, value]) => {
-            formData.append(key, value)
-        });
+        formData.append("pilihan_kelas", form.pilihan_kelas);
+        formData.append("nominal_pembayaran", form.nominal_pembayaran);
+        formData.append("loket_pembayaran", form.loket_pembayaran);
+        formData.append("tanggal_pembayaran", form.tanggal_pembayaran);
+        formData.append("divisi", form.divisi);
+
+        // hanya kirim file jika user upload baru
+        if (form.bukti_pembayaran instanceof File) {
+            formData.append("bukti_pembayaran", form.bukti_pembayaran);
+        }
 
         try {
-            await axios.post("/api/pusbas/peserta/create", formData);
-            Swal.fire({
-                title: 'Pendaftaran Berhasil!',
-                text: 'Data berhasil diupload.',
-                icon: 'success',
-                confirmButtonText: 'OK'
+            await axios.put(`/api/pusbas/peserta/edit-peserta-client/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             });
-            onSubmitSuccess();
-            close()
+
+            Swal.fire({
+                title: 'Berhasil!',
+                text: 'Data berhasil diperbarui.',
+                icon: 'success',
+            });
+
+            close();
         } catch (error) {
             Swal.fire({
                 title: 'Gagal!',
-                text: error.response?.data?.error || 'Terjadi kesalahan saat upload.',
+                text: error.response?.data?.error || 'Terjadi kesalahan saat update.',
                 icon: 'error',
-                confirmButtonText: 'OK'
             });
+            console.log(error);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
+    };
 
-    }
-
-    if (!isOpen && !isOpenLogin) return null;
+    if (!isOpen || !id) return null;
+    console.log(`id: ${id}`);
 
     return (
         <div className="fixed inset-0 bg-black px-6 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-50">
             <div
                 ref={popupRef}
-                className="bg-white sm:p-6 p-3 rounded-lg shadow-lg w-fit border-2 border-yellow-300"
+                className="bg-white sm:px-6 p-3 rounded-lg shadow-lg w-fit border-2 border-yellow-300"
             >
-                <h2 className="text-2xl sm:text-nowrap text-center font-robotoBold mb-4 text-blue-950">Form Pendaftaran {segment[0]}</h2>
+                <h2 className="text-2xl sm:text-nowrap text-center font-robotoBold mb-2 text-blue-950">Edit Data Pendaftaran</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-2">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                            Bukti Pembayaran
+                    {form.bukti_pembayaran && (
+                        <div className="mb-2">
+                            <a
+                                href={form.bukti_pembayaran}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline text-sm"
+                            >
+                                Lihat Bukti Pembayaran
+                            </a>
+                        </div>
+                    )}
+                    <div className='mb-2'>
+                        <label htmlFor="pilihan_kelas" className="block text-sm font-medium text-gray-700">
+                            Ubah bukti pembayaran
                         </label>
                         <input
                             type="file"
                             id="bukti_pembayaran"
-                            className="w-full sm:px-4 px-2 py-2 border border-gray-300 rounded-lg"
-                            accept=".jpg, .jpeg, .png"
-                            required
                             name="bukti_pembayaran"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                            accept=".jpg, .jpeg, .png"
                             onChange={handleChange}
+                            required={!form.bukti_pembayaran}
                         />
                     </div>
                     {
-                        segment[0] === 'Pusbas' && <div className="mb-3">
+                        segment === 'pusbas' && <div className="mb-2">
                             <label htmlFor="pilihan_kelas" className="block text-sm font-medium text-gray-700">
                                 Pilihan Kelas
                             </label>
@@ -117,7 +154,7 @@ const EditPendaftaran = ({ isOpen, close, segment, id }) => {
                             </select>
                         </div>
                     }
-                    <div className="mb-4">
+                    <div className="mb-2">
                         <label htmlFor="nominal_pembayaran" className="block text-sm font-medium text-gray-700">
                             Nominal Pembayaran
                         </label>
@@ -131,7 +168,7 @@ const EditPendaftaran = ({ isOpen, close, segment, id }) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-2">
                         <label htmlFor="tanggal_pembayaran" className="block text-sm font-medium text-gray-700">
                             Tanggal Pembayaran
                         </label>

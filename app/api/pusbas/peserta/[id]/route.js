@@ -5,15 +5,17 @@ export async function GET(req, { params }) {
     const param = await params;
     const id = parseInt(param.id);
 
+    console.log(id)
+
     try {
         const data = await prisma.peserta.findUnique({
-            where: id,
-            
+            where: { id },
         })
+        console.log(data)
+        return NextResponse.json(data)
     } catch (error) {
-
+        return NextResponse.json(error)
     }
-
 }
 
 export async function PUT(req, { params }) {

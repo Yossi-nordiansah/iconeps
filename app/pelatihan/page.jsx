@@ -3,17 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { CalendarDays } from "lucide-react";
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
-import EditPendaftar from '../_component/admin/editPendaftar';
+import EditPendaftaran from '../_component/EditDataPeserta';
+import Loading from '../_component/Loading';
 
 const Pelatihan = () => {
 
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
   const [statusPusbas, setStatusPusbas] = useState("");
   const [statusPuskom, setStatusPuskom] = useState("");
   const [segment, setSegment] = useState("");
   const [openEdit, setOpenEdit] = useState(false);
+  const [pesertaId, setPesertaId] = useState(null);
+  const [puskomId, setPuskomId] = useState(null);
+  const [pusbasId, setPusbasId] = useState(null);
 
   const getStatus = async () => {
+    setLoading(true);
     if (!session?.user?.id) return null;
     try {
       const res = await axios.post("/api/pusbas/peserta/cek-status", {
@@ -21,23 +27,27 @@ const Pelatihan = () => {
       });
       const pusbasStatus = res.data.mahasiswa.peserta.filter(item => item.divisi === "pusbas").map(item => item.status);
       const puskomStatus = res.data.mahasiswa.peserta.filter(item => item.divisi === "puskom").map(item => item.status);
+      setPusbasId(res.data.mahasiswa.peserta.filter(item => item.divisi === "pusbas").map(item => item.id))
+      setPuskomId(res.data.mahasiswa.peserta.filter(item => item.divisi === "puskom").map(item => item.id))
       setStatusPusbas(`${pusbasStatus}`);
       setStatusPuskom(`${puskomStatus}`);
     } catch (error) {
       console.error("Failed to fetch status:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     getStatus();
   }, [session]);
 
   const handleEditPesertaPusbas = () => {
     setSegment('pusbas');
+    setPesertaId(pusbasId[0]);
     setOpenEdit(true);
+    console.log(pesertaId)
   }
-
-  console.log(`status pusbas : ${statusPusbas}`);
-  console.log(`status pusbas : ${statusPuskom}`);
 
   if (!session) {
     return (
@@ -51,9 +61,17 @@ const Pelatihan = () => {
         </button>
       </div>
     );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loading />
+      </div>
+    );
   }
 
-  if (statusPusbas === "" && statusPuskom === "") {
+  if (!loading && statusPusbas === "" && statusPuskom === "") {
     return (
       <div className='md:min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
         <h1 className="text-xl font-semibold mb-4">Anda Belum Terdaftar Pada Pelatihan Apapun</h1>
@@ -69,6 +87,9 @@ const Pelatihan = () => {
 
   return (
     <div className='md:min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 bg-no-repeat' style={{ backgroundImage: `url(${'/images/bg-pelatihan.png'})`, backgroundPosition: 'center' }}>
+      {
+        loading && <Loading />
+      }
       <div className='flex gap-4 mb-7 items-center'>
         <img src="/images/practice.png" alt="" className='w-10' />
         <h1 className='text-xl font-robotoBold'>Pelatihan yang anda ikuti</h1>
@@ -99,7 +120,7 @@ const Pelatihan = () => {
             <div className='text-white text-nowrap w-full'>
               <h1 className='text-6xl font-bold md:mb-0 mb-2 font-radjdhani_bold sm:block hidden md:-mt-1'>PUSBAS</h1>
               <p className='md:-mt-1 text-center'>Menunggu Pelatihan Dimulai</p>
-              <img src="/images/wait.png" alt="" className='w-16 mx-auto mt-2 mb-2'/>
+              <img src="/images/wait.png" alt="" className='w-16 mx-auto mt-2 mb-2' />
               <button className='bg-yellow-500 px-3 py-1 font-semibold rounded-lg mx-auto block' onClick={handleEditPesertaPusbas}>Edit Data</button>
             </div>
           </div>
@@ -123,9 +144,9 @@ const Pelatihan = () => {
         {/* ilustrasi */}
         <img src="/images/mhs-with-stroke.png" alt="" className='max-w-[560px] h-auto min-w-56 w-full object-contain lg:block hidden' />
       </div>
-      <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} segmen={segment} id={session?.user?.id}/>
+      <EditPendaftaran isOpen={openEdit} close={() => setOpenEdit(false)} segment={segment} id={pesertaId} />
     </div>
   )
 }
 
-export default Pelatihan
+export default Pelatihan;
