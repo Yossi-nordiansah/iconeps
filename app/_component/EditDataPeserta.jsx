@@ -230,7 +230,7 @@ const EditPendaftaran = ({ isOpen, close, segment, id }) => {
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                                 </svg>
                             ) : null}
-                            {loading ? 'Loading..' : 'Daftar'}
+                            {loading ? 'Loading..' : 'Ubah'}
                         </button>
                     </div>
                 </form>

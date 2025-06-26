@@ -3,23 +3,25 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req) {
 
-    const body = await req.json();  
+    const body = await req.json();
     const { id } = body;
     try {
         const dataPeserta = await prisma.users.findUnique({
-            where: {
-                id
-            },
+            where: { id },
             include: {
                 mahasiswa: {
                     include: {
-                        peserta: true
+                        peserta: {
+                            include: {
+                                kelas_peserta_kelasTokelas: true,
+                            }
+                        }
                     }
                 }
             }
         });
-        return NextResponse.json(dataPeserta, {status: 200})
+        return NextResponse.json(dataPeserta, { status: 200 })
     } catch (error) {
-        return NextResponse.json(error, {status: 500})
+        return NextResponse.json(error, { status: 500 })
     }
 }
