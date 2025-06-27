@@ -14,6 +14,7 @@ export async function POST(req) {
                         peserta: {
                             include: {
                                 kelas_peserta_kelasTokelas: true,
+                                sertifikat: true
                             }
                         }
                     }

@@ -10,6 +10,7 @@ const PesertaPusbas = () => {
     const { data: session } = useSession();
     const [periodePusbas, setPeriodePusbas] = useState(null);
     const [tipeKelas, setTipeKelas] = useState(null);
+    const [linkUjian, setLinkUjian] = useState(null);
 
     const getStatus = async () => {
         if (!session?.user?.id) return null;
@@ -26,7 +27,10 @@ const PesertaPusbas = () => {
             if (pusbasPeserta?.kelas_peserta_kelasTokelas?.tipe_kelas) {
                 setTipeKelas(`${pusbasPeserta.kelas_peserta_kelasTokelas.nama_kelas} (${pusbasPeserta.kelas_peserta_kelasTokelas.tipe_kelas})`);
             };
-
+            
+            if (pusbasPeserta?.kelas_peserta_kelasTokelas?.link_ujian) {
+                setLinkUjian(pusbasPeserta.kelas_peserta_kelasTokelas.link_ujian);
+            };
         } catch (error) {
             console.error("Failed to fetch status:", error);
         };
@@ -48,7 +52,12 @@ const PesertaPusbas = () => {
                     <span className='sm:text-xl font-semibold'>{periodePusbas}</span>
                 </div>
                 <p className='font-radjdhani_semibold sm:text-2xl text-center text-xl mb-2'>{tipeKelas}</p>
-                <a href="/jadwal" className='bg-yellow-500 px-3 py-2 font-semibold rounded-lg mx-auto block w-fit'>Lihat Jadwal</a>
+                <div className="flex justify-center gap-3 ">
+                    <a href="/jadwal" className='bg-yellow-500 px-3 py-2 font-semibold rounded-lg block w-fit'>Lihat Jadwal</a>
+                    {
+                        linkUjian && <a href={linkUjian} target="_blank" className='bg-yellow-500 px-3 py-2 font-semibold rounded-lg block w-fit'>Link Ujian</a>
+                    }
+                </div>
             </div>
         </div>
     )

@@ -19,7 +19,7 @@ const PendaftarPusbas = () => {
             const res = await axios.post("/api/pusbas/peserta/cek-status", {
                 id: session?.user?.id,
             });
-            setPusbasId(res.data.mahasiswa.peserta.filter(item => item.divisi === "pusbas").map(item => item.id))
+            setPusbasId(res.data.mahasiswa.peserta.filter(item => item.divisi === "pusbas").map(item => item.id));
         } catch (error) {
             console.error("Failed to fetch status:", error);
         }
