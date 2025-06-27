@@ -9,6 +9,7 @@ const LulusPusbas = () => {
 
     const { data: session } = useSession();
     const [path, setPath] = useState(null);
+    const [pesertaId, setPesertaId] = useState(null);
 
     const getStatus = async () => {
         if (!session?.user?.id) return null;
@@ -16,20 +17,31 @@ const LulusPusbas = () => {
             const res = await axios.post("/api/pusbas/peserta/cek-status", {
                 id: session?.user?.id,
             });
-            const pusbasPeserta = res.data.mahasiswa.peserta.find(item => item.divisi === "pusbas");
-            if (pusbasPeserta?.sertifikat) {
-                setPath(pusbasPeserta.sertifikat.path);
-            };
+            const pusbasId = res.data.mahasiswa.peserta.filter(item => item.divisi === "pusbas").map(item => item.id);
+            setPesertaId(pusbasId)
         } catch (error) {
             console.error("Failed to fetch status:", error);
         }
     };
 
+    const getPath = async () => {
+        if (!pesertaId) return null;
+        try {
+            const response = await axios.get(`/api/pusbas/peserta/lulus/sertifikat/${pesertaId}`);
+            const relativePath = response.data.sertifikat[0].path.replace("/public", "");
+            setPath(relativePath);
+        } catch (error) {
+            console.error("Failed to fetch status:", error);
+        }
+    }
+
     useEffect(() => {
         getStatus();
     }, []);
 
-    console.log(path)
+    useEffect(() => {
+        getPath();
+    }, [pesertaId]);
 
     return (
         <div className='flex sm:gap-6 gap-2 sm:flex-row flex-col sm:min-w-[580px] min-w-72 max-w-72 w-full bg-gradient-to-b shadow-xl from-blue-950 to-blue-900 p-4 rounded-lg mb-10'>
@@ -40,7 +52,7 @@ const LulusPusbas = () => {
                 <p className='-mt-1 text-center sm:text-base text-lg'>Selamat Anda Lulus Ujian</p>
                 <img src="/images/certificate.png" alt="" className='sm:w-16 w-20 mx-auto sm:mt-2 sm:mb-2 mt-3 mb-3' />
                 <div className='flex justify-center gap-3'>
-                    <a href='https://wa.me/6285655230897' download className='bg-yellow-500 flex cursor-pointer gap-2 items-center px-3 py-1  w-fit h-fit rounded-md font-radjdhani_bold text-white'>Download Sertifikat</a>
+                    <a href={path} download className='bg-yellow-500 flex cursor-pointer gap-2 items-center px-3 py-1  w-fit h-fit rounded-md font-radjdhani_bold text-white'>Download Sertifikat</a>
                 </div>
             </div>
         </div>
