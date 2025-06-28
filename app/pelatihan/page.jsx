@@ -11,6 +11,7 @@ import RemidialPusbas from '../_component/pelatihan/RemidialPusbas';
 import PendaftarPuskom from '../_component/pelatihan/PendaftarPuskom';
 import PesertaPuskom from '../_component/pelatihan/PesertaPuskom';
 import LulusPuskom from '../_component/pelatihan/LulusPuskom';
+import RemidialPuskom from '../_component/pelatihan/RemidialPuskom';
 
 const Pelatihan = () => {
 
@@ -73,7 +74,7 @@ const Pelatihan = () => {
         <h1 className="text-xl font-semibold mb-4">Anda Belum Terdaftar Pada Pelatihan Apapun</h1>
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
-          onClick={() => window.location.href = "/#program"} // ganti ke halaman pendaftaran yang sesuai
+          onClick={() => window.location.href = "/#program"} 
         >
           Daftar Sekarang
         </button>
@@ -93,6 +94,7 @@ const Pelatihan = () => {
 
       <div className='flex lg:justify-between justify-center mx-auto gap-10 lg:gap-20'>
         <div className='w-fit'>
+
           { statusPusbas === 'pendaftar' && <PendaftarPusbas/> }
           { statusPusbas === 'peserta' && <PesertaPusbas /> }
           { statusPusbas === 'lulus' && <LulusPusbas /> }
@@ -102,6 +104,7 @@ const Pelatihan = () => {
           { statusPuskom === 'pendaftar' && <PendaftarPuskom/> }
           { statusPuskom === 'peserta' && <PesertaPuskom/> }
           { statusPuskom === 'lulus' && <LulusPuskom/>}
+          { statusPuskom === 'remidial' && <RemidialPuskom/>}
 
         </div>
 

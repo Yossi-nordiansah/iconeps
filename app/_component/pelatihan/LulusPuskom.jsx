@@ -5,7 +5,6 @@ import axios from 'axios';
 
 const LulusPuskom = () => {
     const { data: session } = useSession();
-    const [path, setPath] = useState(null);
     const [linkSertificate, setLinkSertificate] = useState(null);
 
     useEffect(() => {
