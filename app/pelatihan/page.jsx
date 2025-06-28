@@ -8,6 +8,7 @@ import PendaftarPusbas from '../_component/pelatihan/PendaftarPusbas';
 import PesertaPusbas from '../_component/pelatihan/PesertaPusbas';
 import LulusPusbas from '../_component/pelatihan/LulusPusbas';
 import RemidialPusbas from '../_component/pelatihan/RemidialPusbas';
+import PendaftarPuskom from '../_component/pelatihan/PendaftarPuskom';
 
 const Pelatihan = () => {
 
@@ -96,20 +97,8 @@ const Pelatihan = () => {
           { statusPusbas === 'remidial' && <RemidialPusbas/> }
 
           {/* puskom */}
-          {/* <div className='flex sm:gap-6 gap-2 sm:flex-row flex-col md:min-w-[400px] w-fit bg-gradient-to-b shadow-xl from-blue-950 to-blue-900 p-4 rounded-lg mb-10'>
-            <h1 className='text-6xl rounded-md font-bold font-radjdhani_bold block sm:hidden text-white sm:mb-2 bg-green'>PUSKOM</h1>
-            <img src="/images/office.png" alt="pusbas image" className='min-h-48 min-w-48 max-w-48 object-cover rounded-xl' />
-            <div className='text-white text-nowrap'>
-              <h1 className='text-6xl font-bold md:mb-0 mb-2 font-radjdhani_bold sm:block hidden md:-mt-1'>PUSKOM</h1>
-              <p className='md:-mt-1'>Anda dalam masa pelatihan</p>
-              <div className="flex items-center gap-2 mb-1 px-2 py-1 rounded-md">
-                <CalendarDays className="w-7 h-7 text-white" />
-                <span className='text-xl font-semibold'>Januari - Februari 2025</span>
-              </div>
-              <p className='font-radjdhani_semibold text-2xl mb-2 text-center'>Kelas C</p>
-              <button className='bg-yellow-500 px-3 py-2 font-semibold rounded-lg mx-auto block'>Lihat Jadwal</button>
-            </div>
-          </div> */}
+          { statusPuskom === 'pendaftar' && <PendaftarPuskom/> }
+
         </div>
 
 
