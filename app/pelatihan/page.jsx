@@ -7,6 +7,7 @@ import Loading from '../_component/Loading';
 import PendaftarPusbas from '../_component/pelatihan/PendaftarPusbas';
 import PesertaPusbas from '../_component/pelatihan/PesertaPusbas';
 import LulusPusbas from '../_component/pelatihan/LulusPusbas';
+import RemidialPusbas from '../_component/pelatihan/RemidialPusbas';
 
 const Pelatihan = () => {
 
@@ -92,6 +93,7 @@ const Pelatihan = () => {
           { statusPusbas === 'pendaftar' && <PendaftarPusbas/> }
           { statusPusbas === 'peserta' && <PesertaPusbas /> }
           { statusPusbas === 'lulus' && <LulusPusbas /> }
+          { statusPusbas === 'remidial' && <RemidialPusbas/> }
 
           {/* puskom */}
           {/* <div className='flex sm:gap-6 gap-2 sm:flex-row flex-col md:min-w-[400px] w-fit bg-gradient-to-b shadow-xl from-blue-950 to-blue-900 p-4 rounded-lg mb-10'>
