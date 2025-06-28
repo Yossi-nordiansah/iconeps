@@ -9,6 +9,8 @@ import PesertaPusbas from '../_component/pelatihan/PesertaPusbas';
 import LulusPusbas from '../_component/pelatihan/LulusPusbas';
 import RemidialPusbas from '../_component/pelatihan/RemidialPusbas';
 import PendaftarPuskom from '../_component/pelatihan/PendaftarPuskom';
+import PesertaPuskom from '../_component/pelatihan/PesertaPuskom';
+import LulusPuskom from '../_component/pelatihan/LulusPuskom';
 
 const Pelatihan = () => {
 
@@ -98,6 +100,8 @@ const Pelatihan = () => {
 
           {/* puskom */}
           { statusPuskom === 'pendaftar' && <PendaftarPuskom/> }
+          { statusPuskom === 'peserta' && <PesertaPuskom/> }
+          { statusPuskom === 'lulus' && <LulusPuskom/>}
 
         </div>
 

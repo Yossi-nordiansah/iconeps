@@ -13,7 +13,7 @@ export async function POST(req) {
                     include: {
                         peserta: {
                             include: {
-                                kelas_peserta_kelasTokelas: true,
+                                kelas_peserta_kelasTokelas: true, 
                                 sertifikat: true
                             }
                         }
