@@ -26,13 +26,10 @@ export async function POST(request) {
             where: { email: email }
         });
 
-        console.log(`existing user: ${existingUser}`)
-
         if (existingUser.length > 0) {
             return NextResponse.json({ message: "Email sudah terdaftar." }, { status: 409 });
         }
 
-        // Cek apakah NIM sudah digunakan
         const existingNIM = await prisma.mahasiswa.findMany({
             where: { nim: nim }
         });
@@ -40,7 +37,6 @@ export async function POST(request) {
         if (existingNIM.length > 0) {
             return NextResponse.json({ message: "NIM sudah terdaftar." }, { status: 409 });
         }
-        // Hash password sebelum disimpan
         const hashedPassword = await bcrypt.hash(password, 10);
  
         const userRegistrasi = await prisma.users.create({
@@ -64,9 +60,6 @@ export async function POST(request) {
                 role: 'mahasiswa'
             }
         });
-
-        console.log("user:", userRegistrasi);
-        console.log("mahasiswa:", dataMahasiswa);
 
         return NextResponse.json({ message: "Registrasi berhasil" }, { status: 200 });
 

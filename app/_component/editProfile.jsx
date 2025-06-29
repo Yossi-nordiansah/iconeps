@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Swal from 'sweetalert2';
+import { useSession } from 'next-auth/react';
 
 const EditProfile = ({ isOpen, close, id }) => {
 
     const [showPasswordButton, setShowPasswordButton] = useState(false);
-    const [showConfirmPasswordButton, setShowConfirmPasswordButton] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [prodiList, setProdiList] = useState([]);
     const [form, setForm] = useState({
         nama: "",
         email: "",
@@ -20,8 +20,33 @@ const EditProfile = ({ isOpen, close, id }) => {
         semester: "",
         nim: "",
         password: "",
-        confirmPassword: "",
     });
+
+    const getDataMahasiswa = async () => {
+        if (!id) return;
+
+        try {
+            const response = await axios.get(`/api/user/${id}`);
+            const mhs = response.data.mahasiswa;
+            setForm({
+                nama: mhs.nama || "",
+                email: response.data.email || "",
+                telepon: mhs.nomor_telepon || "",
+                fakultas: mhs.fakultas || "",
+                prodi: mhs.prodi || "",
+                semester: mhs.semester || "",
+                nim: mhs.nim || "",
+            });
+        } catch (error) {
+            console.log(error);
+            if (isOpen) window.alert("Gagal Fetch Data: " + error.message);
+        }
+    };
+
+    useEffect(() => {
+        if (!id || !isOpen) return;
+        getDataMahasiswa();
+    }, [id, isOpen]);
 
     const fakultasProdi = {
         "Fakultas Teknik": ["Informatika", "Teknik Sipil", "Teknik Mesin", "Teknik Industri"],
@@ -30,8 +55,6 @@ const EditProfile = ({ isOpen, close, id }) => {
         "Fakultas Agama Islam": ["Pendidikan Agama Islam"],
         "Fakultas Keguruan dan Ilmu Pendidikan": ["Pendidikan Bahasa Indonesia", "Pendidikan Bahasa Inggris", "Pendidikan Matematika", "Pendidikan Kepelatihan Olahraga"],
     };
-
-    const [prodiList, setProdiList] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -42,6 +65,24 @@ const EditProfile = ({ isOpen, close, id }) => {
             setForm((prev) => ({ ...prev, prodi: "" }));
         }
     };
+
+    const handleUpdate = async () => {
+        try {
+            await axios.put(`/api/user/${id}`, form);
+            Swal.fire({
+                icon: 'success',
+                title: 'Data Berhasil Diubah',
+                timer: 2000
+            });
+            close()
+        } catch (error) {
+                Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memperbaharui Data',
+                timer: 2000
+            });
+        }
+    }
 
     if (!isOpen) return null;
 
@@ -136,24 +177,6 @@ const EditProfile = ({ isOpen, close, id }) => {
                             required
                         />
                     </div>
-                    <div className="relative">
-                        <input
-                            type={showPasswordButton ? "text" : "password"}
-                            name="password"
-                            placeholder="Password"
-                            value={form.password}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded-lg pr-10 border-blue-500 outline-blue-400"
-                            required
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPasswordButton((prev) => !prev)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
-                        >
-                            {showPasswordButton ? <FaEye /> : <FaEyeSlash />}
-                        </button>
-                    </div>
                     <div className='flex gap-4'>
                         <button
                             onClick={close}
@@ -163,7 +186,8 @@ const EditProfile = ({ isOpen, close, id }) => {
                             Cancel
                         </button>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleUpdate}
                             disabled={isLoading}
                             className={`w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 flex justify-center items-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
