@@ -1,8 +1,20 @@
 import React from 'react';
 import { Download } from "lucide-react";
+import * as XLSX from 'xlsx';
 
 const DataMissing = ({ isOpen, close, data }) => {
     if (!isOpen) return null;
+
+    const handleDownloadExcel = () => {
+        const worksheetData = [
+            ["NIM", "Nama"],
+            ...data.map(mhs => [mhs.nim, mhs.nama]),
+        ];
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data Missing");
+        XLSX.writeFile(workbook, "data_missing_nim.xlsx");
+    };
 
     return (
         <div className='inset-0 bg-black/50 fixed w-full min-h-screen backdrop-blur-sm flex justify-center items-center z-50'>
@@ -32,7 +44,7 @@ const DataMissing = ({ isOpen, close, data }) => {
                         Tutup
                     </button>
                     <button
-                        // onClick={handleDownloadExcel}
+                        onClick={handleDownloadExcel}
                         className='bg-[#39ac73] text-white font-semibold h-fit rounded-sm hover:bg-[#40bf80] px-3 py-2'
                     >
                         <Download size={18} />

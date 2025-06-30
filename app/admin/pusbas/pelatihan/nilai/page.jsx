@@ -70,8 +70,6 @@ export default function NilaiAdmin() {
         })
     };
 
-
-
     return (
         <div className="p-6">
             {/* Header */}
