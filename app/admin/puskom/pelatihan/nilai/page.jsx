@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import DataMissing from '@/app/_component/admin/dataMissing';
 import { Download } from 'lucide-react';
-
+ 
 export default function NilaiAdmin() {
     const [dragActive, setDragActive] = useState(false);
     const [file, setFile] = useState(null);
