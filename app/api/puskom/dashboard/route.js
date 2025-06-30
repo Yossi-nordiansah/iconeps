@@ -11,14 +11,14 @@ export async function GET(req) {
         const jumlahKelas = await prisma.kelas.count({
             where: {
                 periode: periode || undefined,
-                divisi: 'pusbas',
+                divisi: 'puskom',
             },
         });
 
         const jumlahPendaftar = await prisma.peserta.count({
             where: {
                 status: 'pendaftar',
-                divisi: 'pusbas',
+                divisi: 'puskom',
                 kelas_peserta_kelasTokelas: {
                     periode: periode || undefined,
                 },
@@ -30,7 +30,7 @@ export async function GET(req) {
                 status: {
                     in: ['peserta', 'lulus', 'remidial'],
                 },
-                divisi: 'pusbas',
+                divisi: 'puskom',
                 kelas_peserta_kelasTokelas: {
                     periode: periode || undefined,
                 },
@@ -40,7 +40,7 @@ export async function GET(req) {
         const jumlahPesertaLulus = await prisma.peserta.count({
             where: {
                 status: 'lulus',
-                divisi: 'pusbas',
+                divisi: 'puskom',
                 kelas_peserta_kelasTokelas: {
                     periode: periode || undefined,
                 },
@@ -50,7 +50,7 @@ export async function GET(req) {
         const jumlahPesertaRemidial = await prisma.peserta.count({
             where: {
                 status: 'remidial',
-                divisi: 'pusbas', // masih divisi pusbas
+                divisi: 'puskom', // masih divisi pusbas
             },
         });
 

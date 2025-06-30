@@ -1,5 +1,5 @@
 "use client"
-import { Trash2, Pencil, Eye, Mail } from "lucide-react";
+import { Eye } from "lucide-react";
 import { DocumentCheckIcon } from '@heroicons/react/24/solid';
 import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
