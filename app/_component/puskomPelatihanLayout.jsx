@@ -10,7 +10,7 @@ const PuskomPelatihanLayout = ({ children }) => {
     useEffect(() => {
         dispatch(fetchPeriodes());
     }, [dispatch]);
- 
+
     useEffect(() => {
         dispatch(fetchPeriodes()).then((res) => {
             const periodes = res.payload;

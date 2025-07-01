@@ -11,6 +11,7 @@ import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
 import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftar";
 import { Download } from 'lucide-react';
+import Loading from "@/app/_component/Loading";
 
 export default function MahasiswaAdmin() {
 
@@ -59,6 +60,7 @@ export default function MahasiswaAdmin() {
     const [statusPendaftar, setStatusPendaftar] = useState(false);
     const [messageEmpty, setmessageErrorEmpty] = useState("");
     const divisi = segments[segments.length - 3];
+    const [loading, setLoading] = useState(false);
 
     const getDataPendaftar = async () => {
         try {
@@ -200,65 +202,69 @@ export default function MahasiswaAdmin() {
 
     return (
         <div className="p-6 overflow-y-auto">
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <div className="flex items-center gap-2">
-                    <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/admin/pusbas/pelatihan/')}>
-                        <img src="/icons/back.svg" alt="Back" className="w-6" />
-                    </button>
-                    <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
-                        <PencilSquareIcon className="h-5" />
-                        <span className="text-base font-semibold">Pendaftar</span>
-                        <span className="text-base font-semibold">{filteredPendaftar.length}</span>
+            {
+                loading ? (<Loading />) : (
+                    <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                            <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/admin/pusbas/pelatihan/')}>
+                                <img src="/icons/back.svg" alt="Back" className="w-6" />
+                            </button>
+                            <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
+                                <PencilSquareIcon className="h-5" />
+                                <span className="text-base font-semibold">Pendaftar</span>
+                                <span className="text-base font-semibold">{filteredPendaftar.length}</span>
+                            </div>
+                            <div className="p-2 w-fit bg-gray-300 rounded cursor-pointer" onClick={() => {
+                                const ids = currentPendaftar.map(mhs => mhs.peserta[0]?.id).filter(Boolean);
+                                setSelectedPendaftar(ids);
+                                setOpenAcceptPendaftar(true);
+                            }}>
+                                <CheckIcon className="w-5 h-5" />
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <div className="rounded-xl border border-black overflow-hidden flex items-center">
+                                <input
+                                    type="text"
+                                    placeholder="Cari Pendaftar..."
+                                    className="outline-none px-3 py-1 w-64"
+                                    value={searchTerm}
+                                    onChange={(e) => {
+                                        setSearchTerm(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                />
+                                <button className="bg-gray-300 p-2">
+                                    <img src="/icons/search.svg" alt="Search" className="w-5" />
+                                </button>
+                            </div>
+                            <div className="px-2 py-2 border bg-gray-300 rounded">
+                                <select
+                                    className="bg-transparent outline-none"
+                                    value={sortOrder}
+                                    onChange={(e) => setSortOrder(e.target.value)}
+                                >
+                                    <option value="desc">Terbaru</option>
+                                    <option value="asc">Terlama</option>
+                                </select>
+                            </div>
+                            <button onClick={() => setShowFilter(!showFilter)} className={`${showFilter ? 'bg-red-500' : 'bg-gray-300'} px-4 py-2 rounded`}>
+                                {showFilter ? "Tutup Filter" : "Filter"}
+                            </button>
+                            <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => handleSendEmail(allEmails, lastSegmetst)}>
+                                <img src="/icons/email.svg" alt="Email" className="w-6" />
+                                <span>Kirim Email</span>
+                            </button>
+                            <button
+                                onClick={handleDownloadExcel}
+                                className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
+                            >
+                                <Download size={18} />
+                            </button>
+                        </div>
                     </div>
-                    <div className="p-2 w-fit bg-gray-300 rounded cursor-pointer" onClick={() => {
-                        const ids = currentPendaftar.map(mhs => mhs.peserta[0]?.id).filter(Boolean);
-                        setSelectedPendaftar(ids);
-                        setOpenAcceptPendaftar(true);
-                    }}>
-                        <CheckIcon className="w-5 h-5" />
-                    </div>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap">
-                    <div className="rounded-xl border border-black overflow-hidden flex items-center">
-                        <input
-                            type="text"
-                            placeholder="Cari Pendaftar..."
-                            className="outline-none px-3 py-1 w-64"
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                        />
-                        <button className="bg-gray-300 p-2">
-                            <img src="/icons/search.svg" alt="Search" className="w-5" />
-                        </button>
-                    </div>
-                    <div className="px-2 py-2 border bg-gray-300 rounded">
-                        <select
-                            className="bg-transparent outline-none"
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                        >
-                            <option value="desc">Terbaru</option>
-                            <option value="asc">Terlama</option>
-                        </select>
-                    </div>
-                    <button onClick={() => setShowFilter(!showFilter)} className={`${showFilter ? 'bg-red-500' : 'bg-gray-300'} px-4 py-2 rounded`}>
-                        {showFilter ? "Tutup Filter" : "Filter"}
-                    </button>
-                    <button className="flex items-center gap-1 bg-gray-300 p-2 rounded" onClick={() => handleSendEmail(allEmails, lastSegmetst)}>
-                        <img src="/icons/email.svg" alt="Email" className="w-6" />
-                        <span>Kirim Email</span>
-                    </button>
-                    <button
-                        onClick={handleDownloadExcel}
-                        className={`bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 mx-auto flex items-center justify-center gap-2 transition}`}
-                    >
-                        <Download size={18} />
-                    </button>
-                </div>
-            </div>
+                )
+            }
 
             {/* Filter Panel */}
             {showFilter && (
@@ -433,7 +439,7 @@ export default function MahasiswaAdmin() {
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
-            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess}/>
+            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess} />
         </div>
     );
 }

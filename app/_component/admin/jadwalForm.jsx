@@ -23,7 +23,7 @@ const JadwalForm = ({ isOpen, close, data, onSuccess }) => {
       console.log(`selected periode : ${selectedPeriodePusbas}`);
     }
   };
-
+ 
   useEffect(() => {
     dispatch(fetchPeriodes()).then((res) => {
       const periodes = res.payload;

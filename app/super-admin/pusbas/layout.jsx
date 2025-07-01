@@ -11,7 +11,6 @@ const AdminLayout = ({ children }) => {
     const pathName = usePathname();
     const { data: session, status } = useSession();
 
-
     return (
         <div>
             <div className='absolute bg-primary h-full w-48 pt-24 z-10 text-white font-semibold'>

@@ -1,38 +1,40 @@
 "use client"
-import { Trash2, Pencil, Eye, Mail } from "lucide-react";
+import { Eye } from "lucide-react";
 import { DocumentCheckIcon } from '@heroicons/react/24/solid';
 import { usePathname, useRouter } from "next/navigation";
 import EmailEditor from "@/app/_component/admin/emailEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { format } from 'date-fns';
+import PreviewSertifikat from "@/app/_component/admin/previewSertifikat";
 
-const mahasiswa = [
-    {
-        noSertifikat: 1201,
-        nama: 'Yossi Nordiansah',
-        prodi: 'Informatika',
-        tanggalDiterbitkan: '01-01-2025'
-    },
-    {
-        noSertifikat: 1202,
-        nama: 'Rudi Ardiansyah',
-        prodi: 'Manajemen',
-        tanggalDiterbitkan: '01-01-2025'
-    },
-    {
-        noSertifikat: 1203,
-        nama: 'Imam Fatoni',
-        prodi: 'Teknik Mesin',
-        tanggalDiterbitkan: '01-01-2025'
-    }
-];
 
 export default function SertifikatAdmin() {
 
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
+    const [sertifikat, setSertifikat] = useState([]);
+    const [openPreview, setOpenPreview] = useState(false);
+    const [sertifikatPath, setSertifikatPath] = useState("")
     const router = useRouter();
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
-    const lastSegmetst = segments[segments.length - 1];
+    const lastSegmetst = segments[segments.length - 3];
+
+    const getDataPesertaLulus = async () => {
+        try {
+            const response = await axios.get(`/api/pusbas/peserta/lulus/sertifikat?periode=${selectedPeriodePusbas}`);
+            setSertifikat(response.data);
+        } catch (error) {
+            console.log(error);
+            window.alert(error)
+        }
+    };
+
+    useEffect(() => {
+        getDataPesertaLulus();
+    }, [selectedPeriodePusbas])
 
     return (
         <div className="p-6">
@@ -45,7 +47,7 @@ export default function SertifikatAdmin() {
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <DocumentCheckIcon className="h-5" />
                         <span className="text-base font-semibold">Sertifikat</span>
-                        <span className="text-base font-semibold">40</span>
+                        <span className="text-base font-semibold">{sertifikat.length}</span>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -65,41 +67,47 @@ export default function SertifikatAdmin() {
                     </button>
                 </div>
             </div>
-
-            {/* Tabel */}
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-200">
-                    <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Sertifikat</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Diterbitkan</th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {mahasiswa.map((mhs, idx) => (
-                        <tr key={idx}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.noSertifikat}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{mhs.tanggalDiterbitkan}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Trash2 size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Pencil size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Eye size={16} />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="max-h-[360px] overflow-y-auto">
+                {
+                    sertifikat.length === 0 ? (
+                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                            Belum ada peserta lulus.
+                        </div>
+                    ) : (
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-200">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Sertifikat</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
+                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Diterbitkan</th>
+                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {sertifikat.map((mhs, idx) => (
+                                    <tr key={idx}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.sertifikat[0].nomor_sertifikat}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{format(new Date(mhs.sertifikat[0].tanggal_diterbitkan), 'dd-MM-yyyy')}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                setOpenPreview(true);
+                                                setSertifikatPath(mhs.sertifikat[0].path);
+                                            }}>
+                                                <Eye size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )
+                }
+            </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
+            <PreviewSertifikat isOpen={openPreview} close={() => setOpenPreview(false)} data={sertifikatPath} />
         </div>
     );
 }

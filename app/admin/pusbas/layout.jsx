@@ -11,10 +11,10 @@ export default async function AdminLayout({ children }) {
     redirect("/");
   }
 
- const allowedRole = "admin_pusbas";
+  const allowedRoles = ["admin_pusbas", "super_admin"];
 
-  if (session.user.role !== allowedRole) {
-    redirect("/unauthorized"); 
+  if (!allowedRoles.includes(session.user.role)) {
+    redirect("/unauthorized");
   }
 
   return (

@@ -19,9 +19,6 @@ export async function GET(req) {
             where: {
                 status: 'pendaftar',
                 divisi: 'pusbas',
-                kelas_peserta_kelasTokelas: {
-                    periode: periode || undefined,
-                },
             },
         });
 

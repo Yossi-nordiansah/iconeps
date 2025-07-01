@@ -19,10 +19,6 @@ const Pelatihan = () => {
   const [loading, setLoading] = useState(false);
   const [statusPusbas, setStatusPusbas] = useState("");
   const [statusPuskom, setStatusPuskom] = useState("");
-  const [segment, setSegment] = useState("");
-  const [openEdit, setOpenEdit] = useState(false);
-  const [puskomId, setPuskomId] = useState(null);
-  const [pusbasId, setPusbasId] = useState(null);
 
   const getStatus = async () => {
     setLoading(true);
@@ -48,36 +44,38 @@ const Pelatihan = () => {
 
   if (!session) {
     return (
-      <div className='md:min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
+      <div className='min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
         <h1 className="text-xl font-semibold mb-4">Anda Belum Registrasi dan Terdaftar Pada Pelatihan Apapun</h1>
+        <img src="/images/unregistered.jpg" alt="" className='w-72'/>
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
-          onClick={() => window.location.href = "/#program"} // ganti ke halaman pendaftaran yang sesuai
+          onClick={() => window.location.href = "/registrasi"} 
         >
-          Daftar Sekarang
+          Registrasi Sekarang
         </button>
       </div>
     );
   };
 
-  if (loading) {
+  if (!loading && statusPusbas === "" && statusPuskom === "") {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loading />
+      <div className='min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
+        <h1 className="text-xl font-semibold mb-4">Anda Belum Terdaftar Pada Pelatihan Apapun</h1>
+        <img src="/images/pelatihanimg.jpg" alt="" className='w-72'/>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
+          onClick={() => window.location.href = "/#program"}
+        >
+          Daftar Sekarang
+        </button>
       </div>
     );
   }
 
-  if (!loading && statusPusbas === "" && statusPuskom === "") {
+  if (loading) {
     return (
-      <div className='md:min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
-        <h1 className="text-xl font-semibold mb-4">Anda Belum Terdaftar Pada Pelatihan Apapun</h1>
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
-          onClick={() => window.location.href = "/#program"} 
-        >
-          Daftar Sekarang
-        </button>
+      <div className="flex items-center justify-center h-screen">
+        <Loading />
       </div>
     );
   }
@@ -95,20 +93,18 @@ const Pelatihan = () => {
       <div className='flex lg:justify-between justify-center mx-auto gap-10 lg:gap-20'>
         <div className='w-fit'>
 
-          { statusPusbas === 'pendaftar' && <PendaftarPusbas/> }
-          { statusPusbas === 'peserta' && <PesertaPusbas /> }
-          { statusPusbas === 'lulus' && <LulusPusbas /> }
-          { statusPusbas === 'remidial' && <RemidialPusbas/> }
+          {statusPusbas === 'pendaftar' && <PendaftarPusbas />}
+          {statusPusbas === 'peserta' && <PesertaPusbas />}
+          {statusPusbas === 'lulus' && <LulusPusbas />}
+          {statusPusbas === 'remidial' && <RemidialPusbas />}
 
           {/* puskom */}
-          { statusPuskom === 'pendaftar' && <PendaftarPuskom/> }
-          { statusPuskom === 'peserta' && <PesertaPuskom/> }
-          { statusPuskom === 'lulus' && <LulusPuskom/>}
-          { statusPuskom === 'remidial' && <RemidialPuskom/>}
+          {statusPuskom === 'pendaftar' && <PendaftarPuskom />}
+          {statusPuskom === 'peserta' && <PesertaPuskom />}
+          {statusPuskom === 'lulus' && <LulusPuskom />}
+          {statusPuskom === 'remidial' && <RemidialPuskom />}
 
         </div>
-
-
         {/* ilustrasi */}
         <img src="/images/mhs-with-stroke.png" alt="" className='max-w-[560px] h-auto min-w-56 w-full object-contain lg:block hidden' />
       </div>

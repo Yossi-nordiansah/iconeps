@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 
 const Jadwal = () => {
 
-   const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
-   const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
+  const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
+  const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
 
   return (
     <div className="min-h-screen pt-20 pb-10 lg:px-6 px-2 bg-gray-50">
@@ -19,6 +19,7 @@ const Jadwal = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-10">
+
           {/* Pusbas Section */}
           <div className="w-full md:w-1/2">
             <h2 className="text-3xl font-bold text-center font-radjdhani_bold mb-1">Jadwal Pusbas</h2>

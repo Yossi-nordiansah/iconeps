@@ -10,7 +10,6 @@ import Swal from 'sweetalert2';
 import JadwalPopup from '@/app/_component/admin/JadwalPopup';
 
 export default function KelasAdmin() {
-
     const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
@@ -24,7 +23,7 @@ export default function KelasAdmin() {
     const totalPages = Math.ceil(dataKelas.length / itemsPerPage);
     const [loading, setLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
-    const [selectedKelas, setSelectedKelas] = useState({})
+    const [selectedKelas, setSelectedKelas] = useState({});
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
     const [jadwalPopupOpen, setJadwalPopupOpen] = useState(false);
@@ -33,10 +32,13 @@ export default function KelasAdmin() {
 
     const getDataKelas = async () => {
         try {
+            setLoading(true);
             const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -47,9 +49,6 @@ export default function KelasAdmin() {
     }, [selectedPeriodePusbas]);
 
     const handleDelete = async (id) => {
-
-        setLoading(true);
-
         const confirm = await Swal.fire({
             title: "Apa anda yakin menghapus data ini?",
             text: "Data Kelas akan dihapus permanen",
@@ -63,10 +62,11 @@ export default function KelasAdmin() {
 
         if (confirm.isConfirmed) {
             try {
+                setLoading(true);
                 await axios.delete(`/api/pusbas/kelas/${id}`);
                 Swal.fire({
                     icon: 'success',
-                    title: 'data berhaasil dihapus',
+                    title: 'Data berhasil dihapus',
                     timer: 2000
                 });
                 getDataKelas();
@@ -75,9 +75,11 @@ export default function KelasAdmin() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal Menghapus Data!',
-                    text: error,
+                    text: error.message,
                     timer: 2000
-                })
+                });
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -117,55 +119,61 @@ export default function KelasAdmin() {
                 </button>
             </div>
 
-            {
-                dataKelas.length === 0 ? (
-                    <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                        Belum ada kelas.
-                    </div>
-                ) : (
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-200">
-                            <tr>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kelas</th>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instruktur</th>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
-                                <th className="px-3 py-3 text-xs  text-center font-medium text-gray-500 uppercase tracking-wider">Jumlah Peserta</th>
-                                <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+            <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-200">
+                    <tr>
+                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kelas</th>
+                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instruktur</th>
+                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                        <th className="px-3 py-3 text-xs text-center font-medium text-gray-500 uppercase tracking-wider">Jumlah Peserta</th>
+                        <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                    {loading ? (
+                        <tr>
+                            <td colSpan={5} className="py-10 text-center text-gray-500">
+                                <div className="flex justify-center items-center gap-2">
+                                    <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                                    Memuat data kelas...
+                                </div>
+                            </td> 
+                        </tr>
+                    ) : currentData.length === 0 ? (
+                        <tr>
+                            <td colSpan={5} className="text-center py-4 text-gray-500 italic">
+                                Belum ada kelas.
+                            </td>
+                        </tr>
+                    ) : (
+                        currentData.map((kls) => (
+                            <tr key={kls.id}>
+                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
+                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
+                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
+                                <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">
+                                    {kls._count?.peserta_peserta_kelasTokelas ?? 0}
+                                </td>
+                                <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
+                                        <Trash2 size={16} />
+                                    </button>
+                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                        setOpenEdit(true);
+                                        setSelectedKelas(kls);
+                                        setIsOpen(true);
+                                    }}>
+                                        <Pencil size={16} />
+                                    </button>
+                                    <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleOpenJadwal(kls)}>
+                                        <CalendarDateRangeIcon className="h-5" />
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {currentData.map((kls) => (
-                                <tr key={kls.id}>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.tipe_kelas}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">
-                                        {kls._count?.peserta_peserta_kelasTokelas ?? 0}
-                                    </td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                            setOpenEdit(true);
-                                            setSelectedKelas(kls);
-                                            setIsOpen(true);
-                                        }}>
-                                            <Pencil size={16} />
-                                        </button>
-                                        <button
-                                            className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                                            onClick={() => handleOpenJadwal(kls)}
-                                        >
-                                            <CalendarDateRangeIcon className="h-5" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )
-            }
+                        ))
+                    )}
+                </tbody>
+            </table>
 
             <div className="flex justify-center mt-4 space-x-2">
                 <button
@@ -193,11 +201,18 @@ export default function KelasAdmin() {
                 </button>
             </div>
 
-            <KelasForm isOpen={isOpen} segment={lastSegmetst} openEdit={openEdit} selectedKelas={selectedKelas} onSuccess={getDataKelas} close={() => {
-                setIsOpen(false);
-                setOpenEdit(false);
-                setSelectedKelas({});
-            }} />
+            <KelasForm
+                isOpen={isOpen}
+                segment={lastSegmetst}
+                openEdit={openEdit}
+                selectedKelas={selectedKelas}
+                onSuccess={getDataKelas}
+                close={() => {
+                    setIsOpen(false);
+                    setOpenEdit(false);
+                    setSelectedKelas({});
+                }}
+            />
             <JadwalPopup
                 isOpen={jadwalPopupOpen}
                 onClose={() => setJadwalPopupOpen(false)}
@@ -207,4 +222,3 @@ export default function KelasAdmin() {
         </div>
     );
 }
-

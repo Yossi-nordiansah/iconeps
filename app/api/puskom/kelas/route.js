@@ -7,7 +7,7 @@ export async function POST(req) {
 
     try {
         const data = await prisma.kelas.create({
-            data: {
+            data: { 
                 nama_kelas: body.nama_kelas,
                 id_instruktur: parseInt(body.id_instruktur),
                 divisi: "puskom",

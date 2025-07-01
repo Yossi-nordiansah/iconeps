@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { getSession } from "next-auth/react";
 import Swal from 'sweetalert2';
+import Loading from './Loading';
 
 const roleRedirectMap = {
   admin_puskom: "/admin/puskom/pelatihan",
@@ -22,6 +23,7 @@ const PopupLogin = ({ isOpen, close }) => {
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   if (!isOpen) return null;
 
@@ -41,7 +43,9 @@ const PopupLogin = ({ isOpen, close }) => {
         icon: "success",
         title: "Login Berhasil",
         text: `Selamat datang, ${user?.name || "User"}!`,
+        timer: 2000
       }).then(() => {
+        setIsRedirecting(true);
         close();
         const redirectPath = user?.role === "mahasiswa" ? pathname : roleRedirectMap[user?.role] || "/dashboard";
         router.push(redirectPath);
@@ -59,6 +63,12 @@ const PopupLogin = ({ isOpen, close }) => {
       setIsLoading(false);
     }
   };
+
+  if (isRedirecting) {
+    return (
+      <Loading />
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">

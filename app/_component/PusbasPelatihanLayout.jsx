@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 const PusbasPelatihanLayout = ({ children }) => {
     const dispatch = useDispatch();
     const { periodes, loading, selectedPeriodePusbas } = useSelector((state) => state.kelas);
-
+ 
     useEffect(() => {
         dispatch(fetchPeriodes());
     }, [dispatch]);

@@ -21,7 +21,7 @@ const JadwalFormPuskom = ({ isOpen, close, data, onSuccess }) => {
       window.alert(`Gagal fetch data: ${err}`);
       console.log(`selected periode : ${selectedPeriodePuskom}`);
     }
-  };
+  }; 
 
   useEffect(() => {
     dispatch(fetchPeriodes()).then((res) => {

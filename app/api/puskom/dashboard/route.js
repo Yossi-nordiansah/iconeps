@@ -19,9 +19,6 @@ export async function GET(req) {
             where: {
                 status: 'pendaftar',
                 divisi: 'puskom',
-                kelas_peserta_kelasTokelas: {
-                    periode: periode || undefined,
-                },
             },
         });
 
@@ -50,7 +47,7 @@ export async function GET(req) {
         const jumlahPesertaRemidial = await prisma.peserta.count({
             where: {
                 status: 'remidial',
-                divisi: 'puskom', // masih divisi pusbas
+                divisi: 'puskom', 
             },
         });
 

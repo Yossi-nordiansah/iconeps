@@ -23,7 +23,7 @@ export default function AdminJadwal() {
 
   useEffect(() => {
     fetchJadwal();
-  }, [selectedPeriodePusbas]);
+  }, [selectedPeriodePusbas]); 
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({

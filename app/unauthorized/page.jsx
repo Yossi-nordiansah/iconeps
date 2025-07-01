@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import UnauthorizedPage from "@/app/_component/unauthorized";
 
-export default function UnauthorizedWrapper() {
+export default function UnauthorizedWrapper() { 
   const router = useRouter();
 
   useEffect(() => {

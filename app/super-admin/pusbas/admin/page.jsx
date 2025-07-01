@@ -1,34 +1,39 @@
 "use client"
 import { Trash2, Pencil, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminForm from "@/app/_component/admin/formAdmin";
-
-const instrukturs = [
-    {
-        nama: "admin A",
-        email: "adminA@example.com",
-        password: "passwordA123",
-    },
-    {
-        nama: "admin B",
-        email: "adminB@example.com",
-        password: "passwordB456",
-    },
-    {
-        nama: "admin C",
-        email: "adminC@example.com",
-        password: "passwordC789",
-    }
-];
+import axios from "axios";
 
 export default function InstrukturAdmin() {
 
     const router = useRouter();
     const pathname = usePathname();
+    const [dataAdmin, setDataAdmin] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
-    const role = `admin_${segments[segments.length - 2]}`
+    const role = `admin_${segments[segments.length - 2]}`;
+    const [loading, setLoading] = useState(false);
+
+    const getDataAdmin = async () => {
+
+        setLoading(true);
+
+        try {
+            const response = await axios.get('/api/pusbas/admin');
+            console.log(response.data);
+            setDataAdmin(response.data);
+        } catch (error) {
+            window.alert(`Gagal Fetch Data ${error.message}`);
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    } 
+
+    useEffect(() => {
+        getDataAdmin();
+    },[])
 
     return (
         <div className="pl-56 pt-24 pr-6">
@@ -57,11 +62,11 @@ export default function InstrukturAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {instrukturs.map((instruktur, idx) => (
+                    {dataAdmin.map((admin, idx) => (
                         <tr key={idx} className="">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.email}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{instruktur.password}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{admin.admin[0].nama}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{admin.email}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">********</td>
                             <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
                                 <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
                                     <Trash2 size={16} />

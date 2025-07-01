@@ -2,11 +2,16 @@
 import React, { useState } from 'react';
 import { AcademicCapIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
+import DataMissing from '@/app/_component/admin/dataMissing';
+import { Download } from 'lucide-react';
 
 export default function NilaiAdmin() {
     const [dragActive, setDragActive] = useState(false);
     const [file, setFile] = useState(null);
+    const [notFoundData, setNotFoundData] = useState([]);
     const router = useRouter();
+    const [openDataMissing, setOpenDataMissing] = useState(false);
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -30,11 +35,39 @@ export default function NilaiAdmin() {
         }
     };
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
         if (!file) {
             alert("Silakan pilih file terlebih dahulu.");
             return null;
         }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/pusbas/nilai", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Upload File Excel',
+                text: `terjadi error: ${err}`,
+                timer: 2000
+            })
+            return null;
+        }
+
+        const data = await res.json();
+        setNotFoundData(data.notFoundData);
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: `Upload berhasil: ${data.updated} peserta diperbarui`,
+            timer: 2000
+        })
     };
 
     return (
@@ -48,8 +81,20 @@ export default function NilaiAdmin() {
                     <AcademicCapIcon className="h-5" />
                     <span className="text-base font-semibold">Input Nilai</span>
                 </div>
+                <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded cursor-pointer" onClick={() => setOpenDataMissing(true)}>
+                    <img src="/icons/notfound.svg" className='w-4' alt="" />
+                    <span className="text-base font-semibold">Data Missing</span>
+                    <span className="text-base font-semibold">{notFoundData.length}</span>
+                </div>
+                <a
+                    href="/template_file.xlsx"
+                    download
+                    className="bg-[#39ac73] text-white font-semibold rounded-sm hover:bg-[#40bf80] px-3 py-2 flex items-center justify-center gap-2 transition"
+                >
+                    <Download size={18} />
+                    Unduh Template File Excel
+                </a>
             </div>
-            
             <div
                 className={`w-full mx-auto mt-10 max-w-md bg-gray-300 p-8 rounded-lg text-center transition ${dragActive ? "ring-2 ring-black" : ""
                     }`}
@@ -78,6 +123,7 @@ export default function NilaiAdmin() {
                     </button>
                 </div>
             </div>
+            <DataMissing isOpen={openDataMissing} close={() => setOpenDataMissing(false)} data={notFoundData} />
         </div>
     );
 }
