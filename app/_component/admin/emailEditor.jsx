@@ -51,12 +51,17 @@ const EmailEditor = ({ isOpen, close, segment, recipients }) => {
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
+    const handleOnCancel = () => {
+        close();
+        setIsLoading(false)
     }
 
     return (
         <div className='inset-0 bg-black/50 absolute h-screen flex justify-center items-center z-[100]'>
             {
-                isLoading && <Loading/>
+                isLoading && <img src="/loading.gif" alt="" className='fixed w-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'/>
             }
             <div className='bg-white px-3 py-2 w-[60%] rounded-lg'>
                 <h1 className='font-radjdhani_bold text-2xl text-center my-3'>Kirim Email Ke {["mahasiswa", "kelas", "pendaftar", "peserta", "lulus", "remidial"].includes(segment) ? "Seluruh" : ""} {(segment === 'lulus' || segment === 'remidial') ? "Peserta Yang" : ""} {capitalizeFirstLetter(segment)}</h1>
@@ -73,7 +78,7 @@ const EmailEditor = ({ isOpen, close, segment, recipients }) => {
                     className="h-64 border mt-2"
                 />
                 <div className='flex justify-end gap-3 mt-14'>
-                    <button onClick={close} className='bg-red-500 hover:bg-red-400 px-2 py-1 text-white font-radjdhani_bold rounded-md text-lg'>Cancel</button>
+                    <button onClick={handleOnCancel} className='bg-red-500 hover:bg-red-400 px-2 py-1 text-white font-radjdhani_bold rounded-md text-lg'>Cancel</button>
                     <button
                         onClick={sendEmail}
                         disabled={isLoading}

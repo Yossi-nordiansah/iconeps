@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const AdminForm = ({ isOpen, close, role }) => {
+const AdminForm = ({ isOpen, close, role, data }) => {
 
     const router = useRouter()
     const [showPasswordButton, setShowPasswordButton] = useState(false);
@@ -19,6 +19,32 @@ const AdminForm = ({ isOpen, close, role }) => {
         role: role
     });
 
+    useEffect(() => {
+        if (data) {
+            setForm({
+                nama: data.admin[0]?.nama || "",
+                email: data.email || "",
+                password: data.password || "",
+                confirmPassword: "",
+                role: role
+            });
+            console.log(data);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if (isOpen && !data) {
+            setForm({
+                nama: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+                role: role,
+            });
+        }
+    }, [isOpen, data, role]);
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
@@ -27,65 +53,97 @@ const AdminForm = ({ isOpen, close, role }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (form.password !== form.confirmPassword) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Password dan Konfirmasi Password tidak cocok!',
-            });
-            return null;
-        }
-
-        setIsSubmitting(true);
-
-        try {
-            const response = await axios.post('/api/admin/create', {
-                nama: form.nama,
-                email: form.email,
-                password: form.password,
-                role: form.role
-            });
-
-            setForm({
-                nama: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-                role: role
-            });
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Admin Berhasil Ditambahkan',
-                showConfirmButton: false,
-                timer: 2000,
-            });
-
-            close();
-        } catch (error) {
-            // console.error("Registrasi error:", error.response.data.message);
-            if (error.response && error.response.data && error.response.data.message) {
+        if (data) {
+            try {
+                await axios.put(`/api/admin/${data.id}`, form)
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil",
+                    text: "Data Berhasil diperbaharui",
+                    timer: 2000
+                })
+                onCancel()
+            } catch (error) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Registrasi Gagal',
-                    text: error.response.data.message,
-                });
-            } else {
-                // Error lain (network, dll)
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Registrasi Gagal',
-                    text: 'Terjadi kesalahan saat registrasi.',
-                });
+                    title: 'Terjadi Kesalahan',
+                    text: `Terjadi Error ${error.message}`,
+                    timer: 3000
+                })
             }
-        } finally {
-            setIsSubmitting(false);
+
+        } else {
+            if (form.password !== form.confirmPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password dan Konfirmasi Password tidak cocok!',
+                });
+                return null;
+            }
+
+            setIsSubmitting(true);
+
+            try {
+                const response = await axios.post('/api/admin/create', {
+                    nama: form.nama,
+                    email: form.email,
+                    password: form.password,
+                    role: form.role
+                });
+
+                setForm({
+                    nama: "",
+                    email: "",
+                    password: "",
+                    confirmPassword: "",
+                    role: role
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Admin Berhasil Ditambahkan',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+
+                close();
+            } catch (error) {
+                if (error.response && error.response.data && error.response.data.message) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registrasi Gagal',
+                        text: error.response.data.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registrasi Gagal',
+                        text: 'Terjadi kesalahan saat registrasi.',
+                    });
+                }
+            } finally {
+                setIsSubmitting(false);
+            }
         }
     };
+
+    const onCancel = () => {
+        setForm({
+            nama: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            role: ""
+        });
+        close();
+    }
 
     if (!isOpen) {
         return null;
     };
+
+    console.log(data);
 
     return (
         <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
@@ -93,7 +151,7 @@ const AdminForm = ({ isOpen, close, role }) => {
                 ref={popupRef}
                 className="bg-white p-6 rounded-lg shadow-lg w-96 border-2 border-yellow-300"
             >
-                <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">Tambah Admin</h2>
+                <h2 className="text-2xl text-center font-robotoBold mb-4 text-blue-950">{data ? "Edit Data Admin" : "Tambah Admin"}</h2>
                 <form onSubmit={handleSubmit} className="space-y-3 w-full ">
                     <input
                         type="text"
@@ -133,27 +191,29 @@ const AdminForm = ({ isOpen, close, role }) => {
                     </div>
 
                     {/* Confirm Password */}
-                    <div className="relative">
-                        <input
-                            type={showConfirmPasswordButton ? "text" : "password"}
-                            name="confirmPassword"
-                            placeholder="Confirm Password"
-                            value={form.confirmPassword}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded-lg pr-10 border-blue-500 outline-blue-400"
-                            required
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirmPasswordButton((prev) => !prev)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
-                        >
-                            {showConfirmPasswordButton ? <FaEye /> : <FaEyeSlash />}
-                        </button>
-                    </div>
+                    {
+                        !data && <div className="relative">
+                            <input
+                                type={showConfirmPasswordButton ? "text" : "password"}
+                                name="confirmPassword"
+                                placeholder="Confirm Password"
+                                value={form.confirmPassword}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border rounded-lg pr-10 border-blue-500 outline-blue-400"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPasswordButton((prev) => !prev)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
+                            >
+                                {showConfirmPasswordButton ? <FaEye /> : <FaEyeSlash />}
+                            </button>
+                        </div>
+                    }
                     <div className='flex gap-4'>
                         <button
-                            onClick={close}
+                            onClick={onCancel}
                             type="button"
                             className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
                         >
@@ -163,7 +223,7 @@ const AdminForm = ({ isOpen, close, role }) => {
                             type="submit"
                             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                         >
-                            Submit
+                            {data ? "Edit" : "Submit"}
                         </button>
                     </div>
                 </form>

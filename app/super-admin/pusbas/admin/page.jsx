@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AdminForm from "@/app/_component/admin/formAdmin";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function InstrukturAdmin() {
 
@@ -14,6 +15,7 @@ export default function InstrukturAdmin() {
     const segments = pathname.split('/').filter(Boolean);
     const role = `admin_${segments[segments.length - 2]}`;
     const [loading, setLoading] = useState(false);
+    const [dataToEdit, setDataToEdit] = useState();
 
     const getDataAdmin = async () => {
 
@@ -21,7 +23,6 @@ export default function InstrukturAdmin() {
 
         try {
             const response = await axios.get('/api/pusbas/admin');
-            console.log(response.data);
             setDataAdmin(response.data);
         } catch (error) {
             window.alert(`Gagal Fetch Data ${error.message}`);
@@ -29,11 +30,32 @@ export default function InstrukturAdmin() {
         } finally {
             setLoading(false);
         }
-    } 
+    }
 
     useEffect(() => {
         getDataAdmin();
-    },[])
+    }, []);
+
+    const handleOnDelete = async (id) => {
+        const confirm = await Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: 'Data jadwal yang dihapus tidak bisa dikembalikan',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                
+            } catch {
+
+            }
+        }
+    }
 
     return (
         <div className="pl-56 pt-24 pr-6">
@@ -62,24 +84,45 @@ export default function InstrukturAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {dataAdmin.map((admin, idx) => (
-                        <tr key={idx} className="">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{admin.admin[0].nama}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{admin.email}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">********</td>
-                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Trash2 size={16} />
-                                </button>
-                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600">
-                                    <Pencil size={16} />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {
+                        loading ? (
+                            <tr className="min-w-full">
+                                <td colSpan={5} className="py-10 text-center text-gray-500">
+                                    <div className="flex justify-center items-center gap-2">
+                                        <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                                        Memuat data kelas...
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : (
+                            dataAdmin?.map((admin, idx) => (
+                                <tr key={idx} className="">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{admin.admin[0].nama}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{admin.email}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">********</td>
+                                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium space-x-2">
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleOnDelete(admin.id)}>
+                                            <Trash2 size={16} />
+                                        </button>
+                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                            setDataToEdit(admin)
+                                            setIsOpen(true);
+                                        }}>
+                                            <Pencil size={16} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )
+                    }
+
                 </tbody>
             </table>
-            <AdminForm isOpen={isOpen} role={role} close={()=>setIsOpen(false)}/>
+            <AdminForm isOpen={isOpen} role={role} data={dataToEdit} close={() => {
+                setDataToEdit(undefined);
+                setIsOpen(false)
+                getDataAdmin();
+            }} />
         </div>
     );
 }
