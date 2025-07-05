@@ -8,9 +8,8 @@ import axios from "axios";
 import DetailMahasiswa from "@/app/_component/admin/detailMahasiswa";
 import EditMahasiswa from "@/app/_component/admin/EditMahasiswa";
 import Swal from "sweetalert2";
-import Loading from "@/app/_component/Loading";
 
-export default function MahasiswaAdmin() {
+export default function MahasiswaAdmin() { 
 
     const router = useRouter();
     const [loading, setLoading] = useState(true);
@@ -37,8 +36,8 @@ export default function MahasiswaAdmin() {
     const [editData, setEditData] = useState(null);
 
     const getData = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             const response = await axios.get("/api/mahasiswa");
             setMahasiswa(response.data);
         } catch (error) {
@@ -171,7 +170,7 @@ export default function MahasiswaAdmin() {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {
+                    { 
                         loading ? (
                             <tr className="w-full">
                                 <td colSpan={5} className="py-10 text-center text-gray-500">

@@ -59,17 +59,23 @@ export default function MahasiswaAdmin() {
     const [statusPendaftar, setStatusPendaftar] = useState(false);
     const [messageEmpty, setmessageErrorEmpty] = useState("");
     const divisi = segments[segments.length - 3];
+    const [loading, setLoading] = useState(false);
 
     const getDataPendaftar = async () => {
+        setLoading(true);
         try {
-            const response = await axios.post("/api/puskom/pendaftar", {
-                divisi: divisi
-            });
-            setDataPendaftar(response.data);
-            setStatusPendaftar(response.data.length === 0);
+            const response = await axios.post("/api/puskom/pendaftar", { divisi });
+            const hasil = Array.isArray(response.data) ? response.data : [];
+            setDataPendaftar(hasil);
+            setStatusPendaftar(hasil.length === 0);
+            if (hasil.length === 0) {
+                setmessageErrorEmpty("Belum ada pendaftar PUSBAS");
+            }
         } catch (error) {
             setStatusPendaftar(true);
-            setmessageErrorEmpty(`Belum ada pendaftar PUSKOM`);
+            setmessageErrorEmpty(`Belum ada pendaftar PUSBAS`);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -210,7 +216,7 @@ export default function MahasiswaAdmin() {
                         <span className="text-base font-semibold">Pendaftar</span>
                         <span className="text-base font-semibold">{filteredPendaftar.length}</span>
                     </div>
-                    <div className="p-2 w-fit bg-gray-300 rounded cursor-pointer" onClick={() => {
+                    <div className={`p-2 w-fit bg-gray-300 rounded ${filteredPendaftar.length === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`} onClick={() => {
                         const ids = currentPendaftar.map(mhs => mhs.peserta[0]?.id).filter(Boolean);
                         setSelectedPendaftar(ids);
                         setOpenAcceptPendaftar(true);
@@ -338,6 +344,12 @@ export default function MahasiswaAdmin() {
             )}
 
             {
+                loading ? (
+                    <div className="flex justify-center mt-40 items-center gap-2">
+                        <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                        Memuat data kelas...
+                    </div>
+                ) : (
                 statusPendaftar ? <div className="w-full">
                     <img src="/images/kosong.png" alt="" className="mx-auto block w-16 mt-32" />
                     <h1 className="text-center mt-2 font-robotoBold">{messageEmpty}</h1>
@@ -405,8 +417,7 @@ export default function MahasiswaAdmin() {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
-
+                    </table>)
             }
             <div className="flex justify-end items-center gap-2 mt-4">
                 <button
@@ -431,7 +442,7 @@ export default function MahasiswaAdmin() {
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
-            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess}/>
+            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess} />
         </div>
     );
 }

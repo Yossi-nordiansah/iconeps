@@ -33,13 +33,17 @@ export default function MahasiswaAdmin() {
     const currentMahasiswa = filteredMahasiswa.slice(indexOfFirstItem, indexOfLastItem);
     const [openEdit, setOpenEdit] = useState(false);
     const [editData, setEditData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const getData = async () => {
+        setLoading(true);
         try {
-            const response = await axios.get("/api/mahasiswa")
+            const response = await axios.get("/api/mahasiswa");
             setMahasiswa(response.data);
         } catch (error) {
-            console.log(error)
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
     useEffect(() => {
@@ -167,14 +171,23 @@ export default function MahasiswaAdmin() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     {
-                        filteredMahasiswa.length === 0 ? (
-                            <tr className="">
-                                <td colSpan={5} className="text-center min-w-[1040px] py-4 text-gray-500">
-                                    Hasil tidak ditemukan
+                        loading ? (
+                            <tr className="w-full">
+                                <td colSpan={5} className="py-10 text-center text-gray-500">
+                                    <div className="flex justify-center items-center gap-2">
+                                        <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                                        Memuat data kelas...
+                                    </div>
                                 </td>
                             </tr>
-                        ) :
-                            (
+                        ) : (
+                            filteredMahasiswa.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="text-center min-w-[1040px] py-4 text-gray-500">
+                                        Hasil tidak ditemukan
+                                    </td>
+                                </tr>
+                            ) : (
                                 currentMahasiswa.map((mhs, idx) => (
                                     <tr key={idx}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
@@ -199,6 +212,7 @@ export default function MahasiswaAdmin() {
                                     </tr>
                                 ))
                             )
+                        )
                     }
                 </tbody>
             </table>
