@@ -28,7 +28,6 @@ const AdminForm = ({ isOpen, close, role, data }) => {
                 confirmPassword: "",
                 role: role
             });
-            console.log(data);
         }
     }, [data]);
 
@@ -142,8 +141,6 @@ const AdminForm = ({ isOpen, close, role, data }) => {
     if (!isOpen) {
         return null;
     };
-
-    console.log(data);
 
     return (
         <div className="fixed inset-0 bg-green bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 px-3">

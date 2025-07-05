@@ -22,7 +22,7 @@ export async function PUT(req, { params }) {
                 ...(hashedPassword && { password: hashedPassword }),
             },
         });
-        
+
         await prisma.admin.updateMany({
             where: { users_id: id },
             data: {
@@ -30,6 +30,21 @@ export async function PUT(req, { params }) {
             },
         });
         return NextResponse.json({ status: 200 })
+    } catch (error) {
+        return NextResponse.json({ error }, error.message, { status: 500 });
+    }
+}
+
+export async function DELETE(req, { params }) {
+
+    const param = await params;
+    const id = parseInt(param.id);
+
+    try {
+        await prisma.users.delete({
+            where: { id }
+        })
+        return NextResponse.json({ message: "Data Berhasil Dihapus" }, { status: 200 })
     } catch (error) {
         return NextResponse.json({ error }, error.message, { status: 500 });
     }

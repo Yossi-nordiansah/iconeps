@@ -39,7 +39,7 @@ export default function InstrukturAdmin() {
     const handleOnDelete = async (id) => {
         const confirm = await Swal.fire({
             title: 'Yakin ingin menghapus?',
-            text: 'Data jadwal yang dihapus tidak bisa dikembalikan',
+            text: 'Data Admin yang dihapus tidak bisa dikembalikan!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
@@ -50,9 +50,20 @@ export default function InstrukturAdmin() {
 
         if (confirm.isConfirmed) {
             try {
-                
+                await axios.delete(`/api/admin/${id}`);
+                Swal.fire({
+                    icon: 'success',
+                    title: "Berhasil",
+                    text: 'Data Berhasil Dihapus',
+                    timer: 2000
+                })
             } catch {
-
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Erro',
+                    text: error.message,
+                    timer: 3000
+                })
             }
         }
     }
