@@ -31,8 +31,8 @@ export default function KelasAdmin() {
     const [selectedKelasName, setSelectedKelasName] = useState("");
 
     const getDataKelas = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
             setDataKelas(res.data);
         } catch (err) {
@@ -120,7 +120,7 @@ export default function KelasAdmin() {
             </div>
 
             <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-200">
+                <thead className="bg-gray-200"> 
                     <tr>
                         <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kelas</th>
                         <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instruktur</th>
