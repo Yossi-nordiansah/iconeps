@@ -21,14 +21,18 @@ export default function SertifikatAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const segments = pathname.split('/').filter(Boolean);
     const lastSegmetst = segments[segments.length - 3];
+    const [loading, setLoading] = useState(false)
 
     const getDataPesertaLulus = async () => {
+        setLoading(true);
         try {
             const response = await axios.get(`/api/pusbas/peserta/lulus/sertifikat?periode=${selectedPeriodePusbas}`);
             setSertifikat(response.data);
         } catch (error) {
             console.log(error);
             window.alert(error)
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -69,41 +73,47 @@ export default function SertifikatAdmin() {
             </div>
             <div className="max-h-[360px] overflow-y-auto">
                 {
-                    sertifikat.length === 0 ? (
-                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                            Belum ada peserta lulus.
+                    loading ? (
+                        <div className="flex justify-center items-center gap-2">
+                            <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                            Memuat data kelas...
                         </div>
-                    ) : (
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-200">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Sertifikat</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Diterbitkan</th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {sertifikat.map((mhs, idx) => (
-                                    <tr key={idx}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.sertifikat[0].nomor_sertifikat}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{format(new Date(mhs.sertifikat[0].tanggal_diterbitkan), 'dd-MM-yyyy')}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                                setOpenPreview(true);
-                                                setSertifikatPath(mhs.sertifikat[0].path);
-                                            }}>
-                                                <Eye size={16} />
-                                            </button>
-                                        </td>
+                    ) :
+                        sertifikat.length === 0 ? (
+                            <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                Belum ada peserta lulus.
+                            </div>
+                        ) : (
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-200">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Sertifikat</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Diterbitkan</th>
+                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {sertifikat.map((mhs, idx) => (
+                                        <tr key={idx}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.sertifikat[0].nomor_sertifikat}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.prodi}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{format(new Date(mhs.sertifikat[0].tanggal_diterbitkan), 'dd-MM-yyyy')}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                    setOpenPreview(true);
+                                                    setSertifikatPath(mhs.sertifikat[0].path);
+                                                }}>
+                                                    <Eye size={16} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )
                 }
             </div>
             <EmailEditor isOpen={isOpen} segment={lastSegmetst} close={() => setIsOpen(false)} />
