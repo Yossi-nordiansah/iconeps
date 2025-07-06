@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const periode = searchParams.get('periode');
+    console.log(periode);
 
     if (!periode) {
         return NextResponse.json({ error: 'Periode is required' }, { status: 400 });
@@ -20,7 +21,6 @@ export async function GET(req) {
                 }
             }
         });
-
         return NextResponse.json(kelas);
     } catch (error) {
         console.error(error);

@@ -5,17 +5,19 @@ import { CheckIcon } from '@heroicons/react/24/solid';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import Loading from '../Loading'; 
+import Loading from '../Loading';
 
 const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
 
     const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
+    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const [dataKelas, setDataKelas] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriodePuskom}`);
+            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${segment === 'pusbas' ? (selectedPeriodePusbas) : (selectedPeriodePuskom)}`);
+            // const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriodePusbas}`);
             console.log(res)
             setDataKelas(res.data);
         } catch (err) {
@@ -24,10 +26,12 @@ const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
     };
 
     useEffect(() => {
-        if (selectedPeriodePuskom) {
+        if (segment === 'puskom' && selectedPeriodePuskom) {
+            getDataKelas();
+        } else if (segment === 'pusbas' && selectedPeriodePusbas) {
             getDataKelas();
         }
-    }, [selectedPeriodePuskom]);
+    }, [selectedPeriodePuskom, selectedPeriodePusbas, segment]);
 
     if (!isOpen) return null;
 

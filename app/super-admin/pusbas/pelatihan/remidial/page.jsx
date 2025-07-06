@@ -26,13 +26,17 @@ export default function RemidiAdmin() {
     const lastSegmetst = segments[segments.length - 1];
     const [recipients, setRecipients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const getDataPesertaRemidial = async () => {
+        setLoading(true);
         try {
             const res = await axios.get(`/api/pusbas/peserta/remidial/periode`);
             setPesertaRemidial(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -74,7 +78,6 @@ export default function RemidiAdmin() {
 
     return (
         <div className="p-6">
-            {/* Header dan Pencarian */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/super-admin/pusbas/pelatihan/')}>
@@ -117,56 +120,62 @@ export default function RemidiAdmin() {
             </div>
             <div className="max-h-[360px] overflow-y-auto">
                 {
-                    pesertaRemidial.length === 0 ? (
-                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                            Belum ada peserta Remidial.
+                    loading ? (
+                        <div className="flex justify-center items-center gap-2">
+                            <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                            Memuat data kelas...
                         </div>
-                    ) : (
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-200">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Listening</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Structure</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Reading</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredPeserta.map((mhs, idx) => (
-                                    <tr key={idx}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nilai[0]?.listening}</td>
-                                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-700">{mhs.nilai[0]?.structure}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.reading}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.total}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
-                                                setSelectedPeserta(mhs);
-                                                setOpenChangeClass(true);
-                                            }} /></button>
-                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                                setOpenDetailPeserta(true);
-                                                setDetailPeserta(mhs);
-                                            }}>
-                                                <Eye size={16} />
-                                            </button>
-                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                                setRecipients([mhs.mahasiswa.email]);
-                                                setIsOpen(true);
-                                                setEmailSegments(mhs.mahasiswa.nama);
-                                            }}>
-                                                <Mail size={16} />
-                                            </button>
-                                        </td>
+                    ) :
+                        pesertaRemidial.length === 0 ? (
+                            <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                Belum ada peserta Remidial.
+                            </div>
+                        ) : (
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-200">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Listening</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Structure</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Reading</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                        <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {filteredPeserta.map((mhs, idx) => (
+                                        <tr key={idx}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nim}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.mahasiswa.nama}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 max-w-56 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nilai[0]?.listening}</td>
+                                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-700">{mhs.nilai[0]?.structure}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.reading}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.total}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
+                                                    setSelectedPeserta(mhs);
+                                                    setOpenChangeClass(true);
+                                                }} /></button>
+                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                    setOpenDetailPeserta(true);
+                                                    setDetailPeserta(mhs);
+                                                }}>
+                                                    <Eye size={16} />
+                                                </button>
+                                                <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                    setRecipients([mhs.mahasiswa.email]);
+                                                    setIsOpen(true);
+                                                    setEmailSegments(mhs.mahasiswa.nama);
+                                                }}>
+                                                    <Mail size={16} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )
                 }
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} close={() => setIsOpen(false)} recipients={recipients} />
