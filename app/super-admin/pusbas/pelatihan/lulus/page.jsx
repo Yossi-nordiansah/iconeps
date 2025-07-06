@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { Download } from "lucide-react";
 
 export default function LulusAdmin() {
- 
+
     const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
     const router = useRouter();
     const pathname = usePathname();
@@ -23,13 +23,17 @@ export default function LulusAdmin() {
     const lastSegmetst = segments[segments.length - 1];
     const [recipients, setRecipients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const getDataPesertaLulus = async () => {
+        setLoading(true);
         try {
             const res = await axios.get(`/api/pusbas/peserta/lulus/periode?periode=${selectedPeriodePusbas}`);
             setPesertaLulus(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -109,7 +113,12 @@ export default function LulusAdmin() {
                 </div>
             </div>
             <div className="max-h-[360px] overflow-y-auto">
-                {
+                {loading ? (
+                    <div className="flex justify-center items-center gap-2">
+                        <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                        Memuat data kelas...
+                    </div>
+                ) :
                     pesertaLulus.length === 0 ? (
                         <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
                             Belum ada peserta lulus.

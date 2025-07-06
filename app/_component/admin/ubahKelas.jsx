@@ -5,17 +5,18 @@ import { CheckIcon } from '@heroicons/react/24/solid';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import Loading from '../Loading';
+import Loading from '../Loading'; 
 
 const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
 
-    const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
     const [dataKelas, setDataKelas] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getDataKelas = async () => {
         try {
-            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriodePusbas}`);
+            const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriodePuskom}`);
+            console.log(res)
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
@@ -23,10 +24,10 @@ const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
     };
 
     useEffect(() => {
-        if (selectedPeriodePusbas) {
+        if (selectedPeriodePuskom) {
             getDataKelas();
         }
-    }, [selectedPeriodePusbas]);
+    }, [selectedPeriodePuskom]);
 
     if (!isOpen) return null;
 

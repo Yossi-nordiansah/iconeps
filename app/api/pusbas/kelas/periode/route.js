@@ -1,6 +1,5 @@
-// app/api/pusbas/kelas/route.js
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // pastikan path prisma benar
+import { prisma } from '@/lib/prisma'; 
 
 export async function GET(req) {
     const { searchParams } = new URL(req.url);

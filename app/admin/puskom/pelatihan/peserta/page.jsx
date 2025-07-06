@@ -33,22 +33,29 @@ export default function PesertaAdmin() {
     const [openEditLink, setOpenEditLink] = useState(false);
     const [selectedKelas, setSelectedKelas] = useState(null);
     const lastSegmetst = segments[segments.length - 1];
+    const [loading, setLoading] = useState(false);
 
     const getDataKelas = async () => {
+        setLoading(true);
         try {
             const res = await axios.get(`/api/puskom/kelas/periode?periode=${selectedPeriodePuskom}`);
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);
+        } finally {
+            setLoading(false);
         }
     };
 
     const getDataPeserta = async () => {
+        setLoading(true);
         try {
             const response = await axios.post('/api/puskom/peserta', { periode: selectedPeriodePuskom });
             setPeserta(response.data);
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -174,78 +181,83 @@ export default function PesertaAdmin() {
 
             {/* Tabel Pendaftar */}
             <div className="max-h-[360px] overflow-y-auto">
-                {
+                {loading ? (
+                    <div className="flex justify-center items-center gap-2">
+                        <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                        Memuat data kelas...
+                    </div>
+                ) :
                     peserta.length === 0 ? (
-                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                            Belum ada peserta.
-                        </div>
-                    )
-                        :
+                <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                    Belum ada peserta.
+                </div>
+                )
+                :
                         (Object.entries(pesertaPerKelas).map(([namaKelas, daftarPeserta]) => (
-                            <div key={namaKelas} className="mb-6">
-                                <div className="text-xl font-bold bg-blue-500 text-white px-2 py-1 flex justify-between">
-                                    <h1 className="">{namaKelas}</h1>
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            title="Upload link ujian"
-                                            onClick={() => {
-                                                const selected = dataKelas.find(k =>
-                                                    `${k.nama_kelas}` === namaKelas
-                                                );
-                                                setSelectedKelas(selected);
-                                                setOpenLink(true);
-                                                setOpenEditLink(!!selected?.link_ujian);
-                                            }}
-                                        >
-                                            <Upload size={18} />
-                                        </button>
-                                        <h1>{daftarPeserta.length}</h1>
-                                    </div>
-                                </div>
-                                {
-                                    daftarPeserta.length === 0 ? (
-                                        <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
-                                            Belum ada peserta di kelas ini.
-                                        </div>
-                                    ) : (<table className="w-full text-left mt-0">
-                                        <thead>
-                                            <tr className="bg-gray-100">
-                                                <th className="px-3 py-2">NIM</th>
-                                                <th className="px-3 py-2">NAMA</th>
-                                                <th className="px-3 py-2">FAKULTAS</th>
-                                                <th className="px-3 py-2">PRODI</th>
-                                                <th className="px-3 py-2 text-center">SEMESTER</th>
-                                                <th className="px-3 py-2 text-right">AKSI</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {daftarPeserta.map((mhs, idx) => (
-                                                <tr key={idx} className="border-t">
-                                                    <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
-                                                    <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
-                                                    <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
-                                                    <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
-                                                    <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
-                                                    <td className="px-3 py-2 text-right space-x-2">
-                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
-                                                            setSelectedPeserta(mhs);
-                                                            setOpenChangeClass(true);
-                                                        }} /></button>
-                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                                                            onClick={() => {
-                                                                setOpenDetailPeserta(true);
-                                                                setDetailPesrta(mhs);
-                                                            }}
-                                                        ><Eye size={16} /></button>
-                                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.mahasiswa?.email], mhs.mahasiswa?.nama)}><Mail size={16} /></button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>)
-                                }
+                <div key={namaKelas} className="mb-6">
+                    <div className="text-xl font-bold bg-blue-500 text-white px-2 py-1 flex justify-between">
+                        <h1 className="">{namaKelas}</h1>
+                        <div className="flex items-center gap-3">
+                            <button
+                                title="Upload link ujian"
+                                onClick={() => {
+                                    const selected = dataKelas.find(k =>
+                                        `${k.nama_kelas}` === namaKelas
+                                    );
+                                    setSelectedKelas(selected);
+                                    setOpenLink(true);
+                                    setOpenEditLink(!!selected?.link_ujian);
+                                }}
+                            >
+                                <Upload size={18} />
+                            </button>
+                            <h1>{daftarPeserta.length}</h1>
+                        </div>
+                    </div>
+                    {
+                        daftarPeserta.length === 0 ? (
+                            <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                Belum ada peserta di kelas ini.
                             </div>
-                        )))
+                        ) : (<table className="w-full text-left mt-0">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="px-3 py-2">NIM</th>
+                                    <th className="px-3 py-2">NAMA</th>
+                                    <th className="px-3 py-2">FAKULTAS</th>
+                                    <th className="px-3 py-2">PRODI</th>
+                                    <th className="px-3 py-2 text-center">SEMESTER</th>
+                                    <th className="px-3 py-2 text-right">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {daftarPeserta.map((mhs, idx) => (
+                                    <tr key={idx} className="border-t">
+                                        <td className="px-3 py-2">{mhs.mahasiswa?.nim}</td>
+                                        <td className="px-3 py-2 max-w-52 min-w-52 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.nama}</td>
+                                        <td className="px-3 py-2 max-w-60 min-w-60 truncate overflow-hidden text-ellipsis">{mhs.mahasiswa?.fakultas.substring(9)}</td>
+                                        <td className="px-3 py-2">{mhs.mahasiswa?.prodi}</td>
+                                        <td className="px-3 py-2 text-center">{mhs.mahasiswa?.semester}</td>
+                                        <td className="px-3 py-2 text-right space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
+                                                setSelectedPeserta(mhs);
+                                                setOpenChangeClass(true);
+                                            }} /></button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                                onClick={() => {
+                                                    setOpenDetailPeserta(true);
+                                                    setDetailPesrta(mhs);
+                                                }}
+                                            ><Eye size={16} /></button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.mahasiswa?.email], mhs.mahasiswa?.nama)}><Mail size={16} /></button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>)
+                    }
+                </div>
+                )))
                 }
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
@@ -260,5 +272,5 @@ export default function PesertaAdmin() {
                 onSuccess={getDataKelas}
             />
         </div>
-    ); 
+    );
 }
