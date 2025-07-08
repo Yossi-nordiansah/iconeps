@@ -1,10 +1,20 @@
 "use client"
 import React from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 const Alur = () => {
 
+    useEffect(() => {
+        AOS.init({
+            duration: 1000,
+            once: true,
+        });
+    }, []);
+
     return (
-        <div className="px-4 py-6 md:px-10 bg-white/75">
+        <div data-aos="fade-up" className="px-4 py-6 md:px-10 bg-white/75">
             <h1 className="mb-10 text-2xl underline md:text-3xl font-robotoExtraBold text-blue-950 ">Alur Pelatihan ICONEPS</h1>
             <div className="flex flex-col-reverse items-start justify-between lg:items-center lg:flex-row">
                 <div className="lg:w-[50%]">
@@ -20,7 +30,7 @@ const Alur = () => {
                             <li>isi formulir registrasi</li>
                             <li>submit formulir</li>
                         </ol>
-                    </div> 
+                    </div>
                     <div>
                         <div className="flex items-center gap-6 mt-2">
                             <div className="p-1 bg-blue-500 border-4 rounded-full w-fit border-primary">
@@ -35,7 +45,7 @@ const Alur = () => {
                             <li>isi form pendaftaran</li>
                             <li>submit</li>
                         </ol>
-                    </div> 
+                    </div>
                     <div>
                         <div className="flex items-center gap-6 mt-2">
                             <div className="p-1 bg-blue-500 border-4 rounded-full w-fit border-primary">
@@ -48,7 +58,7 @@ const Alur = () => {
                                 Setelah anda melakukan pendaftaran maka anda akan menunggu jadwal pelatihan dimulai yang disesuaikan dengan periode dari waktu pelatihan.
                             </p>
                         </ol>
-                    </div> 
+                    </div>
                     <div>
                         <div className="flex items-center gap-6 mt-2">
                             <div className="p-1 bg-blue-500 border-4 rounded-full w-fit border-primary">
@@ -61,9 +71,9 @@ const Alur = () => {
                             <li>Jika anda lulus, seritifkat bisa didownload melalui website ini</li>
                             <li>Jika tidak lulus, maka anda masih bisa mengikuti remidi dengan ketentuan yang berlaku</li>
                         </ol>
-                    </div> 
+                    </div>
                 </div>
-                <img src="/images/alur6.png" alt="" className="mx-auto lg:w-[50%]"/>
+                <img src="/images/alur6.png" alt="" className="mx-auto lg:w-[50%]" />
             </div>
 
         </div>

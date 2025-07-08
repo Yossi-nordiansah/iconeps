@@ -19,7 +19,7 @@ export default function Home() {
     if (showLogin) {
       setIsopen(true);
     }
-  }, [showLogin]);
+  }, [showLogin]); 
 
   return (
     <div>

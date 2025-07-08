@@ -1,27 +1,37 @@
 "use client"
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import React from 'react';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const QuestionsList = () => {
+
     const inputRef = useRef();
     const focusRef = useRef();
 
+    useEffect(() => {
+        AOS.init({
+            duration: 1000,
+            once: true,
+        });
+    }, []);
+
     const handleInputOnFocus = () => {
-        if(window.screen.availWidth <= 640){
+        if (window.screen.availWidth <= 640) {
             inputRef.current.style.fontSize = '12px';
             inputRef.current.style.top = '3px';
         }
-        else if(window.screen.availWidth >640){
+        else if (window.screen.availWidth > 640) {
             inputRef.current.style.fontSize = '13px';
             inputRef.current.style.top = '9px';
         }
     }
     const handleInputOnBlur = () => {
-        if(window.screen.availWidth <= 640){
+        if (window.screen.availWidth <= 640) {
             inputRef.current.style.fontSize = '16px';
             inputRef.current.style.top = '13px';
         }
-        else if(window.screen.availWidth >640){
+        else if (window.screen.availWidth > 640) {
             inputRef.current.style.fontSize = '18px';
             inputRef.current.style.top = '17px';
         }
@@ -83,7 +93,7 @@ const QuestionsList = () => {
                 {
                     questionsList.map((item) =>
                     (
-                        <div key={item.id} className={`mb-2 duration-300 `}>
+                        <div data-aos="fade-up" key={item.id} className={`mb-2 duration-300 `}>
                             <div onClick={() => handleQuestionOnClick(item.id)} className='flex items-center justify-between w-full px-6 py-2 rounded-xl lg:px-8 lg:py-3 bg-primary'>
                                 <p className='text-white font-radjdhani_bold sm:text-2xl'>{item.question}</p>
                                 <img src="/icons/arrow4.svg" alt="" className={`${item.action ? 'rotate-180 duration-100' : 'rotate-90 duration-100'} sm:w-10 w-7`} />

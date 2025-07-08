@@ -348,12 +348,12 @@ export default function MahasiswaAdmin() {
 
             {
                 loading ? (
-                    <div className="flex justify-center mt-40 items-center gap-2">
+                    <div className="flex justify-center mt-40 mb-24 items-center gap-2">
                         <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
                         Memuat data kelas...
                     </div>
                 ) : (
-                    statusPendaftar ? <div className="w-full">
+                    statusPendaftar ? <div className="w-full mb-24">
                         <img src="/images/kosong.png" alt="" className="mx-auto block w-16 mt-32" />
                         <h1 className="text-center mt-2 font-robotoBold">{messageEmpty}</h1>
                     </div>

@@ -1,13 +1,22 @@
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
 
 const Pusbas = () => {
 
   const router = useRouter();
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
 
   return (
-    <div className='flex sm:flex-row flex-col-reverse shadow-2xl overflow-hidden bg-white rounded-tr-[50px] rounded-bl-[50px]'>
+    <div data-aos="fade-up" className='flex sm:flex-row flex-col-reverse shadow-2xl overflow-hidden bg-white rounded-tr-[50px] rounded-bl-[50px]'>
       <div className='sm:w-1/2'>
         <h1 className='hidden px-6 py-6 text-2xl text-white sm:inline-block font-montserrat_bold bg-blue-950 rounded-ee-3xl'>PUSBAS</h1>
         <div className='px-5 mt-3 sm:mt-10'>
