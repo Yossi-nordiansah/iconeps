@@ -23,9 +23,9 @@ const PelatihanAdminPage = () => {
   } = useSelector((state) => state.dashboarPuskom);
   const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
 
-  useEffect(() => {
-    dispatch(fetchDashboardData(selectedPeriodePuskom));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchDashboardData(selectedPeriodePuskom));
+  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchDashboardData(selectedPeriodePuskom));

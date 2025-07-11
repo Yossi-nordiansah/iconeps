@@ -42,7 +42,7 @@ export default function InstrukturAdmin() {
             text: 'Data Admin yang dihapus tidak bisa dikembalikan!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+            confirmButtonColor: '#d33', 
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal',
@@ -56,7 +56,8 @@ export default function InstrukturAdmin() {
                     title: "Berhasil",
                     text: 'Data Berhasil Dihapus',
                     timer: 2000
-                })
+                });
+                getDataAdmin();
             } catch {
                 Swal.fire({
                     icon: 'error',
@@ -76,7 +77,7 @@ export default function InstrukturAdmin() {
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
                         <img src="/icons/admin.svg" alt="" className="w-6" />
                         <span className="text-base font-semibold">Admin Pusbas</span>
-                        <span className="text-base font-semibold">3</span>
+                        <span className="text-base font-semibold">{dataAdmin?.length ?? 0}</span>
                     </div>
                     <button className="bg-green text-white text-xl font-radjdhani_bold border rounded px-3 py-1 flex items-center gap-2" onClick={() => setIsOpen(true)}>
                         Tambah Admin <Plus size={16} />

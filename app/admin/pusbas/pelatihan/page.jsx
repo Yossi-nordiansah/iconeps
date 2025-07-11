@@ -25,9 +25,9 @@ const PelatihanAdminPage = () => {
 
   const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
 
-  useEffect(() => {
-    dispatch(fetchDashboardData(selectedPeriodePusbas));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchDashboardData(selectedPeriodePusbas));
+  // }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchDashboardData(selectedPeriodePusbas));
@@ -44,7 +44,6 @@ const PelatihanAdminPage = () => {
     { title: 'Sertifikat', value: jumlahPesertaLulus, icon: <DocumentCheckIcon className="h-20 w-20" />, path: '/admin/pusbas/pelatihan/sertifikat' },
   ];
 
-  // Jika loading, tampilkan loading UI
   if (loading) return <Loading />;
 
   return (

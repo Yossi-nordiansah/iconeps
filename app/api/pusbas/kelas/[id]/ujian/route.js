@@ -2,7 +2,8 @@ import prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function PATCH(req, { params }) {
-  const { id } = params;
+  const param = await params
+  const id = parseInt(param.id);
   const body = await req.json();
 
   try {
@@ -17,7 +18,8 @@ export async function PATCH(req, { params }) {
 }
 
 export async function POST(req, { params }) {
-  const { id } = params;
+  const param = await params
+  const id = parseInt(param.id);
   const body = await req.json();
 
   try {
