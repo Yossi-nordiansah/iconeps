@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
 import Alur from "./_component/alur";
-import Footer from "./_component/footer";
 import Hero from "./_component/hero";
 import Intro from "./_component/intro";
 import Keunggulan from "./_component/keunggulan";

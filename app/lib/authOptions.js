@@ -61,7 +61,7 @@ export const authOptions = {
         let nama = "Unknown";
         let statusPeserta = null;
 
-        if (
+        if ( 
           user.role === "super_admin" ||
           user.role === "admin_puskom" ||
           user.role === "admin_pusbas"

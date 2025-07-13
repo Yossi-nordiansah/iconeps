@@ -142,7 +142,7 @@ const InputField = ({ label, ...props }) => (
       {...props}
     />
   </div>
-);
+); 
 
 const PasswordField = ({ label, value, onChange, showPassword, toggleShowPassword, ...props }) => (
   <div className="mb-6">

@@ -1,6 +1,5 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { CalendarDays } from "lucide-react";
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Loading from '../_component/Loading';
@@ -23,6 +22,10 @@ const Pelatihan = () => {
   const getStatus = async () => {
     setLoading(true);
     if (!session?.user?.id) return null;
+    if (session?.user?.role !== "mahasiswa") {
+      setLoading(false);
+      return;
+    }
     try {
       const res = await axios.post("/api/pusbas/peserta/cek-status", {
         id: session?.user?.id,
@@ -46,10 +49,10 @@ const Pelatihan = () => {
     return (
       <div className='min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
         <h1 className="text-xl font-semibold mb-4">Anda Belum Registrasi dan Terdaftar Pada Pelatihan Apapun</h1>
-        <img src="/images/unregistered.jpg" alt="" className='w-72'/>
+        <img src="/images/unregistered.jpg" alt="" className='w-72' />
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
-          onClick={() => window.location.href = "/registrasi"} 
+          onClick={() => window.location.href = "/registrasi"}
         >
           Registrasi Sekarang
         </button>
@@ -61,7 +64,7 @@ const Pelatihan = () => {
     return (
       <div className='min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 flex flex-col items-center justify-center text-center bg-no-repeat'>
         <h1 className="text-xl font-semibold mb-4">Anda Belum Terdaftar Pada Pelatihan Apapun</h1>
-        <img src="/images/pelatihanimg.jpg" alt="" className='w-72'/>
+        <img src="/images/pelatihanimg.jpg" alt="" className='w-72' />
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg"
           onClick={() => window.location.href = "/#program"}
@@ -78,7 +81,7 @@ const Pelatihan = () => {
         <Loading />
       </div>
     );
-  }
+  };
 
   return (
     <div className='md:min-h-screen h-fit pt-20 sm:px-6 px-3 pb-10 bg-no-repeat sm:bg-center bg-bottom' style={{ backgroundImage: `url(${'/images/bg-pelatihan.png'})` }}>
@@ -97,8 +100,6 @@ const Pelatihan = () => {
           {statusPusbas === 'peserta' && <PesertaPusbas />}
           {statusPusbas === 'lulus' && <LulusPusbas />}
           {statusPusbas === 'remidial' && <RemidialPusbas />}
-
-          {/* puskom */}
           {statusPuskom === 'pendaftar' && <PendaftarPuskom />}
           {statusPuskom === 'peserta' && <PesertaPuskom />}
           {statusPuskom === 'lulus' && <LulusPuskom />}
