@@ -11,7 +11,7 @@ model admin {
   id                Int                 @id @default(autoincrement())
   users_id          Int
   nama              String              @db.VarChar(100)
-  role              String              @db.VarChar(20)
+  role              String              @db.VarChar(17)
   users             users               @relation(fields: [users_id], references: [id], onDelete: Cascade, map: "id_users_fk")
   informasi_periode informasi_periode[]
 
@@ -109,6 +109,7 @@ model peserta {
   nominal_pembayaran         Int
   loket_pembayaran           String          @db.VarChar(25)
   kelas                      Int?
+  periode_puskom             String?         @db.VarChar(50)
   nilai                      nilai[]
   mahasiswa                  mahasiswa       @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
   kelas_peserta_kelasTokelas kelas?          @relation("peserta_kelasTokelas", fields: [kelas], references: [id], onDelete: Cascade, map: "peserta_ibfk_2")
@@ -141,6 +142,13 @@ model users {
   mahasiswa     mahasiswa?
 }
 
+model periode_puskom {
+  id              Int     @id @default(autoincrement())
+  nama            String? @db.VarChar(100)
+  tanggal_mulai   String? @db.VarChar(6)
+  tanggal_selesai String? @db.VarChar(6)
+}
+
 enum informasi_periode_divisi {
   pusbas
   puskom
@@ -148,7 +156,7 @@ enum informasi_periode_divisi {
 
 enum instruktur_divisi {
   pusbas
-  puskom
+  puskom 
 }
 
 enum peserta_status {

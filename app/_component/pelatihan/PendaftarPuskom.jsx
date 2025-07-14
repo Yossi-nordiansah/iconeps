@@ -28,7 +28,7 @@ const PendaftarPuskom = () => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { 
         getStatus();
     }, [])
 
@@ -38,69 +38,38 @@ const PendaftarPuskom = () => {
         setOpenEdit(true);
     };
 
-    // const getKeteranganPendaftaran = () => {
-    //     if (!tanggalDaftarPuskom) return "Menunggu Pelatihan Dimulai";
-
-    //     const date = new Date(tanggalDaftarPuskom);
-    //     const year = date.getFullYear();
-    //     const periode1Start = new Date(`${year - 1}-10-21`);
-    //     const periode1End = new Date(`${year}-03-20`);
-    //     const periode2Start = new Date(`${year}-03-21`);
-    //     const periode2End = new Date(`${year}-07-20`);
-    //     const periode3Start = new Date(`${year}-07-21`);
-    //     const periode3End = new Date(`${year}-10-20`);
-
-    //     if (date >= periode1Start && date <= periode1End) {
-    //         const pelatihanTahun = date.getMonth() + 1 >= 10 ? year + 1 : year;
-    //         return `Anda terdaftar dan masuk pada program periode I (April - Juni ${pelatihanTahun})`;
-    //     }
-
-    //     if (date >= periode2Start && date <= periode2End) {
-    //         return `Anda terdaftar dan masuk pada program periode II (Agustus - September ${year})`;
-    //     }
-
-    //     if (date >= periode3Start && date <= periode3End) {
-    //         return `Anda terdaftar dan masuk pada program periode III (November - Desember ${year})`;
-    //     }
-
-    //     return "Menunggu Pelatihan Dimulai";
-    // };
     const getKeteranganPendaftaran = () => {
         if (!tanggalDaftarPuskom) return "Menunggu Pelatihan Dimulai";
 
         const date = new Date(tanggalDaftarPuskom);
         const year = date.getFullYear();
 
-        // Periode I: 21 Okt (tahun saat daftar) - 31 Des (tahun saat daftar)
         const periode1BagianA_Start = new Date(`${year}-10-21`);
         const periode1BagianA_End = new Date(`${year}-12-31`);
 
-        // Periode I: 1 Jan (tahun saat daftar) - 20 Mar (tahun saat daftar)
         const periode1BagianB_Start = new Date(`${year}-01-01`);
         const periode1BagianB_End = new Date(`${year}-03-20`);
 
-        // Periode II: 21 Mar - 20 Jul
         const periode2Start = new Date(`${year}-03-21`);
         const periode2End = new Date(`${year}-07-20`);
 
-        // Periode III: 21 Jul - 20 Okt
         const periode3Start = new Date(`${year}-07-21`);
         const periode3End = new Date(`${year}-10-20`);
 
         if (date >= periode1BagianA_Start && date <= periode1BagianA_End) {
-            return `Anda terdaftar dan masuk pada program periode I April - Juni ${year + 1}`;
+            return `Anda terdaftar pada program periode I (April - Juni ${year + 1})`;
         }
 
         if (date >= periode1BagianB_Start && date <= periode1BagianB_End) {
-            return `Anda terdaftar dan masuk pada program periode I April - Juni ${year}`;
+            return `Anda terdaftar pada program periode I (April - Juni ${year})`;
         }
 
         if (date >= periode2Start && date <= periode2End) {
-            return `Anda terdaftar dan masuk pada program periode II Agustus - September ${year}`;
+            return `Anda terdaftar pada program periode II (Agustus - September ${year})`;
         }
 
         if (date >= periode3Start && date <= periode3End) {
-            return `Anda terdaftar dan masuk pada program periode III November - Desember ${year}`;
+            return `Anda terdaftar pada program periode III (November - Desember ${year})`;
         }
 
         return "Menunggu Pelatihan Dimulai";
@@ -112,11 +81,11 @@ const PendaftarPuskom = () => {
             <img src="/images/office.png" alt="pusbas image" className='lg:fit max-h-48 min-w-48 object-cover rounded-xl' />
             <div className='text-white text-nowrap w-full'>
                 <h1 className='text-6xl font-bold font-radjdhani_bold sm:block hidden sm:-mt-1'>PUSKOM</h1>
-                <div className='flex mx-auto justify-center items-center mb-2 gap-2'>
-                    <p className='text-xl font-radjdhani_bold text-center'>Tunggu Waktu Pelatihan Dimulai</p>
+                <div className='flex mx-auto justify-center items-center mb-2 sm:gap-2 gap-1'>
+                    <p className='sm:text-xl text-base sm:font-radjdhani_bold text-center'>Tunggu Waktu Pelatihan Dimulai</p>
                     <img src="/images/stopwatch.png" alt="" className='w-7 block' />
                 </div>
-                <p className='-mt-1 text-center sm:text-base text-lg text-wrap mb-2'>
+                <p className='-mt-1 text-center sm:text-base text-lg text-wrap mb-2 sm:px-2'>
                     {getKeteranganPendaftaran()}
                 </p>
                 <div className='flex justify-center gap-3'>

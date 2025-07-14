@@ -20,7 +20,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
         pilihan_kelas: null, 
         tanggal_pembayaran: "",
         nominal_pembayaran: 0,
-        loket_pembayaran: ""
+        loket_pembayaran: "",
     });
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
             ...prev,
             [name]: files ? files[0] : value,
         }))
-    };
+    }; 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -63,7 +63,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
         });
 
         try {
-            await axios.post("/api/pusbas/peserta/create", formData);
+        await axios.post(`/api/${segment[0].toLowerCase()}/peserta/create`, formData);
             Swal.fire({
                 title: 'Pendaftaran Berhasil!',
                 text: 'Data berhasil diupload.',
@@ -80,7 +80,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
                 confirmButtonText: 'OK'
             });
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
 
     }
