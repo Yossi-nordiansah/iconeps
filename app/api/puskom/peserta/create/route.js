@@ -9,7 +9,8 @@ import { getPeriodePuskomByTanggal } from '@/lib/getPeriodePuskom';
 export async function POST(req) {
     const formData = await req.formData();
     const tanggal_pendaftaran = new Date();
-    const tanggalPendaftaranToExecute = tanggal_pendaftaran.toISOString().substring(0, 10);
+    // const tanggalPendaftaranToExecute = tanggal_pendaftaran.toISOString().substring(0, 10);
+    const tanggalPendaftaranToExecute = '2026-03-20'
 
     const origin = req.headers.get('origin');
     if (!origin || !origin.includes(process.env.ALLOWED_ORIGIN)) {
@@ -29,7 +30,6 @@ export async function POST(req) {
     if (isNaN(nominal_pembayaran)) return NextResponse.json({ error: "Nominal pembayaran tidak valid" }, { status: 400 });
     if (!["image/jpeg", "image/png"].includes(bukti_pembayaran.type)) return NextResponse.json({ error: "File harus berupa JPG/PNG" }, { status: 400 });
 
-    // ⬇️ Simpan file
     const uploadDir = path.join(process.cwd(), "public", "bukti-pembayaran");
     await mkdir(uploadDir, { recursive: true });
     const extension = bukti_pembayaran.type === "image/png" ? "png" : "jpg";
@@ -45,9 +45,9 @@ export async function POST(req) {
 
         if (!mahasiswa) return NextResponse.json({ error: "Mahasiswa tidak ditemukan" }, { status: 404 });
 
-        // ⬇️ Cari periode
         console.log(tanggalPendaftaranToExecute);
-        const periode_puskom = await getPeriodePuskomByTanggal(tanggal_pembayaran);
+        const periode_puskom = await getPeriodePuskomByTanggal(tanggalPendaftaranToExecute);
+        console.log(periode_puskom);
 
         const created = await prisma.peserta.create({
             data: {
