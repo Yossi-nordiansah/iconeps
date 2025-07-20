@@ -60,7 +60,7 @@ const FormPendaftaran = ({ isOpen, close, segment, onSubmitSuccess }) => {
         const formData = new FormData();
         Object.entries(form).forEach(([key, value]) => {
             formData.append(key, value)
-        });
+        }); 
 
         try {
         await axios.post(`/api/${segment[0].toLowerCase()}/peserta/create`, formData);

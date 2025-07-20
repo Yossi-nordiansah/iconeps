@@ -23,14 +23,15 @@ export async function GET() {
                 peserta: {
                     where: {
                         status: 'pendaftar',
-                        divisi: 'puskom' // ⬅️ tambahkan ini
+                        divisi: 'puskom' 
                     },
                     select: {
                         pilihan_kelas: true,
                         tanggal_pendaftaran: true,
                         loket_pembayaran: true,
                         nominal_pembayaran: true,
-                        tanggal_pembayaran: true
+                        tanggal_pembayaran: true,
+                        bukti_pembayaran: true
                     }
                 }
             }
@@ -46,7 +47,8 @@ export async function GET() {
             Tanggal_Daftar: mhs.peserta[0]?.tanggal_pendaftaran?.toISOString().split('T')[0] || '',
             Loket_Pembayaran: mhs.peserta[0]?.loket_pembayaran || '',
             Nominal_Pembayaran: mhs.peserta[0]?.nominal_pembayaran || 0,
-            Tanggal_Pembayaran: mhs.peserta[0]?.tanggal_pembayaran || ""
+            Tanggal_Pembayaran: mhs.peserta[0]?.tanggal_pembayaran || "",
+            Bukti_Pembayaran: mhs.peserta[0]?.bukti_pembayaran || ""
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(flatData);

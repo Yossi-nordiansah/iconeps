@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 
-export default function EditPendaftar({ isOpen, close, data, onSave }) {
+export default function EditPendaftar({ isOpen, close, data, onSave, divisi }) {
     const [formData, setFormData] = useState({
         id: "",
         pilihan_kelas: "",
@@ -38,16 +38,18 @@ export default function EditPendaftar({ isOpen, close, data, onSave }) {
                 <Dialog.Panel className="bg-white rounded p-6 w-full max-w-md space-y-4">
                     <Dialog.Title className="text-lg font-semibold">Edit Pendaftar</Dialog.Title>
                     <div className="space-y-3">
-                        <select
-                            name="pilihan_kelas"
-                            value={formData.pilihan_kelas}
-                            onChange={handleChange}
-                            className="w-full p-2 border rounded"
-                        >
-                            <option value="weekend_offline">Weekend Offline</option>
-                            <option value="weekday_online">Weekday Online</option>
-                            <option value="weekday_offline">Weekday Offline</option>
-                        </select>
+                        {
+                            divisi === 'pusbas' && <select
+                                name="pilihan_kelas"
+                                value={formData.pilihan_kelas}
+                                onChange={handleChange}
+                                className="w-full p-2 border rounded"
+                            >
+                                <option value="weekend_offline">Weekend Offline</option>
+                                <option value="weekday_online">Weekday Online</option>
+                                <option value="weekday_offline">Weekday Offline</option>
+                            </select>
+                        }
                         <input
                             type="text"
                             name="nominal_pembayaran"

@@ -8,7 +8,7 @@ const PuskomPelatihanLayout = ({ children }) => {
     const { periodes, loading, selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
 
     useEffect(() => {
-        dispatch(fetchPeriodes());
+        dispatch(fetchPeriodes()); 
     }, [dispatch]);
 
     useEffect(() => {

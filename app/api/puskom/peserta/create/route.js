@@ -8,9 +8,13 @@ import { getPeriodePuskomByTanggal } from '@/lib/getPeriodePuskom';
 
 export async function POST(req) {
     const formData = await req.formData();
-    const tanggal_pendaftaran = new Date();
+    // const tanggal_pendaftaran = new Date();
     // const tanggalPendaftaranToExecute = tanggal_pendaftaran.toISOString().substring(0, 10);
-    const tanggalPendaftaranToExecute = '2026-03-20'
+
+    //testing
+    const dateStr = '2025-07-21T13:48:24.625Z';
+    const dateObj = new Date(dateStr);
+    const tanggalPendaftaranToExecute = dateObj.toISOString().substring(0, 10);
 
     const origin = req.headers.get('origin');
     if (!origin || !origin.includes(process.env.ALLOWED_ORIGIN)) {
@@ -45,9 +49,7 @@ export async function POST(req) {
 
         if (!mahasiswa) return NextResponse.json({ error: "Mahasiswa tidak ditemukan" }, { status: 404 });
 
-        console.log(tanggalPendaftaranToExecute);
         const periode_puskom = await getPeriodePuskomByTanggal(tanggalPendaftaranToExecute);
-        console.log(periode_puskom);
 
         const created = await prisma.peserta.create({
             data: {
@@ -60,7 +62,7 @@ export async function POST(req) {
                 loket_pembayaran,
                 bukti_pembayaran: `/bukti-pembayaran/${safeFileName}`,
                 periode_puskom,
-                tanggal_pendaftaran
+                tanggal_pendaftaran: dateObj
             },
         });
 

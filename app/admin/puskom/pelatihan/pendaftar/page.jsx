@@ -301,15 +301,6 @@ export default function MahasiswaAdmin() {
                             </select>
                         </div>
                         <div>
-                            <label className="block font-semibold mb-1">Pilihan Kelas</label>
-                            <select className="w-full border px-3 py-2 rounded" value={selectedKelas} onChange={(e) => setSelectedKelas(e.target.value)}>
-                                <option value="">Semua Kelas</option>
-                                <option value="weekday_offline">weekday_offline</option>
-                                <option value="weekday_online">weekday_online</option>
-                                <option value="weekend_offline">weekend_offline</option>
-                            </select>
-                        </div>
-                        <div>
                             <label className="block font-semibold mb-1">Semester</label>
                             <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto border px-2 py-2 rounded">
                                 <label className="flex items-center space-x-2 col-span-4">
@@ -417,7 +408,7 @@ export default function MahasiswaAdmin() {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>)
+                    </table>) 
             }
             <div className="flex justify-end items-center gap-2 mt-4">
                 <button
@@ -441,8 +432,8 @@ export default function MahasiswaAdmin() {
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
-            <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
+            <EditPendaftar divisi={divisi} isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
             <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess} />
         </div>
     );
-}
+} 

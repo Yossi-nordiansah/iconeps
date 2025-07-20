@@ -7,7 +7,7 @@ export async function POST(req) {
 
     try {
         const data = await prisma.kelas.create({
-            data: { 
+            data: {
                 nama_kelas: body.nama_kelas,
                 id_instruktur: parseInt(body.id_instruktur),
                 divisi: "puskom",
@@ -22,13 +22,15 @@ export async function POST(req) {
 
 export async function GET() {
     try {
-        const data = await prisma.kelas.findMany({
+        const data = await prisma.peserta.findMany({
             where: {
                 divisi: 'puskom'
             },
         });
+
+        console.log(data);
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error }, error.message, { status: 500 })
-    }
+    };
 }
