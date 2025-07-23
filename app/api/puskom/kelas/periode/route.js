@@ -7,20 +7,14 @@ export async function GET(req) {
 
     if (!periode) {
         return NextResponse.json({ error: 'Periode is required' }, { status: 400 });
-    }
+    };
+
     try {
         const kelas = await prisma.kelas.findMany({
-            where: { periode,
+            where: {
                 divisi: 'puskom'
              }, 
-            include: {
-                instruktur: true,
-                _count: {
-                    select: { peserta_peserta_kelasTokelas: true }
-                }
-            }
         });
-
         return NextResponse.json(kelas);
     } catch (error) {
         console.error(error);

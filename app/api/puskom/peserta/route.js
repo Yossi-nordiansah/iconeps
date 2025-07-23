@@ -8,9 +8,7 @@ export async function POST(req) {
     try {
         const data = await prisma.peserta.findMany({
             where: {
-                kelas_peserta_kelasTokelas: {
-                    periode: periode
-                },
+                periode_puskom: periode,
                 divisi: 'puskom',
                 status: {
                     in: ["peserta", "lulus", "remidial"]

@@ -15,7 +15,7 @@ const PuskomPelatihanLayout = ({ children }) => {
         dispatch(fetchPeriodes()).then((res) => {
             const periodes = res.payload;
             if (!selectedPeriodePuskom && periodes?.length > 0) {
-                dispatch(setSelectedPeriodePuskom(periodes[periodes.length - 1]));
+                dispatch(setSelectedPeriodePuskom(periodes[periodes.length - 1])); 
             }
         });
     }, []);

@@ -8,6 +8,6 @@ export default function Layout({ children }) {
   return (
     <PuskomPelatihanLayout>
         {children}
-    </PuskomPelatihanLayout>
+    </PuskomPelatihanLayout> 
   );
 }

@@ -14,8 +14,8 @@ const DetailPeserta = ({ isOpen, close, data }) => {
                 <p><strong>WA:</strong> {data.mahasiswa?.nomor_telepon}</p>
                 <p><strong>Prodi:</strong> {data.mahasiswa?.prodi}</p>
                 <p><strong>Semester:</strong> {data.mahasiswa?.semester}</p>
-                <p><strong>Nama Kelas:</strong> {data.kelas_peserta_kelasTokelas.nama_kelas}</p>
-                <p><strong>Tipe Kelas:</strong> {data.kelas_peserta_kelasTokelas.tipe_kelas}</p>
+                <p><strong>Nama Kelas:</strong> {data.kelas_peserta_kelasTokelas?.nama_kelas}</p>
+                <p><strong>Tipe Kelas:</strong> {data.kelas_peserta_kelasTokelas?.tipe_kelas}</p>
                 <button
                     className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
                     onClick={close}

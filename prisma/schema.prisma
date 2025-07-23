@@ -52,14 +52,14 @@ model jadwal {
 model kelas {
   id                           Int          @id @default(autoincrement())
   nama_kelas                   String       @db.VarChar(50)
-  id_instruktur                Int
+  id_instruktur                Int?
   tipe_kelas                   String?      @db.VarChar(30)
   divisi                       kelas_divisi
-  periode                      String       @db.VarChar(30)
+  periode                      String?      @db.VarChar(30)
   link_ujian                   String?      @db.VarChar(100)
   link_sertifikat_puskom       String?      @db.VarChar(100)
   jadwal                       jadwal[]
-  instruktur                   instruktur   @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
+  instruktur                   instruktur?  @relation(fields: [id_instruktur], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "insturktur relation")
   peserta_peserta_kelasTokelas peserta[]    @relation("peserta_kelasTokelas")
 
   @@index([id_instruktur], map: "insturktur relation")
@@ -156,7 +156,7 @@ enum informasi_periode_divisi {
 
 enum instruktur_divisi {
   pusbas
-  puskom 
+  puskom
 }
 
 enum peserta_status {

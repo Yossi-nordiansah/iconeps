@@ -47,7 +47,7 @@ const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
                 title: 'Berhasil',
                 text: `Pendaftar Berhasil ditambahkan ke Kelas`,
                 timer: 2000
-            });
+            }); 
             onCancel();
         } catch (error) {
             console.log(error);

@@ -31,21 +31,13 @@ export async function GET() {
             loket_pembayaran: true,
             nominal_pembayaran: true,
             tanggal_pembayaran: true,
-            kelas_peserta_kelasTokelas: {
-              select: {
-                nama_kelas: true,
-                tipe_kelas: true,
-                periode: true,
-                divisi: true
-              }
-            }
           }
         }
       }
     });
 
     const flatData = data.map((mhs) => {
-      const peserta = mhs.peserta[0]; // ambil data peserta pertama (jika ada)
+      const peserta = mhs.peserta[0]; 
       const kelas = peserta?.kelas_peserta_kelasTokelas;
 
       return {
@@ -59,8 +51,6 @@ export async function GET() {
         Loket_Pembayaran: peserta?.loket_pembayaran || '',
         Nominal_Pembayaran: peserta?.nominal_pembayaran || 0,
         Tanggal_Pembayaran: peserta?.tanggal_pembayaran || '',
-        Nama_Kelas: kelas?.nama_kelas || '',
-        Periode: kelas?.periode || '',
       };
     });
 

@@ -10,7 +10,6 @@ export async function GET(req) {
 
         const jumlahKelas = await prisma.kelas.count({
             where: {
-                periode: periode || undefined,
                 divisi: 'puskom',
             },
         });
@@ -28,9 +27,7 @@ export async function GET(req) {
                     in: ['peserta', 'lulus', 'remidial'],
                 },
                 divisi: 'puskom',
-                kelas_peserta_kelasTokelas: {
-                    periode: periode || undefined,
-                },
+                periode_puskom: periode
             },
         });
 
