@@ -8,13 +8,13 @@ import { getPeriodePuskomByTanggal } from '@/lib/getPeriodePuskom';
 
 export async function POST(req) {
     const formData = await req.formData();
-    // const tanggal_pendaftaran = new Date(); 
-    // const tanggalPendaftaranToExecute = tanggal_pendaftaran.toISOString().substring(0, 10);
+    const tanggal_pendaftaran = new Date(); 
+    const tanggalPendaftaranToExecute = tanggal_pendaftaran.toISOString().substring(0, 10);
 
     //testing
-    const dateStr = '2025-03-31T13:48:24.625Z';
-    const dateObj = new Date(dateStr);
-    const tanggalPendaftaranToExecute = dateObj.toISOString().substring(0, 10);
+    // const dateStr = '2025-10-31T13:48:24.625Z';
+    // const dateObj = new Date(dateStr);
+    // const tanggalPendaftaranToExecute = dateObj.toISOString().substring(0, 10);
 
     const origin = req.headers.get('origin');
     if (!origin || !origin.includes(process.env.ALLOWED_ORIGIN)) {
@@ -62,10 +62,9 @@ export async function POST(req) {
                 loket_pembayaran,
                 bukti_pembayaran: `/bukti-pembayaran/${safeFileName}`,
                 periode_puskom,
-                tanggal_pendaftaran: dateObj
+                tanggal_pendaftaran
             },
         });
-        console.log(periode_puskom);
         return NextResponse.json(created, { status: 200 });
 
     } catch (err) {

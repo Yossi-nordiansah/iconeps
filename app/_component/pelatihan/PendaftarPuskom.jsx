@@ -84,14 +84,14 @@ const PendaftarPuskom = () => {
 
         // Periode I: November – Februari
         if (month === 11 || month === 12) {
-            return `Anda terdaftar pada program periode I (April - Juni ${year + 1})`;
+            return `Anda terdaftar pada program periode I (April - Mei ${year + 1})`;
         }
-        if (month === 1 || month === 2) {
-            return `Anda terdaftar pada program periode I (April - Juni ${year})`;
+        if (month === 1 || month === 3) {
+            return `Anda terdaftar pada program periode I (April - Mei ${year})`;
         }
 
         // Periode II: Maret – Juli
-        if (month >= 3 && month <= 7) {
+        if (month >= 4 && month <= 7) {
             return `Anda terdaftar pada program periode II (Agustus - September ${year})`;
         }
 
