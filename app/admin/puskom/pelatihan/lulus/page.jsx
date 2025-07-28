@@ -26,7 +26,7 @@ export default function LulusAdmin() {
     const [loading, setLoading] = useState(false);
 
     const getDataPesertaLulus = async () => {
-        setLoading(true);
+        setLoading(true); 
         try {
             const res = await axios.get(`/api/puskom/peserta/lulus/periode?periode=${selectedPeriodePuskom}`);
             setPesertaLulus(res.data);

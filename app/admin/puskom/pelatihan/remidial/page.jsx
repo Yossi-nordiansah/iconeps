@@ -150,10 +150,6 @@ export default function RemidiAdmin() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.word_2016_e}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">{mhs.nilai[0]?.total + ' %'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"><img src="/icons/pindahkelas.svg" alt="" className="w-4" onClick={() => {
-                                                setSelectedPeserta(mhs);
-                                                setOpenChangeClass(true);
-                                            }} /></button>
                                             <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
                                                 setOpenDetailPeserta(true);
                                                 setDetailPeserta(mhs);

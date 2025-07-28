@@ -11,9 +11,7 @@ export async function GET(req) {
             where: {
                 status: 'lulus',
                 divisi: 'puskom',
-                kelas_peserta_kelasTokelas: {
-                    periode: periode,
-                },
+                periode_puskom: periode
             },
             include: {
                 mahasiswa: true,
