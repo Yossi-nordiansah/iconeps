@@ -65,8 +65,22 @@ export async function POST(req) {
                 tanggal_pendaftaran
             },
         });
-        return NextResponse.json(created, { status: 200 });
 
+        const dataPeriode = await prisma.periode_puskom.findFirst({
+            where: {
+                periode : periode_puskom
+            }
+        })
+
+        if (!dataPeriode){
+            await prisma.periode_puskom.create({
+                data: {
+                    periode: periode_puskom,
+                }
+            })
+        }
+
+        return NextResponse.json(created, { status: 200 });
     } catch (err) {
         console.error("Database Error:", err);
         return NextResponse.json({ error: err.message || "Terjadi kesalahan" }, { status: 500 });

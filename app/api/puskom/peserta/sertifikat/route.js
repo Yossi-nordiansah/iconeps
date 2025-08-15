@@ -10,23 +10,19 @@ export async function POST(req) {
       return NextResponse.json({ error: "Periode dan link wajib diisi." }, { status: 400 });
     }
 
-    const updated = await prisma.kelas.updateMany({
-      where: {
-        periode: periode,
-        divisi: 'puskom'
-      },
+    const updated = await prisma.periode_puskom.update({
+      where: { periode },
       data: {
-        link_sertifikat_puskom: link
+        link_gdrive: link
       }
-    });
+    }); 
 
     return NextResponse.json({
       message: "Link berhasil diunggah.",
       updatedCount: updated.count
     });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Terjadi kesalahan server." }, { status: 500 });
+    return NextResponse.json({ error }, error.message, { status: 500 });
   }
 };
 
@@ -38,18 +34,12 @@ export async function GET(req) {
     return NextResponse.json({ error: "Periode wajib diisi" }, { status: 400 });
   };
 
-  console.log(periode);
-
-  const kelas = await prisma.kelas.findFirst({
+  const kelas = await prisma.periode_puskom.findFirst({
     where: {
-      periode,
-      divisi: "puskom",
-    },
-    select: {
-      link_sertifikat_puskom: true,
+      periode: periode,
     },
   });
-
-  return NextResponse.json({ link: kelas?.link_sertifikat_puskom || "" });
+  console.log(kelas);
+  return NextResponse.json({ kelas });
 }
 

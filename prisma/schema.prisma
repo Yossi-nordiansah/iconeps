@@ -143,10 +143,9 @@ model users {
 }
 
 model periode_puskom {
-  id              Int     @id @default(autoincrement())
-  nama            String? @db.VarChar(100)
-  tanggal_mulai   String? @db.VarChar(6)
-  tanggal_selesai String? @db.VarChar(6)
+  id          Int     @id @default(autoincrement())
+  periode     String  @unique(map: "periode") @db.VarChar(50)
+  link_gdrive String? @db.VarChar(255)
 }
 
 enum informasi_periode_divisi {
