@@ -73,7 +73,7 @@ export async function POST(req) {
         const fontPathBold = path.join(process.cwd(), 'public/fonts/times-new-roman-bold.ttf');
         let font;
         if (fs.existsSync(fontPathBold)) {
-          const fontBytes = fs.readFileSync(fontPathBold);
+          const fontBytes = fs.readFileSync(fontPathBold); 
           font = await pdfDoc.embedFont(fontBytes);
         } else {
           font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);

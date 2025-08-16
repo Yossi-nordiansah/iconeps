@@ -21,9 +21,8 @@ useEffect(() => {
 
         try {
             const res = await axios.get(`/api/puskom/peserta/sertifikat?periode=${selectedPeriodePuskom}`);
-            if (res.data.kelas) {
-                console.log(res.data.kelas.link_gdrive);
-                setLink(res.data.kelas.link_gdrive);
+            if (res.data.kelas.link_gdrive) {
+                setLink(res.data.kelas.link_gdrive || "");
                 setIsEdit(true);
             }
         } catch (err) {
