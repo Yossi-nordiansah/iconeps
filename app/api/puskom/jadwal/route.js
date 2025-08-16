@@ -33,7 +33,6 @@ export async function GET(req) {
     const data = await prisma.kelas.findMany({
       where: {
         divisi: 'puskom',
-        periode
       },
       include: {
         jadwal: true,

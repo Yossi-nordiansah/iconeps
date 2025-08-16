@@ -37,7 +37,7 @@ const LulusPuskom = () => {
                 <h1 className='text-6xl font-bold font-radjdhani_bold sm:block hidden sm:-mt-1'>PUSKOM</h1>
                 <p className=' text-center sm:text-base text-lg text-wrap'>Selamat Anda Dinyatakan Lulus Ujian</p>
                 <img src="/images/certificate.png" alt="Certificate Icon" className='sm:w-16 w-20 mx-auto sm:mt-2 sm:mb-2 mt-3 mb-3' />
-                {linkSertificate && (
+                {linkSertificate ? (
                     <div className='flex justify-center gap-3'>
                         <a
                             href={linkSertificate}
@@ -48,6 +48,9 @@ const LulusPuskom = () => {
                             Download Sertifikat
                         </a>
                     </div>
+                ) :
+                (
+                    <p className='mt-1 text-center sm:text-base text-lg text-wrap bg-red-500 sm:font-semibold p-1 rounded-md'>Sertifikat Masih Dalam Proses</p>
                 )}
             </div>
         </div>

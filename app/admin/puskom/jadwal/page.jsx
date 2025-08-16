@@ -16,6 +16,7 @@ export default function AdminJadwal() {
     try {
       const res = await axios.get(`/api/puskom/jadwal?periode=${selectedPeriodePuskom}`);
       setJadwals(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error('Error fetching jadwal:', err);
     }
