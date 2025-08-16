@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'axios'; 
 import Swal from 'sweetalert2';
 
 export default function LinkUjianForm({ isOpen, data, openEdit, close, onSuccess, segment }) {

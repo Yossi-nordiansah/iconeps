@@ -50,7 +50,7 @@ const PesertaPuskom = () => {
                 <h1 className='text-6xl font-bold font-radjdhani_bold sm:block hidden sm:-mt-1'>PUSKOM</h1>
                 <p className='-mt-1 text-center text-lg sm:text-base'>Anda dalam masa pelatihan</p>
                 <div className="flex w-full sm:justifty-left justify-center items-center gap-2 mb-1">
-                    <CalendarDays className="w-6 h-6 text-white" />
+                    <CalendarDays className="w-12 h-12 text-white" />
                     <span className='sm:text-xl font-semibold'>{periodePuskom}</span>
                 </div>
                 <p className='font-radjdhani_semibold sm:text-2xl text-center text-xl mb-2'>{tipeKelas}</p>

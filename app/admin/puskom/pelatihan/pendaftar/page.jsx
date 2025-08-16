@@ -10,10 +10,13 @@ import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
 import { Download } from 'lucide-react';
+import UploadLinkGrupWa from "@/app/_component/admin/uploadLinkWA";
+import { useSelector } from "react-redux";
 
 export default function MahasiswaAdmin() {
 
     const router = useRouter();
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
@@ -58,6 +61,7 @@ export default function MahasiswaAdmin() {
     const [messageEmpty, setmessageErrorEmpty] = useState("");
     const divisi = segments[segments.length - 3];
     const [loading, setLoading] = useState(false);
+    const [openFormLinkWA, setOpenFormLinkWA] = useState(false);
 
     const getDataPendaftar = async () => {
         setLoading(true);
@@ -221,7 +225,6 @@ export default function MahasiswaAdmin() {
         }
     };
 
-
     return (
         <div className="p-6 overflow-y-auto">
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
@@ -241,6 +244,9 @@ export default function MahasiswaAdmin() {
                     }}>
                         <CheckIcon className="w-5 h-5" />
                     </div>
+                    <div className="bg-wa p-2 rounded-md cursor-pointer" title="upload link grup whatsapp" onClick={setOpenFormLinkWA}>
+                        <img src="/icons/wa.svg" alt="" className='w-5'/>
+                    </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                     <div className="rounded-xl border border-black overflow-hidden flex items-center">
@@ -250,7 +256,7 @@ export default function MahasiswaAdmin() {
                             className="outline-none px-3 py-1 w-64"
                             value={searchTerm}
                             onChange={(e) => {
-                                setSearchTerm(e.target.value);
+                                setSearchTerm(e.target.value); 
                                 setCurrentPage(1);
                             }}
                         />
@@ -443,7 +449,7 @@ export default function MahasiswaAdmin() {
                     onClick={nextPage}
                     disabled={currentPage === totalPages}
                     className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
-                >
+                > 
                     Next
                 </button>
             </div>
@@ -451,6 +457,7 @@ export default function MahasiswaAdmin() {
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
             <EditPendaftar divisi={divisi} isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
+            <UploadLinkGrupWa isOpen={openFormLinkWA} close={() => setOpenFormLinkWA(false)} periode={selectedPeriodePuskom}/>
         </div>
     );
 } 

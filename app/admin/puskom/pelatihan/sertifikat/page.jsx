@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import axios from "axios"; 
  
-export default function SertifikatAdmin() {
+export default function SertifikatAdmin() { 
     const [link, setLink] = useState("");
     const [isEdit, setIsEdit] = useState(false);
     const router = useRouter();

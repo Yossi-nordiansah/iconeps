@@ -20,7 +20,6 @@ const PuskomPage = () => {
         const getInformasi = async () => {
             try {
                 const res = await axios.get('/api/puskom/informasi-periode');
-                console.log("ISI HTML:", res.data.keterangan);
                 setInformasiPeriode(res.data.keterangan);
             } catch (error) {
                 console.error("Gagal ambil informasi periode", error);
@@ -32,6 +31,9 @@ const PuskomPage = () => {
     useEffect(() => {
         const getStatus = async () => {
             if (!session?.user?.id) return null;
+            if (session?.user?.role !== "mahasiswa") {
+                return;
+            }
             try {
                 const res = await axios.post("/api/puskom/peserta/cek-status", {
                     id: session?.user?.id,
@@ -97,10 +99,10 @@ const PuskomPage = () => {
                         <li>Klik tombol daftar dibawah, isi semua form dengan benar.</li>
                         <li>Setelah melakukan pendaftaran status anda akan muncul pada halaman pelatihan.</li>
                         <li>Pelatihan akan dimulai sesuai dengan periode yang ditentukan yang akan diinformasikan melalui grup whatsApp</li>
-                        <li>Pertemuan akan dilaksanakan sebayak 10 kali dan jadwalnya akan mengikuti kelas yang anda pilih (weekend/weekday).</li>
                         <li>Ujian akan dilakukan satu kali, bagi peserta yang tidak hadir akan dinyatakan gugur/gagal dalam ujian.</li>
                         <li>Peserta yang lulus ujian akan mendapatkan sertifikat yang dapat di download dari website ini.</li>
                         <li>Bagi peserta yang gagal akan mendapat kesempatan untuk remidi sebanyak satu kali.</li>
+                        <li>Hubungi kontak dibawah apabila anda ber-status remidial.</li>
                         <li>Apabila ada pertanyaan lebih lanjut dapat klik tombol kontak dibawah.</li>
                     </ol>
                     <div className='flex items-start mt-6 flex-wrap justify-center md:gap-5 gap-3 h-fit'>
@@ -109,7 +111,7 @@ const PuskomPage = () => {
                             listed ? <Link href="/pelatihan" className='shadow-md bg-green px-3 py-2 rounded-md text-white font-radjdhani_bold text-nowrap'>
                                 Cek Status
                             </Link>
-                                :
+                                : 
                                 <button className='shadow-md bg-green px-3 py-2 rounded-md text-white font-radjdhani_bold text-nowrap' onClick={() => setIsOpen(true)}>Daftar Sekarang</button>
                         }
                     </div>

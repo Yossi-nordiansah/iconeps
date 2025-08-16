@@ -20,7 +20,7 @@ const PusbasPage = () => {
         const getInformasi = async () => {
             try {
                 const res = await axios.get('/api/pusbas/informasi-periode');
-                setInformasiPeriode(res.data.keterangan); 
+                setInformasiPeriode(res.data.keterangan);
             } catch (error) {
                 console.error("Gagal ambil informasi periode", error);
             }
@@ -31,6 +31,9 @@ const PusbasPage = () => {
     useEffect(() => {
         const getStatus = async () => {
             if (!session?.user?.id) return null;
+            if (session?.user?.role !== "mahasiswa") {
+                return;
+            }
             try {
                 const res = await axios.post("/api/pusbas/peserta/cek-status", {
                     id: session?.user?.id,

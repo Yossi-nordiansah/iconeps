@@ -15,7 +15,7 @@ export async function POST(req) {
       data: {
         link_gdrive: link
       }
-    }); 
+    });  
 
     return NextResponse.json({
       message: "Link berhasil diunggah.",

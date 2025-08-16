@@ -19,7 +19,7 @@ const Pelatihan = () => {
   const [statusPusbas, setStatusPusbas] = useState("");
   const [statusPuskom, setStatusPuskom] = useState("");
 
-  const getStatus = async () => {
+  const getStatus = async () => { 
     setLoading(true);
     if (!session?.user?.id) return null;
     if (session?.user?.role !== "mahasiswa") {
