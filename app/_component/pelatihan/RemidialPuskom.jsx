@@ -42,12 +42,13 @@ const RemidialPuskom = () => {
             <div className='text-white text-nowrap w-full'>
                 <h1 className='text-6xl font-bold font-radjdhani_bold sm:block hidden sm:-mt-1'>PUSKOM</h1>
                 <p className='text-center sm:text-base text-lg'>Anda Tidak Lulus Dalam Ujian</p>
-                <img src="/images/gagal.png" alt="Certificate Icon" className='sm:w-16 w-20 mx-auto sm:mt-2 sm:mb-2 mt-3 mb-3' />
+                <img src="/images/gagal.png" alt="Certificate Icon" className='sm:w-14 w-20 mx-auto sm:mt-2 sm:mb-4 mt-3 mb-3' />
                 <div className='flex justify-center gap-3'>
+                    <a href="https://wa.me/6285655230897" target="_blank" className='bg-wa flex cursor-pointer gap-2 items-center px-3 py-1  w-fit h-fit rounded-md font-radjdhani_bold text-white'>Hubungi Admin <img src="/icons/wa.svg" alt="" className='w-5' /></a>
                     <button className='bg-yellow-500 px-3 py-1 font-semibold rounded-lg block' onClick={() => setOpenDetail(true)}>Lihat Nilai</button>
                 </div>
+                <DetailNilaiPuskom isOpen={openDetail} close={() => setOpenDetail(false)} data={nilai} />
             </div>
-            <DetailNilaiPuskom isOpen={openDetail} close={() => setOpenDetail(false)} data={nilai} />
         </div>
     );
 };
