@@ -21,14 +21,11 @@ export async function POST(request) {
             where: { email: email }
         });
 
-        console.log(`existing user: ${existingUser}`)  
-
         if (existingUser.length > 0) {
             return NextResponse.json({ message: "Email sudah terdaftar." }, { status: 409 });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log(hashedPassword)
 
         const userRegistrasi = await prisma.users.create({
             data: {

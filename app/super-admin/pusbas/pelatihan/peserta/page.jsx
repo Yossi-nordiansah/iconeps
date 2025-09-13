@@ -97,10 +97,6 @@ export default function PesertaAdmin() {
 
     const allEmails = peserta.map(p => p.mahasiswa.email);
 
-    useEffect(() => {
-        console.log(selectedPeserta)
-    }, [selectedPeserta]);
-
     const handleDownloadExcel = async () => {
         try {
             const res = await fetch('/api/pusbas/peserta/export');

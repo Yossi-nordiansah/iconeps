@@ -29,7 +29,6 @@ useEffect(() => {
             console.error(err); 
         }
     };
-    console.log("test");
     fetchLink();
 }, [selectedPeriodePuskom]);
 

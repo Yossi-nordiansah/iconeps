@@ -3,21 +3,26 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import DetailNilaiPusbas from './DetailNilaiPusbas';
+import PopupJadwal from './PopupJadwal';
 
 const RemidialPusbas = () => {
     const { data: session } = useSession();
     const [nilai, setNilai] = useState(null);
     const [openDetail, setOpenDetail] = useState(false);
+    const [tanggalRemidi, setTanggalRemidi] = useState("");
+    const [openTanggal, setOpenTanggal] = useState(false);
 
     useEffect(() => {
         const fetchSertifikatPath = async () => {
             if (!session?.user?.id) return null;
 
             try {
-                // 1. Ambil ID peserta divisi pusbas
                 const statusRes = await axios.post("/api/pusbas/peserta/cek-status", {
                     id: session.user.id,
                 });
+
+                const tanggalRemidi = await axios.get("/api/pusbas/peserta/remidial/jadwal");
+                setTanggalRemidi(tanggalRemidi.data.jadwal_remidial);
 
                 const pesertaPusbas = statusRes.data?.mahasiswa?.peserta?.find(
                     (item) => item.divisi === "pusbas"
@@ -43,11 +48,13 @@ const RemidialPusbas = () => {
                 <h1 className='text-6xl font-bold font-radjdhani_bold sm:block hidden sm:-mt-1'>PUSBAS</h1>
                 <p className='text-center sm:text-base text-lg'>Anda Tidak Lulus Dalam Ujian</p>
                 <img src="/images/gagal.png" alt="Certificate Icon" className='sm:w-16 w-20 mx-auto sm:mt-2 sm:mb-2 mt-3 mb-3' />
-                    <div className='flex justify-center gap-3'>
-                        <button className='bg-yellow-500 px-3 py-1 font-semibold rounded-lg block' onClick={() => setOpenDetail(true)}>Lihat Nilai</button>
-                    </div>
+                <div className='flex justify-center gap-3'>
+                    <button className='bg-yellow-500 px-3 py-1 font-semibold rounded-lg block' onClick={() => setOpenDetail(true)}>Lihat Nilai</button>
+                    {tanggalRemidi && <button className='bg-yellow-500 px-3 py-1 font-semibold rounded-lg block' onClick={()=>setOpenTanggal(true)}>Lihat Jadwal</button>}
+                </div>
             </div>
             <DetailNilaiPusbas isOpen={openDetail} close={() => setOpenDetail(false)} data={nilai} />
+            <PopupJadwal isOpen={openTanggal} data={tanggalRemidi} close={()=>setOpenTanggal(false)}/>
         </div>
     );
 };

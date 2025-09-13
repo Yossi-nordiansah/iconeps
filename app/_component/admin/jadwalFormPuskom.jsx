@@ -19,7 +19,6 @@ const JadwalFormPuskom = ({ isOpen, close, data, onSuccess }) => {
       setDataKelas(res.data);
     } catch (err) {
       window.alert(`Gagal fetch data: ${err}`);
-      console.log(`selected periode : ${selectedPeriodePuskom}`);
     }
   }; 
 

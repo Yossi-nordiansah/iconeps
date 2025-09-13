@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 
 export default function LinkUjianForm({ isOpen, data, openEdit, close, onSuccess, segment }) {
     const [link, setLink] = useState("");
-    console.log(data)
 
     useEffect(() => {
         if (data && openEdit) {

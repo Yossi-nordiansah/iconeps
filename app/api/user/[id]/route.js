@@ -24,7 +24,6 @@ export async function PUT(req, { params }) {
     const param = await params;
     const id = parseInt(param.id);
     const body = await req.json();
-    console.log(body)
 
     try {
         const editData = await prisma.users.update({

@@ -16,7 +16,6 @@ const AcceptPendaftar = ({ isOpen, close, selectedPendaftar, onSuccess }) => {
     const getDataKelas = async () => {
         try {
             const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
-            console.log(res.data)
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);

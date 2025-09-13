@@ -99,7 +99,6 @@ const EditPendaftaran = ({ isOpen, close, segment, id }) => {
     };
 
     if (!isOpen || !id) return null;
-    console.log(`id: ${id}`);
 
     return (
         <div className="fixed inset-0 bg-black px-6 bg-opacity-40 backdrop-blur-sm flex justify-center items-center z-50">

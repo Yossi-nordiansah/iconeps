@@ -18,7 +18,6 @@ const UbahKelas = ({ isOpen, close, selectedPeserta, onSuccess, segment }) => {
         try {
             const res = await axios.get(`/api/${segment}/kelas/periode?periode=${segment === 'pusbas' ? (selectedPeriodePusbas) : (selectedPeriodePuskom)}`);
             // const res = await axios.get(`/api/${segment}/kelas/periode?periode=${selectedPeriodePusbas}`);
-            console.log(res)
             setDataKelas(res.data);
         } catch (err) {
             window.alert(`Gagal fetch data: ${err}`);

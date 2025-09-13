@@ -460,4 +460,4 @@ export default function MahasiswaAdmin() {
             <UploadLinkGrupWa isOpen={openFormLinkWA} close={() => setOpenFormLinkWA(false)} periode={selectedPeriodePuskom}/>
         </div>
     );
-} 
+}  

@@ -16,11 +16,9 @@ const JadwalForm = ({ isOpen, close, data, onSuccess }) => {
   const getDataKelas = async () => {
     try {
       const res = await axios.get(`/api/pusbas/kelas/periode?periode=${selectedPeriodePusbas}`);
-      console.log(`selected periode : ${selectedPeriodePusbas}`);
       setDataKelas(res.data);
     } catch (err) {
       window.alert(`Gagal fetch data: ${err}`);
-      console.log(`selected periode : ${selectedPeriodePusbas}`);
     }
   };
  

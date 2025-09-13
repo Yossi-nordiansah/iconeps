@@ -39,7 +39,6 @@ export async function GET(req) {
       periode: periode,
     },
   });
-  console.log(kelas);
   return NextResponse.json({ kelas });
 }
 

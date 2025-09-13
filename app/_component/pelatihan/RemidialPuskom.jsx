@@ -14,7 +14,6 @@ const RemidialPuskom = () => {
             if (!session?.user?.id) return null;
 
             try {
-                // 1. Ambil ID peserta divisi pusbas
                 const statusRes = await axios.post("/api/puskom/peserta/cek-status", {
                     id: session.user.id,
                 });

@@ -14,7 +14,6 @@ const InformasiPeriode = () => {
     const getDataText = async () => {
         try {
             const response = await axios.get('/api/pusbas/informasi-periode');
-            console.log(response.data)
             setValue(response.data.keterangan);
         } catch (error) {
             window.alert(error.message)

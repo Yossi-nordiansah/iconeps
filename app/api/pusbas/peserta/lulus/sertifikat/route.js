@@ -19,7 +19,6 @@ export async function GET(req) {
                 sertifikat: true
             }
         })
-        console.log(data[0]?.sertifikat);
         return NextResponse.json(data, {status: 200})
     } catch (error) {
         return NextResponse.json({error}, error.message, {status: 500});

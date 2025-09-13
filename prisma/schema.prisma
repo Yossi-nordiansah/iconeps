@@ -82,7 +82,7 @@ model mahasiswa {
   @@index([user_id], map: "mahasiswa_ibfk_1")
 }
 
-model nilai {
+model nilai { 
   id                Int     @id @default(autoincrement())
   id_peserta        Int
   listening         Int?
@@ -110,6 +110,7 @@ model peserta {
   loket_pembayaran           String          @db.VarChar(25)
   kelas                      Int?
   periode_puskom             String?         @db.VarChar(50)
+  jadwal_remidial            String?         @db.VarChar(100)
   nilai                      nilai[]
   mahasiswa                  mahasiswa       @relation(fields: [mahasiswa_id], references: [id], onDelete: Cascade, map: "peserta_ibfk_1")
   kelas_peserta_kelasTokelas kelas?          @relation("peserta_kelasTokelas", fields: [kelas], references: [id], onDelete: Cascade, map: "peserta_ibfk_2")

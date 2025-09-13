@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma";
 export async function POST(req){
 
     const body = await req.json();
-    console.log(body);
 
     try {
         const data = await prisma.instruktur.create({

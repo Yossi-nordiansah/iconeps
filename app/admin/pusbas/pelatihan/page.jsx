@@ -25,10 +25,6 @@ const PelatihanAdminPage = () => {
 
   const { selectedPeriodePusbas } = useSelector((state) => state.kelas);
 
-  // useEffect(() => {
-  //   dispatch(fetchDashboardData(selectedPeriodePusbas));
-  // }, [dispatch]);
-
   useEffect(() => {
     dispatch(fetchDashboardData(selectedPeriodePusbas));
   }, [selectedPeriodePusbas]);
