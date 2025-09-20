@@ -13,6 +13,7 @@ export default function AdminCetakLaporan() {
     useEffect(() => {
         const fetchTahun = async () => {
             const res = await axios.get('/api/puskom/laporan');
+            console.log(res.data);
             const tahunArray = res.data.sort((a, b) => b - a);
             setListTahun(tahunArray);
         };
@@ -60,6 +61,8 @@ export default function AdminCetakLaporan() {
         link.click();
         link.remove();
     };
+
+    console.log(listTahun);
 
     return (
         <div className="relative pl-52 pr-6 pt-20">

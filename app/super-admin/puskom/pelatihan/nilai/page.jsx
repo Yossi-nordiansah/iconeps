@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { AcademicCapIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; 
 import DataMissing from '@/app/_component/admin/dataMissing';
 import { Download } from 'lucide-react';
+import { useSelector } from 'react-redux';
  
 export default function NilaiAdmin() {
     const [dragActive, setDragActive] = useState(false);
@@ -12,6 +13,7 @@ export default function NilaiAdmin() {
     const [notFoundData, setNotFoundData] = useState([]);
     const router = useRouter();
     const [openDataMissing, setOpenDataMissing] = useState(false);
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
@@ -44,7 +46,7 @@ export default function NilaiAdmin() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch("/api/puskom/nilai", {
+        const res = await fetch(`/api/puskom/nilai?periode=${selectedPeriodePuskom}`, {
             method: "POST",
             body: formData,
         });

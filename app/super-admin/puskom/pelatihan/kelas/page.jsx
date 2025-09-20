@@ -77,7 +77,11 @@ export default function KelasAdmin() {
                     text: error,
                     timer: 2000
                 })
+            } finally {
+                setLoading(false);
             }
+        } else {
+            setLoading(false);
         }
     };
 
@@ -110,8 +114,6 @@ export default function KelasAdmin() {
                 <thead className="bg-gray-200">
                     <tr>
                         <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kelas</th>
-                        <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Instruktur</th>
-                        <th className="px-3 py-3 text-xs  text-center font-medium text-gray-500 uppercase tracking-wider">Jumlah Peserta</th>
                         <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -125,12 +127,18 @@ export default function KelasAdmin() {
                                 </div>
                             </td>
                         </tr>
+                    ) : currentData.length === 0 ? (
+                        <tr>
+                            <td colSpan={5}>
+                                <div className="text-center py-4 text-gray-500 italic border border-gray-200 rounded">
+                                    Belum ada Kelas
+                                </div>
+                            </td>
+                        </tr>
                     ) : (
                         currentData.map((kls) => (
                             <tr key={kls.id}>
                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.nama_kelas}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{kls.instruktur.nama}</td>
-                                <td className="px-3 py-4 whitespace-nowrap text-center text-sm text-gray-700">{kls._count?.peserta_peserta_kelasTokelas ?? 0}</td>
                                 <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                     <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(kls.id)}>
                                         <Trash2 size={16} />
@@ -144,9 +152,10 @@ export default function KelasAdmin() {
                                     </button>
                                 </td>
                             </tr>
-                        )))
-                    }
+                        ))
+                    )}
                 </tbody>
+
             </table>
             <div className="flex justify-center mt-4 space-x-2">
                 <button

@@ -3,31 +3,22 @@ import { NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import prisma from '@/lib/prisma';
 
-
 export async function POST(req) {
   const { tahun } = await req.json();
+  console.log(tahun);
 
   try {
     const peserta = await prisma.peserta.findMany({
       where: {
         status: { in: ['lulus', 'remidial'] },
         divisi: 'puskom',
-        kelas_peserta_kelasTokelas: {
-          is: {
-            periode: {
-              endsWith: tahun,
-            },
-          },
-        },
-      },
-      include: {
-        mahasiswa: true,
-        kelas_peserta_kelasTokelas: true,
       },
     });
 
+    console.log(peserta)
+
     const data = peserta.map((p) => ({
-      Periode: p.kelas_peserta_kelasTokelas.periode,
+      Periode: p.periode,
       Nama: p.mahasiswa.nama,
       Status: p.status,
     }));

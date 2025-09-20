@@ -126,7 +126,7 @@ export default function MahasiswaAdmin() {
 
     return (
         <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                     <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/super-admin/puskom/pelatihan/')}>
                         <img src="/icons/back.svg" alt="Back" className="w-6" />

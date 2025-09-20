@@ -9,21 +9,22 @@ import Swal from "sweetalert2";
 import DetailPendaftar from "@/app/_component/admin/detailPendaftar";
 import BuktiPembayaran from "@/app/_component/admin/buktiPembayaran";
 import EditPendaftar from "@/app/_component/admin/editPendaftar";
-import AcceptPendaftar from "@/app/_component/admin/AcceptPendaftarPuskom";
 import { Download } from 'lucide-react';
+import UploadLinkGrupWa from "@/app/_component/admin/uploadLinkWA";
+import { useSelector } from "react-redux";
 
 export default function MahasiswaAdmin() {
 
     const router = useRouter();
+    const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
-    const [openAcceptPendaftar, setOpenAcceptPendaftar] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [dataPendaftar, setDataPendaftar] = useState([]);
     const [allSemesterChecked, setAllSemesterChecked] = useState(true);
-    const [selectedPendaftar, setSelectedPendaftar] = useState({})
+    const [selectedPendaftar, setSelectedPendaftar] = useState([])
     const [selectedFakultas, setSelectedFakultas] = useState('');
     const [selectedProdi, setSelectedProdi] = useState('');
     const [selectedKelas, setSelectedKelas] = useState('');
@@ -60,6 +61,7 @@ export default function MahasiswaAdmin() {
     const [messageEmpty, setmessageErrorEmpty] = useState("");
     const divisi = segments[segments.length - 3];
     const [loading, setLoading] = useState(false);
+    const [openFormLinkWA, setOpenFormLinkWA] = useState(false);
 
     const getDataPendaftar = async () => {
         setLoading(true);
@@ -138,10 +140,6 @@ export default function MahasiswaAdmin() {
         }
     };
 
-    const onSuccess = () => {
-        getDataPendaftar();
-    }
-
     const handleDelete = async (id) => {
         const confirm = await Swal.fire({
             title: 'Apa anda yakin?',
@@ -203,6 +201,29 @@ export default function MahasiswaAdmin() {
         }
     };
 
+    const onAcceptHandle = async (id) => {
+
+        setLoading(true);
+        try {
+            await axios.put(`/api/puskom/kelas/peserta/`, id);
+            await Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                timer: 2000
+            });
+            getDataPendaftar();
+        } catch (error) {
+            console.log(error);
+            await Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Peserta',
+                text: error?.message ?? "Terjadi kesalahan",
+                timer: 2000
+            })
+        } finally {
+            setLoading(false)
+        }
+    };
 
     return (
         <div className="p-6 overflow-y-auto">
@@ -219,9 +240,12 @@ export default function MahasiswaAdmin() {
                     <div className={`p-2 w-fit bg-gray-300 rounded ${filteredPendaftar.length === 0 ? 'cursor-not-allowed' : 'cursor-pointer'}`} onClick={() => {
                         const ids = currentPendaftar.map(mhs => mhs.peserta[0]?.id).filter(Boolean);
                         setSelectedPendaftar(ids);
-                        setOpenAcceptPendaftar(true);
+                        onAcceptHandle(ids);
                     }}>
                         <CheckIcon className="w-5 h-5" />
+                    </div>
+                    <div className="bg-wa p-2 rounded-md cursor-pointer" title="upload link grup whatsapp" onClick={setOpenFormLinkWA}>
+                        <img src="/icons/wa.svg" alt="" className='w-5'/>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
@@ -232,7 +256,7 @@ export default function MahasiswaAdmin() {
                             className="outline-none px-3 py-1 w-64"
                             value={searchTerm}
                             onChange={(e) => {
-                                setSearchTerm(e.target.value);
+                                setSearchTerm(e.target.value); 
                                 setCurrentPage(1);
                             }}
                         />
@@ -301,15 +325,6 @@ export default function MahasiswaAdmin() {
                             </select>
                         </div>
                         <div>
-                            <label className="block font-semibold mb-1">Pilihan Kelas</label>
-                            <select className="w-full border px-3 py-2 rounded" value={selectedKelas} onChange={(e) => setSelectedKelas(e.target.value)}>
-                                <option value="">Semua Kelas</option>
-                                <option value="weekday_offline">weekday_offline</option>
-                                <option value="weekday_online">weekday_online</option>
-                                <option value="weekend_offline">weekend_offline</option>
-                            </select>
-                        </div>
-                        <div>
                             <label className="block font-semibold mb-1">Semester</label>
                             <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto border px-2 py-2 rounded">
                                 <label className="flex items-center space-x-2 col-span-4">
@@ -350,74 +365,74 @@ export default function MahasiswaAdmin() {
                         Memuat data kelas...
                     </div>
                 ) : (
-                statusPendaftar ? <div className="w-full mb-24">
-                    <img src="/images/kosong.png" alt="" className="mx-auto block w-16 mt-32" />
-                    <h1 className="text-center mt-2 font-robotoBold">{messageEmpty}</h1>
-                </div>
-                    :
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-200">
-                            <tr>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
-                                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Daftar</th>
-                                <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {currentPendaftar.map((mhs, idx) => (
-                                <tr key={idx}>
-                                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 max-w-32 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nama}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-32 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.fakultas.substring(9)}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.semester}</td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        {new Date(mhs.peserta[0].tanggal_pendaftaran).toLocaleDateString("id-ID", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric"
-                                        })}
-                                    </td>
-                                    <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(mhs.peserta[0].id)}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                                            onClick={() => {
-                                                setOpenEdit(true);
-                                                setEditData(mhs);
-                                            }}
-                                        >
-                                            <Pencil size={16} />
-                                        </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                            setOpenDetailPendaftar(true);
-                                            setDetailPendaftar(mhs);
-                                        }}>
-                                            <Eye size={16} />
-                                        </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                            setOpenAcceptPendaftar(true);
-                                            setSelectedPendaftar([mhs.peserta[0].id])
-                                        }}>
-                                            <CheckIcon className="w-5 h-5" />
-                                        </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
-                                            setOpenDetailPembayaran(true);
-                                            setDetailPendaftar(mhs);
-                                        }}>
-                                            <DocumentCurrencyDollarIcon className="w-5 h-5" />
-                                        </button>
-                                        <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.users.email], mhs.nama)}>
-                                            <Mail size={16} />
-                                        </button>
-                                    </td>
+                    statusPendaftar ? <div className="w-full mb-16">
+                        <img src="/images/kosong.png" alt="" className="mx-auto block w-16 mt-32" />
+                        <h1 className="text-center mt-2 font-robotoBold">{messageEmpty}</h1>
+                    </div>
+                        :
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-200">
+                                <tr>
+                                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fakultas</th>
+                                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prodi</th>
+                                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Daftar</th>
+                                    <th className="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>)
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {currentPendaftar.map((mhs, idx) => (
+                                    <tr key={idx}>
+                                        <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-700 max-w-32 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.nama}</td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700 max-w-32 overflow-hidden truncate text-nowrap text-ellipsis">{mhs.fakultas.substring(9)}</td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.prodi}</td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">{mhs.semester}</td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-700">
+                                            {new Date(mhs.peserta[0].tanggal_pendaftaran).toLocaleDateString("id-ID", {
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "numeric"
+                                            })}
+                                        </td>
+                                        <td className="px-3 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleDelete(mhs.peserta[0].id)}>
+                                                <Trash2 size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                                onClick={() => {
+                                                    setOpenEdit(true);
+                                                    setEditData(mhs);
+                                                }}
+                                            >
+                                                <Pencil size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                setOpenDetailPendaftar(true);
+                                                setDetailPendaftar(mhs);
+                                            }}>
+                                                <Eye size={16} />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                setSelectedPendaftar([mhs.peserta[0].id])
+                                                onAcceptHandle([mhs.peserta[0].id]);
+                                            }}>
+                                                <CheckIcon className="w-5 h-5" />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => {
+                                                setOpenDetailPembayaran(true);
+                                                setDetailPendaftar(mhs);
+                                            }}>
+                                                <DocumentCurrencyDollarIcon className="w-5 h-5" />
+                                            </button>
+                                            <button className="p-1 rounded hover:bg-gray-100 text-gray-600" onClick={() => handleSendEmail([mhs.users.email], mhs.nama)}>
+                                                <Mail size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>)
             }
             <div className="flex justify-end items-center gap-2 mt-4">
                 <button
@@ -434,15 +449,15 @@ export default function MahasiswaAdmin() {
                     onClick={nextPage}
                     disabled={currentPage === totalPages}
                     className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
-                >
+                > 
                     Next
                 </button>
             </div>
             <EmailEditor isOpen={isOpen} segment={emailSegments} recipients={recipients} close={() => setIsOpen(false)} />
             <DetailPendaftar isOpen={openDetailPendaftar} close={() => setOpenDetailPendaftar(false)} data={detailPendaftar} />
             <BuktiPembayaran isOpen={openDetailPembayaran} close={() => setOpenDetailPembayaran(false)} data={detailPendaftar} />
-            <EditPendaftar isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
-            <AcceptPendaftar isOpen={openAcceptPendaftar} close={() => setOpenAcceptPendaftar(false)} selectedPendaftar={selectedPendaftar} onSuccess={onSuccess} />
+            <EditPendaftar divisi={divisi} isOpen={openEdit} close={() => setOpenEdit(false)} data={editData} onSave={handleSaveEdit} />
+            <UploadLinkGrupWa isOpen={openFormLinkWA} close={() => setOpenFormLinkWA(false)} periode={selectedPeriodePuskom}/>
         </div>
     );
-}
+}  
