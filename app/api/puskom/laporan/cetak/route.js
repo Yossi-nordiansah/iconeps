@@ -1,24 +1,26 @@
-// /app/api/pusbas/laporan/cetak/route.js
 import { NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import prisma from '@/lib/prisma';
 
 export async function POST(req) {
   const { tahun } = await req.json();
-  console.log(tahun);
 
   try {
     const peserta = await prisma.peserta.findMany({
       where: {
         status: { in: ['lulus', 'remidial'] },
         divisi: 'puskom',
+        periode_puskom: {
+          endsWith: tahun
+        }
       },
+      include: {
+        mahasiswa: true
+      }
     });
 
-    console.log(peserta)
-
     const data = peserta.map((p) => ({
-      Periode: p.periode,
+      Periode: p.periode_puskom,
       Nama: p.mahasiswa.nama,
       Status: p.status,
     }));
@@ -46,7 +48,6 @@ export async function POST(req) {
       },
     });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: 'Gagal membuat laporan', error }, { status: 500 });
+    return NextResponse.json({ error }, error.message, { status: 500 });
   }
 }

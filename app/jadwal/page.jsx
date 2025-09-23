@@ -30,7 +30,7 @@ const Jadwal = () => {
           {/* Puskom Section */}
           <div className="w-full md:w-1/2">
             <h2 className="text-3xl font-bold text-center text-green-700 mb-1 font-radjdhani_bold">Jadwal Puskom</h2>
-            <p className="text-center text-sm text-gray-600 mb-3">Periode: {selectedPeriodePuskom}</p>
+            <p className="text-center text-sm text-gray-600 mb-3">{selectedPeriodePuskom}</p>
             <JadwalPuskom />
           </div>
         </div>

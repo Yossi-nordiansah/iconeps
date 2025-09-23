@@ -41,7 +41,7 @@ const PendaftarPuskom = () => {
     if (!selectedPeriodePuskom) return;
     try {
       const dataLink = await axios.get(`/api/puskom/pendaftar/link-wa?periode=${selectedPeriodePuskom}`);
-      if(dataLink.data.link_grup_wa.length > 0){
+      if(dataLink.data.link_grup_wa){
           setLink(dataLink.data.link_grup_wa || "");
       }
     } catch (error) {
