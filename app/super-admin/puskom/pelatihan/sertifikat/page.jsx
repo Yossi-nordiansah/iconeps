@@ -13,7 +13,7 @@ export default function SertifikatAdmin() {
     const { selectedPeriodePuskom } = useSelector((state) => state.kelasPuskom);
 
 useEffect(() => {
-    setLink("");  // clear dulu agar user lihat perubahan
+    setLink(""); 
     setIsEdit(false);
 
     const fetchLink = async () => {

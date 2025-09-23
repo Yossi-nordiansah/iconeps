@@ -8,7 +8,7 @@ export default function AdminCetakLaporan() {
     const [tahun, setTahun] = useState('');
     const [listTahun, setListTahun] = useState([]);
     const [previewData, setPreviewData] = useState([]);
-    const [excelBlob, setExcelBlob] = useState(null); // Simpan blob untuk tombol download
+    const [excelBlob, setExcelBlob] = useState(null); 
 
     useEffect(() => {
         const fetchTahun = async () => {
@@ -61,8 +61,6 @@ export default function AdminCetakLaporan() {
         link.click();
         link.remove();
     };
-
-    console.log(listTahun);
 
     return (
         <div className="relative pl-52 pr-6 pt-20">

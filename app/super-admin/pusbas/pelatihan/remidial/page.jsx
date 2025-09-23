@@ -9,6 +9,8 @@ import DetailPesertaLulus from "@/app/_component/admin/detailPesertaLulus";
 import { useSelector } from "react-redux";
 import UbahKelas from "@/app/_component/admin/ubahKelas";
 import { Download } from "lucide-react";
+import { Upload } from "lucide-react";
+import UploadJadwalRemidial from "@/app/_component/admin/FormJadwalRemdial";
 
 export default function RemidiAdmin() {
 
@@ -27,6 +29,7 @@ export default function RemidiAdmin() {
     const [recipients, setRecipients] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(false);
+    const [openFormJadwal, setOpenFormJadwal] = useState("");
 
     const getDataPesertaRemidial = async () => {
         setLoading(true);
@@ -80,7 +83,7 @@ export default function RemidiAdmin() {
         <div className="p-6">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/super-admin/pusbas/pelatihan/')}>
+                    <button className="bg-gray-300 p-2 rounded" onClick={() => router.push('/admin/pusbas/pelatihan/')}>
                         <img src="/icons/back.svg" alt="Back" className="w-6" />
                     </button>
                     <div className="flex items-center gap-2 bg-gray-300 px-2 py-2 rounded">
@@ -88,6 +91,15 @@ export default function RemidiAdmin() {
                         <span className="text-base font-semibold">Remidial</span>
                         <span className="text-base font-semibold">{pesertaRemidial.length}</span>
                     </div>
+                    <button
+                        title="Upload Jadwal Remidial"
+                        onClick={() => {
+                            setOpenFormJadwal(true);
+                        }}
+                        className="bg-gray-300 px-2 py-2 rounded"
+                    >
+                        <Upload size={21} />
+                    </button>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="rounded-xl border border-black overflow-hidden flex items-center">
@@ -181,6 +193,7 @@ export default function RemidiAdmin() {
             <EmailEditor isOpen={isOpen} segment={emailSegments} close={() => setIsOpen(false)} recipients={recipients} />
             <DetailPesertaLulus isOpen={openDetailPeserta} close={() => setOpenDetailPeserta(false)} data={detailPeserta} />
             <UbahKelas isOpen={openChangeClass} segment='pusbas' onSuccess={onSuccess} close={() => setOpenChangeClass(false)} selectedPeserta={selectedPeserta} />
+            <UploadJadwalRemidial isOpen={openFormJadwal} close={()=> setOpenFormJadwal(false)} />
         </div>
     );
 }
