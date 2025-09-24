@@ -12,14 +12,15 @@ html {
 }
 
 .table {
-    border-collapse: collapse;
-    width: 100%;
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.table th, .table td {
-    border: 2px solid black;
-    padding: 8px;
-    text-align: left; /* Optional: Align text to the left */
+.table th,
+.table td {
+  border: 2px solid black;
+  padding: 8px;
+  text-align: left; /* Optional: Align text to the left */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -40,65 +41,66 @@ body {
 }
 
 @font-face {
-    font-family: 'roboto-normal';
-    src: url('/fonts/Poppins-Medium.ttf') format('truetype');
-  }
+  font-family: "roboto-normal";
+  src: url("/fonts/Poppins-Medium.ttf") format("truetype");
+}
 
 @font-face {
-    font-family: 'roboto-bold';
-    src: url('/fonts/Poppins-Bold.ttf') format('truetype');
-  }
+  font-family: "roboto-bold";
+  src: url("/fonts/Poppins-Bold.ttf") format("truetype");
+}
 
 @font-face {
-    font-family: 'roboto-extrabold';
-    src: url('/fonts/Poppins-ExtraBold.ttf') format('truetype');
-  }
+  font-family: "roboto-extrabold";
+  src: url("/fonts/Poppins-ExtraBold.ttf") format("truetype");
+}
 
-  @font-face {
-    font-family: 'radjdhani_bold';
-    src: url('/fonts/Rajdhani-Bold.ttf') format('truetype');
-  }
-    @font-face {
-      font-family: 'radjdhani_semibold';
-      src: url('/fonts/Rajdhani-SemiBold.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'radjdhani_medium';
-      src: url('/fonts/Rajdhani-Medium.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'radjdhani_regular';
-      src: url('/fonts/Rajdhani-Regular.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'radjdhani_light';
-      src: url('/fonts/Rajdhani-Light.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'cartoon';
-      src: url('/fonts/Happy School.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Montserrat-Regular';
-      src: url('/fonts/Montserrat-Regular.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Montserrat-Medium';
-      src: url('/fonts/Montserrat-Medium.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Montserrat-SemiBold';
-      src: url('/fonts/Montserrat-SemiBold.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Montserrat-Bold';
-      src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Montserrat-ExtraBold';
-      src: url('/fonts/Montserrat-ExtraBold.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'NetflixSansBold';
-      src: url('/fonts/NetflixSansBold.ttf') format('truetype');
-    }
+@font-face {
+  font-family: "radjdhani_bold";
+  src: url("/fonts/Rajdhani-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "radjdhani_semibold";
+  src: url("/fonts/Rajdhani-SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "radjdhani_medium";
+  src: url("/fonts/Rajdhani-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "radjdhani_regular";
+  src: url("/fonts/Rajdhani-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "radjdhani_light";
+  src: url("/fonts/Rajdhani-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "cartoon";
+  src: url("/fonts/Happy School.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Montserrat-Regular";
+  src: url("/fonts/Montserrat-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Montserrat-Medium";
+  src: url("/fonts/Montserrat-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Montserrat-SemiBold";
+  src: url("/fonts/Montserrat-SemiBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Montserrat-Bold";
+  src: url("/fonts/Montserrat-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Montserrat-ExtraBold";
+  src: url("/fonts/Montserrat-ExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "NetflixSansBold";
+  src: url("/fonts/NetflixSansBold.ttf") format("truetype");
+}
+

@@ -12,8 +12,8 @@ const AdminLayout = ({ children }) => {
     const { data: session, status } = useSession();
 
     return (
-        <div>
-            <div className='absolute bg-primary h-full w-48 pt-24 z-10 text-white font-semibold'>
+        <div className='h-full'>
+            <div className='absolute bg-primary h-full w-48 pt-20 z-10 text-white font-semibold'>
                 <p className='text-xl mb-10 px-3'>{session?.user?.name}</p>
                 <ul className='flex-col'>
                     <Link href="/super-admin/pusbas/pelatihan" className={`py-4 border-y block px-3 ${pathName.startsWith("/super-admin/pusbas/pelatihan") ? "bg-yellow-400" : ""}`}>

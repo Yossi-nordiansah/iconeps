@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }) {
   }
 
   return (
-    <div>
+    <div className="max-h-screen overflow-y-hidden">
       <div className='absolute z-20 w-full flex bg-secondary py-2 px-5 justify-between items-center'>
         <div className='flex items-center text-white gap-4'>
           <Image src="/images/iconeps_logo.png" alt="" width={44} height={44} />

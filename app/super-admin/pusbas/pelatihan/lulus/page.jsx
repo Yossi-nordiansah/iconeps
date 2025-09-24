@@ -70,7 +70,7 @@ export default function LulusAdmin() {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6"> 
             {/* Header dan Pencarian */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export default function LulusAdmin() {
                     </button>
                 </div>
             </div>
-            <div className="max-h-[360px] overflow-y-auto">
+            <div className="max-h-[360px] overflow-y-auto pb-3">
                 {loading ? (
                     <div className="flex justify-center items-center gap-2">
                         <div className="w-5 h-5 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>

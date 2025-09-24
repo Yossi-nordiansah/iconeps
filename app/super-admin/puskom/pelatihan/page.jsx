@@ -45,8 +45,8 @@ const PelatihanAdminPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className=''>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 mt-8">
+    <div className='h-full'>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 px-6 mt-3">
         {cards.map((card, index) => (
           <div key={index} onClick={() => router.push(card.path)} className="flex cursor-pointer items-center justify-between bg-gray-300 rounded-md p-4 shadow-md hover:scale-110 duration-200">
             <div className="text-gray-800">

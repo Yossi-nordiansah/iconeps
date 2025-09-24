@@ -43,8 +43,7 @@ const PelatihanAdminPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-6 mt-8">
+      <div className="overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 py-3 px-6 mt-2">
         {cards.map((card, index) => (
           <div key={index} onClick={() => router.push(card.path)} className="flex cursor-pointer items-center justify-between bg-gray-300 rounded-md p-4 shadow-md hover:scale-110 duration-200">
             <div className="text-gray-800">
@@ -59,7 +58,6 @@ const PelatihanAdminPage = () => {
           </div>
         ))}
       </div>
-    </div>
   );
 }
 

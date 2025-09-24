@@ -130,7 +130,7 @@ export default function RemidiAdmin() {
                     </button>
                 </div>
             </div>
-            <div className="max-h-[360px] overflow-y-auto">
+            <div className="max-h-[360px] overflow-y-auto pb-3">
                 {
                     loading ? (
                         <div className="flex justify-center items-center gap-2">

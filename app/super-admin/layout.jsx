@@ -33,7 +33,7 @@ const AdminLayout = ({ children }) => {
     };
 
     return (
-        <div>
+        <div className='h-screen'>
             <div className='absolute z-20 w-full flex bg-secondary py-2 px-5 justify-between items-center'>
                 <div className='flex items-center text-white gap-4'>
                     <img src="/images/iconeps_logo.png" alt="" className='w-11' />
