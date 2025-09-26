@@ -4,6 +4,7 @@ import "../globals.css";
 import JadwalPusbas from "../_component/jadwalPusbas";
 import JadwalPuskom from "../_component/jadwalPuskom";
 import { useSelector } from 'react-redux';
+import Head from "next/head";
 
 const Jadwal = () => {
 
@@ -12,6 +13,9 @@ const Jadwal = () => {
 
   return (
     <div className="min-h-screen pt-20 pb-10 lg:px-6 px-2 bg-gray-50">
+      <Head>
+        <title>Jadwal {selectedPeriodePusbas} | Iconeps</title>
+      </Head>
       <div className="mx-auto">
         <div className="flex gap-4 mb-5 items-center">
           <img src="/images/calendar.png" alt="Calendar Icon" className="w-10" />
@@ -19,8 +23,6 @@ const Jadwal = () => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-10">
-
-          {/* Pusbas Section */}
           <div className="w-full md:w-1/2">
             <h2 className="text-3xl font-bold text-center font-radjdhani_bold mb-1">Jadwal Pusbas</h2>
             <p className="text-center text-sm text-gray-600 mb-3">Periode: {selectedPeriodePusbas}</p>
